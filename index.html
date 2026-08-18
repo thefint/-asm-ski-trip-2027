@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASM TY Ski Trip 2027 — Biberwier, Austria</title>
+  <style>
+    :root {
+      --navy: #0D2B55;
+      --navy-dark: #081C38;
+      --navy-mid: #153A6E;
+      --sky: #5BA4CF;
+      --sky-light: #A8D4EE;
+      --sky-pale: #EAF4FB;
+      --white: #FFFFFF;
+      --off-white: #F5FAFD;
+      --text: #1a2e44;
+      --muted: #4a6481;
+      --border: #C8DFF0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--off-white);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(160deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-mid) 100%);
+      color: var(--white);
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 120px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='%23EAF4FB' d='M0,120 L0,80 L120,30 L240,70 L360,20 L480,60 L600,10 L720,55 L840,15 L960,50 L1080,5 L1200,45 L1320,0 L1440,40 L1440,120 Z'/%3E%3C/svg%3E") no-repeat bottom center / cover;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 56px 24px 100px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(91,164,207,0.25);
+      border: 1px solid rgba(91,164,207,0.5);
+      color: var(--sky-light);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 6vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+
+    .hero h1 span { color: var(--sky-light); }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 36px;
+    }
+
+    .hero-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 36px;
+    }
+
+    .chip {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--white);
+      padding: 8px 18px;
+      border-radius: 24px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .chip-icon { font-size: 1.1rem; }
+
+    /* ── NAV ── */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--navy);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+
+    .nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-inner::-webkit-scrollbar { display: none; }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.65);
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: 3px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+      font-family: inherit;
+    }
+    .nav-btn:hover, .nav-btn.active {
+      color: var(--white);
+      border-bottom-color: var(--sky);
+    }
+
+    /* ── LAYOUT ── */
+    .page { max-width: 960px; margin: 0 auto; padding: 0 20px 60px; }
+
+    section { padding-top: 56px; }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      font-size: 0.93rem;
+      margin-bottom: 28px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 2px solid var(--border);
+      margin-bottom: 32px;
+    }
+
+    /* ── TRIP DETAILS ── */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .detail-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .detail-card .icon {
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+
+    .detail-card .label {
+      font-size: 0.73rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .detail-card .value {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .detail-card .value-sub {
+      font-size: 0.83rem;
+      color: var(--muted);
+    }
+
+    .detail-card a {
+      color: var(--sky);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .detail-card a:hover { text-decoration: underline; }
+
+    /* ── COUNTDOWN ── */
+    .countdown-bar {
+      background: var(--navy);
+      border-radius: 14px;
+      padding: 24px 28px;
+      color: var(--white);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .countdown-label {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.65);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+    }
+
+    .countdown-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .countdown-digits {
+      display: flex;
+      gap: 12px;
+    }
+
+    .cd-unit {
+      text-align: center;
+    }
+
+    .cd-num {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--sky-light);
+    }
+
+    .cd-lbl {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.55);
+    }
+
+    /* ── DEADLINES ── */
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .tl-item {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -26px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--sky);
+      border: 2px solid var(--white);
+      box-shadow: 0 0 0 2px var(--sky);
+    }
+
+    .tl-item.urgent::before { background: #E53E3E; box-shadow: 0 0 0 2px #E53E3E; }
+    .tl-item.done::before { background: #38A169; box-shadow: 0 0 0 2px #38A169; }
+
+    .tl-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+
+    .tl-date {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--sky);
+      margin-bottom: 4px;
+    }
+    .tl-item.urgent .tl-date { color: #E53E3E; }
+    .tl-item.done .tl-date { color: #38A169; }
+
+    .tl-title {
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .tl-desc {
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .tl-desc a {
+      color: var(--sky);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .tl-desc a:hover { text-decoration: underline; }
+
+    /* ── PACKING ── */
+    .pack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .pack-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+    }
+
+    .pack-card h3 {
+      font-size: 0.95rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--navy);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pack-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .pack-list li {
+      font-size: 0.9rem;
+      color: var(--text);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .pack-list li::before {
+      content: '✓';
+      color: var(--sky);
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .shop-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .shop-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 24px;
+      padding: 8px 18px;
+      font-size: 0.87rem;
+      font-weight: 600;
+      color: var(--navy);
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .shop-btn:hover {
+      border-color: var(--sky);
+      background: var(--sky-pale);
+      color: var(--navy);
+    }
+    .shop-btn.secondhand {
+      border-style: dashed;
+    }
+
+    .shop-label {
+      font-size: 0.73rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    /* ── INFO CARDS ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .info-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+    }
+
+    .info-card h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-card p, .info-card li {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .info-card ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+
+    .info-card li::before {
+      content: '→ ';
+      color: var(--sky);
+      font-weight: 800;
+    }
+
+    .info-card a {
+      color: var(--sky);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .info-card a:hover { text-decoration: underline; }
+
+    .highlight-box {
+      background: var(--sky-pale);
+      border: 1.5px solid var(--sky-light);
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin-bottom: 24px;
+    }
+
+    .highlight-box p {
+      font-size: 0.92rem;
+      color: var(--navy);
+      line-height: 1.6;
+    }
+
+    .highlight-box strong { color: var(--navy); }
+
+    /* ── DAY SCHEDULE ── */
+    .schedule {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .schedule-row {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+    .schedule-row:last-child { border-bottom: none; }
+
+    .sched-time {
+      width: 100px;
+      flex-shrink: 0;
+      background: var(--navy);
+      color: var(--sky-light);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+    }
+
+    .sched-content {
+      padding: 14px 18px;
+      font-size: 0.91rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sched-icon { font-size: 1.1rem; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .badge-green { background: #E6F4EA; color: #276749; }
+    .badge-amber { background: #FEF3CD; color: #7A5E0A; }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .contact-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+    }
+
+    .contact-card h3 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .contact-card .cname {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    .contact-card .cdetail {
+      font-size: 0.87rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .contact-card a {
+      color: var(--sky);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .contact-card a:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy-dark);
+      color: rgba(255,255,255,0.45);
+      text-align: center;
+      padding: 28px 20px;
+      font-size: 0.82rem;
+    }
+
+    footer strong { color: rgba(255,255,255,0.7); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .hero-inner { padding: 40px 20px 80px; }
+      .sched-time { width: 80px; font-size: 0.75rem; }
+      .countdown-digits { gap: 8px; }
+      .cd-num { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Ardscoil Mhuire · Transition Year</div>
+    <h1>ASM Ski Trip <span>2027</span></h1>
+    <p class="hero-sub">Biberwier, Austria &nbsp;·&nbsp; January – February 2027</p>
+    <div class="hero-chips">
+      <div class="chip"><span class="chip-icon">✈️</span> 30 Jan – 5 Feb 2027</div>
+      <div class="chip"><span class="chip-icon">⛷️</span> Biberwier, Austria</div>
+      <div class="chip"><span class="chip-icon">🏨</span> Alpina Regina Hotel</div>
+      <div class="chip"><span class="chip-icon">🌙</span> 7 Days, 6 Nights</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── NAV ── -->
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="scrollTo('trip')">Trip Details</button>
+    <button class="nav-btn" onclick="scrollTo('maps')">Ski Maps</button>
+    <button class="nav-btn" onclick="scrollTo('deadlines')">Deadlines</button>
+    <button class="nav-btn" onclick="scrollTo('packing')">What to Pack</button>
+    <button class="nav-btn" onclick="scrollTo('health')">EHIC & Insurance</button>
+    <button class="nav-btn" onclick="scrollTo('travel')">Travel Info</button>
+    <button class="nav-btn" onclick="scrollTo('day')">Typical Day</button>
+    <button class="nav-btn" onclick="scrollTo('contact')">Contact</button>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- ── TRIP DETAILS ── -->
+  <section id="trip">
+    <div class="section-title">⛷️ Trip Details</div>
+    <p class="section-sub">Everything you need to know about the destination.</p>
+
+    <div class="countdown-bar">
+      <div>
+        <div class="countdown-label">Countdown to departure</div>
+        <div class="countdown-title">Saturday, 30th January 2027</div>
+      </div>
+      <div class="countdown-digits">
+        <div class="cd-unit"><div class="cd-num" id="cd-days">--</div><div class="cd-lbl">Days</div></div>
+        <div class="cd-unit"><div class="cd-num" id="cd-hrs">--</div><div class="cd-lbl">Hrs</div></div>
+        <div class="cd-unit"><div class="cd-num" id="cd-min">--</div><div class="cd-lbl">Min</div></div>
+        <div class="cd-unit"><div class="cd-num" id="cd-sec">--</div><div class="cd-lbl">Sec</div></div>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-card">
+        <div class="icon">📅</div>
+        <div class="label">Departure</div>
+        <div class="value">Saturday, 30 Jan 2027</div>
+        <div class="value-sub">Airport — TBC</div>
+      </div>
+      <div class="detail-card">
+        <div class="icon">🏁</div>
+        <div class="label">Return</div>
+        <div class="value">Friday, 5 Feb 2027</div>
+        <div class="value-sub">7 days · 6 nights</div>
+      </div>
+      <div class="detail-card">
+        <div class="icon">🏔️</div>
+        <div class="label">Resort</div>
+        <div class="value">Biberwier, Austria</div>
+        <div class="value-sub">Zugspitz Arena ski region</div>
+        <a href="#maps">🗺️ View Ski Maps ↓</a>
+      </div>
+      <div class="detail-card">
+        <div class="icon">🏨</div>
+        <div class="label">Hotel</div>
+        <div class="value">Alpina Regina</div>
+        <div class="value-sub">Fernpaßstraße 54, 6633 Biberwier<br>Tel: 0043 5673 2469</div>
+        <a href="https://hotel-alpina-regina.hotelsintyrol.com/en/" target="_blank" rel="noopener">🔗 Hotel Website</a>
+        <a href="https://maps.google.com/?q=Alpina+Regina+Fernpassstrasse+54+6633+Biberwier+Austria" target="_blank" rel="noopener">📍 Google Maps</a>
+      </div>
+      <div class="detail-card">
+        <div class="icon">🎿</div>
+        <div class="label">Organiser</div>
+        <div class="value">Topflight for Schools</div>
+        <div class="value-sub">Ski lessons, accommodation & transport included</div>
+        <a href="https://topflightforschools.ie/parents-portal-2/" target="_blank" rel="noopener">🔗 Parent Portal</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SKI MAPS ── -->
+  <section id="maps">
+    <hr class="divider">
+    <div class="section-title">🗺️ Ski Maps</div>
+    <p class="section-sub">Two ski areas accessible from Biberwier — Ehrwalder Alm and Grubigstein/Marienberg.</p>
+
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div class="info-card" style="padding:20px;">
+        <h3>⛷️ Ehrwalder Almbahn — Zugspitz Tirol</h3>
+        <img src="map-ehrwalder.jpg" alt="Ehrwalder Almbahn ski map" style="width:100%; border-radius:10px; margin-top:8px; display:block;">
+      </div>
+      <div class="info-card" style="padding:20px;">
+        <h3>🏔️ Lermoos–Biberwier — Grubigstein &amp; Marienberg</h3>
+        <img src="map-biberwier.jpg" alt="Lermoos Biberwier ski map" style="width:100%; border-radius:10px; margin-top:8px; display:block;">
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DEADLINES ── -->
+  <section id="deadlines">
+    <hr class="divider">
+    <div class="section-title">📅 Payment Deadlines</div>
+    <p class="section-sub">Key dates — mark these in your calendar now.</p>
+
+    <div class="timeline">
+
+      <div class="tl-item done">
+        <div class="tl-card">
+          <div class="tl-date">✅ End of April 2026</div>
+          <div class="tl-title">€300 Non-Refundable Deposit</div>
+          <div class="tl-desc">Deposit due to secure your place on the trip. <strong>Deposits are non-refundable.</strong></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-card">
+          <div class="tl-date">~Saturday, 21st November 2026 &nbsp;(10 weeks before departure)</div>
+          <div class="tl-title">Full Balance Due — via Topflight Parent Portal</div>
+          <div class="tl-desc">
+            Final payment of the full trip cost (~€1,450–€1,480) must be paid via the
+            <a href="https://topflightforschools.ie/parents-portal-2/" target="_blank" rel="noopener">Topflight Parent Portal</a>.
+            See their <a href="https://topflightforschools.ie/parents-portal-2/" target="_blank" rel="noopener">Terms &amp; Conditions</a> for cancellation rules.
+            <br><br>
+            <strong>Cancellation policy:</strong><br>
+            More than 10 weeks before departure — deposit forfeited only<br>
+            10–8 weeks before — 75% of cost forfeited<br>
+            Within 8 weeks — 100% forfeited
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-card">
+          <div class="tl-date">Sunday, 21st December 2026 &nbsp;(6 weeks before departure)</div>
+          <div class="tl-title">All Student Details Due — via Parent Portal</div>
+          <div class="tl-desc">
+            Passport details, height, weight, shoe size, dietary needs, and medical information must all be entered through the
+            <a href="https://topflightforschools.ie/parents-portal-2/" target="_blank" rel="noopener">Parent Portal</a>.
+            Do this as early as possible — don't leave it to the last minute.
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-card">
+          <div class="tl-date">~Friday, 2nd January 2027 &nbsp;(4 weeks before departure)</div>
+          <div class="tl-title">Name Change Deadline</div>
+          <div class="tl-desc">Airline fees apply for any name changes made after this date.</div>
+        </div>
+      </div>
+
+      <div class="tl-item urgent">
+        <div class="tl-card">
+          <div class="tl-date">Thursday, 29th January 2027</div>
+          <div class="tl-title">€70 Cash Payment to School</div>
+          <div class="tl-desc">
+            A <strong>€70 cash payment</strong> is required to be paid directly to the school the day before departure.
+            This covers: après ski activities · city tax · bus transfer from Dublin Airport.
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item urgent">
+        <div class="tl-card">
+          <div class="tl-date">Saturday, 30th January 2027 — 12:00 pm</div>
+          <div class="tl-title">Meet at Shannon Airport</div>
+          <div class="tl-desc">
+            Meeting point and time TBC. Bring your passport, EHIC card, and any medication clearly labelled.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── PACKING ── -->
+  <section id="packing">
+    <hr class="divider">
+    <div class="section-title">🎒 What to Pack</div>
+    <p class="section-sub">Each student is allowed <strong>one 20kg suitcase</strong> and one small backpack that fits under the seat. Do not overpack.</p>
+
+    <div class="pack-grid">
+      <div class="pack-card">
+        <h3>🧥 Ski Outer Layers</h3>
+        <ul class="pack-list">
+          <li>Ski jacket (waterproof)</li>
+          <li>Ski pants / salopettes</li>
+          <li>Ski gloves</li>
+          <li>Ski goggles or sunglasses</li>
+          <li>Hat</li>
+          <li>Snood / neck warmer</li>
+        </ul>
+      </div>
+
+      <div class="pack-card">
+        <h3>🧣 Mid & Base Layers</h3>
+        <ul class="pack-list">
+          <li>3–4 thermal pants &amp; tops (base layer)</li>
+          <li>2–3 fleeces or ¼-zip tops (mid layer)</li>
+          <li>Everyday tops / t-shirts</li>
+          <li>Ski socks — 5 pairs minimum</li>
+        </ul>
+      </div>
+
+      <div class="pack-card">
+        <h3>👟 Footwear</h3>
+        <ul class="pack-list">
+          <li>Runners / trainers (for evenings)</li>
+          <li>Sliders or Crocs (hotel / après ski)</li>
+          <li>Ski boots are provided on the mountain</li>
+        </ul>
+      </div>
+
+      <div class="pack-card">
+        <h3>🧴 Personal Care</h3>
+        <ul class="pack-list">
+          <li>Sun cream / high SPF moisturiser</li>
+          <li>Lip balm (UV-protecting)</li>
+          <li>Toiletries as normal</li>
+          <li>Swimwear &amp; swim hat (pool)</li>
+        </ul>
+      </div>
+
+      <div class="pack-card">
+        <h3>🔌 Tech &amp; Essentials</h3>
+        <ul class="pack-list">
+          <li>Phone charger &amp; EU adapter</li>
+          <li>Power pack / portable charger</li>
+          <li>Headphones (NO Bluetooth speakers)</li>
+          <li>Travel pillow</li>
+          <li>Books / Kindle</li>
+          <li>Snacks for the journey</li>
+        </ul>
+      </div>
+
+      <div class="pack-card">
+        <h3>💊 Medical &amp; Documents</h3>
+        <ul class="pack-list">
+          <li>Passport (teachers will collect on the day)</li>
+          <li>EHIC card</li>
+          <li>Any medication — clearly labelled, inform teachers of dosage &amp; storage</li>
+          <li>Cash for lunches on the mountain (€12–€15/day)</li>
+          <li>Extra spending money</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight-box" style="margin-top:24px;">
+      <p>⚠️ <strong>One per room:</strong> One hairdryer/straightener and one adapter/extension plug per room — coordinate with your roommates before packing.</p>
+    </div>
+
+    <div class="section-title" style="margin-top:32px; font-size:1.1rem;">🛍️ Where to Buy Ski Gear</div>
+    <p class="section-sub" style="margin-bottom:16px;">New gear from these stores, or save money buying second-hand:</p>
+
+    <div class="shop-label">New</div>
+    <div class="shop-grid" style="margin-bottom:20px;">
+      <a class="shop-btn" href="https://www.lidl.ie" target="_blank" rel="noopener">🛒 Lidl</a>
+      <a class="shop-btn" href="https://www.aldi.ie" target="_blank" rel="noopener">🛒 Aldi</a>
+      <a class="shop-btn" href="https://www.decathlon.ie" target="_blank" rel="noopener">🏔️ Decathlon</a>
+      <a class="shop-btn" href="https://ie.sportsdirect.com" target="_blank" rel="noopener">⚽ Sports Direct</a>
+    </div>
+
+    <div class="shop-label">Second-Hand</div>
+    <div class="shop-grid">
+      <a class="shop-btn secondhand" href="https://www.vinted.ie" target="_blank" rel="noopener">👗 Vinted</a>
+      <a class="shop-btn secondhand" href="https://www.adverts.ie" target="_blank" rel="noopener">📋 Adverts.ie</a>
+      <a class="shop-btn secondhand" href="https://www.depop.com" target="_blank" rel="noopener">🛍️ Depop</a>
+    </div>
+  </section>
+
+  <!-- ── HEALTH & INSURANCE ── -->
+  <section id="health">
+    <hr class="divider">
+    <div class="section-title">🏥 EHIC Card &amp; Insurance</div>
+    <p class="section-sub">All students are fully insured through Topflight. An EHIC card is also strongly recommended.</p>
+
+    <div class="highlight-box">
+      <p>
+        <strong>European Health Insurance Card (EHIC)</strong> — While not essential, we <strong>strongly recommend</strong> every student has one.
+        It makes visiting hospitals and doctors in Austria significantly easier and faster.
+        It is free to get — apply well in advance of the trip.
+      </p>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>🪪 Apply for Your EHIC Card</h3>
+        <p style="margin-bottom:10px;">Groups travelling from Ireland should apply at:</p>
+        <p><a href="https://www.ehic.ie" target="_blank" rel="noopener">www.ehic.ie</a> — it's free and takes a few minutes online.</p>
+        <p style="margin-top:10px; font-size:0.85rem;">Apply as early as possible — cards can take a few weeks to arrive.</p>
+      </div>
+
+      <div class="info-card">
+        <h3>⚕️ Pre-Existing Medical Conditions</h3>
+        <p style="margin-bottom:8px;">If your daughter has any pre-existing medical condition, it is <strong>mandatory</strong> to contact Medical Screening to ensure she is covered for winter sports:</p>
+        <p><strong>Phone:</strong> <a href="tel:+35315337357">+353 1 533 7357</a></p>
+        <p style="margin-top:6px; font-size:0.85rem;">Declare all conditions within 14 days of purchasing the policy. Some conditions require screening before winter sports cover applies.</p>
+      </div>
+
+      <div class="info-card">
+        <h3>📋 Insurance Claims</h3>
+        <p style="margin-bottom:8px;">If you need to make an insurance claim or cancel a place, contact:</p>
+        <ul>
+          <li><a href="tel:+35315337352">+353 1 533 7352</a></li>
+          <li><a href="mailto:claims@white-horse.ie">claims@white-horse.ie</a></li>
+        </ul>
+        <p style="margin-top:8px; font-size:0.85rem;">All cancellations must also be advised to the school directly.</p>
+      </div>
+
+      <div class="info-card">
+        <h3>🔗 Topflight Parent Portal</h3>
+        <p style="margin-bottom:8px;">For payments, FAQs, and a video tutorial on using the portal:</p>
+        <ul>
+          <li><a href="https://topflightforschools.ie/parents-portal-2/" target="_blank" rel="noopener">Parent Portal FAQs</a></li>
+          <li><a href="https://topflightforschools.ie/parents-portal-3/" target="_blank" rel="noopener">Portal Video Tutorial</a></li>
+          <li><a href="mailto:schools@topflight.ie">schools@topflight.ie</a> (login/payment issues only)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TRAVEL INFO ── -->
+  <section id="travel">
+    <hr class="divider">
+    <div class="section-title">✈️ Travel Information</div>
+    <p class="section-sub">Important reminders for the journey.</p>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>🛂 Passports</h3>
+        <ul>
+          <li>Irish passports must be valid for at least 3 months from the date of travel</li>
+          <li>Passports will be collected by teachers on the day — bring yours to Shannon</li>
+          <li>Non-EU passport holders may need a visa — check in advance</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h3>🧳 Luggage Allowance</h3>
+        <ul>
+          <li>One 20kg suitcase per student</li>
+          <li>One small backpack that fits under the seat</li>
+          <li>Do not overpack — you will be able to buy anything you forget in a local shop on day 2</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h3>🔒 Airport Security</h3>
+        <ul>
+          <li>If wearing a hoodie, you will be asked to remove it at security — wear a top underneath</li>
+          <li>Liquids must be under 100ml in a clear bag</li>
+          <li>Meeting point and time TBC — details to follow closer to departure</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h3>📱 Phones &amp; Devices</h3>
+        <ul>
+          <li>Phones may be used during the day</li>
+          <li>Phones are collected at <strong>11:00 pm</strong> every evening and returned at wake-up</li>
+          <li>Students who need to contact home during lights-out will be facilitated by teachers</li>
+          <li>Bluetooth speakers are <strong>not permitted</strong></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TYPICAL DAY ── -->
+  <section id="day">
+    <hr class="divider">
+    <div class="section-title">🗓️ A Typical Day</div>
+    <p class="section-sub">The schedule varies slightly each day — this is a general guide. Bring cash for mountain lunches.</p>
+
+    <div class="schedule">
+      <div class="schedule-row">
+        <div class="sched-time">7:00 am</div>
+        <div class="sched-content"><span class="sched-icon">⏰</span> Wake-up call</div>
+      </div>
+      <div class="schedule-row">
+        <div class="sched-time">8:00 am</div>
+        <div class="sched-content"><span class="sched-icon">🍳</span> Breakfast &nbsp;<span class="badge badge-green">Included</span></div>
+      </div>
+      <div class="schedule-row">
+        <div class="sched-time">9:30 am</div>
+        <div class="sched-content"><span class="sched-icon">⛷️</span> Morning ski lesson &nbsp;<span class="badge badge-green">Included</span></div>
+      </div>
+      <div class="schedule-row">
+        <div class="sched-time">12:00 pm</div>
+        <div class="sched-content"><span class="sched-icon">🍕</span> Lunch on the mountain &nbsp;<span class="badge badge-amber">€12–€15 cash</span> &nbsp; — main course/pizza &amp; soft drink. Bring cash every day.</div>
+      </div>
+      <div class="schedule-row">
+        <div class="sched-time">1:00 pm</div>
+        <div class="sched-content"><span class="sched-icon">🏂</span> Afternoon ski lesson &nbsp;<span class="badge badge-green">Included</span></div>
+      </div>
+      <div class="schedule-row">
+        <div class="sched-time">3:30 pm</div>
+        <div class="sched-content"><span class="sched-icon">🏨</span> Return to hotel · rest &amp; freshen up</div>
+      </div>
+      <div class="schedule-row">
+        <div class="sched-time">Dinner</div>
+        <div class="sched-content"><span class="sched-icon">🍽️</span> Dinner at the hotel &nbsp;<span class="badge badge-green">Included</span></div>
+      </div>
+      <div class="schedule-row">
+        <div class="sched-time">Evening</div>
+        <div class="sched-content"><span class="sched-icon">🎿</span> Après ski activities (tubing, sledging &amp; more) — some covered, additional costs may apply. Some activities take place directly after skiing, others after dinner.</div>
+      </div>
+      <div class="schedule-row">
+        <div class="sched-time">11:00 pm</div>
+        <div class="sched-content"><span class="sched-icon">📵</span> Phones collected · lights out. Maximum participation expected at all times.</div>
+      </div>
+    </div>
+
+    <div class="highlight-box" style="margin-top:20px;">
+      <p>📍 <strong>Note:</strong> On some days the group will travel to a glacier approximately 1 hour away, so the schedule will shift slightly. Teachers will give full details on the day.</p>
+    </div>
+  </section>
+
+  <!-- ── CONTACT ── -->
+  <section id="contact">
+    <hr class="divider">
+    <div class="section-title">📞 Contact</div>
+    <p class="section-sub">For all queries not covered here, contact the school directly.</p>
+
+    <div class="contact-grid">
+      <div class="contact-card">
+        <h3>School</h3>
+        <div class="cname">Ardscoil Mhuire</div>
+        <div class="cdetail">For all trip-specific queries, cancellations, and medical information — contact the school.</div>
+      </div>
+
+      <div class="contact-card">
+        <h3>Topflight for Schools</h3>
+        <div class="cname">Parent Portal &amp; Payments</div>
+        <div class="cdetail">
+          <a href="mailto:schools@topflight.ie">schools@topflight.ie</a> — for login and payment issues only.<br>
+          <a href="https://topflightforschools.ie/parents-portal-2/" target="_blank" rel="noopener">Parent Portal FAQs →</a>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <h3>Medical Screening</h3>
+        <div class="cname">Pre-existing Conditions</div>
+        <div class="cdetail">
+          <a href="tel:+35315337357">+353 1 533 7357</a><br>
+          Quote reference: <strong>A&amp;G Group Travel</strong>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <h3>Insurance Claims</h3>
+        <div class="cname">Accident &amp; General</div>
+        <div class="cdetail">
+          <a href="tel:+35315337352">+353 1 533 7352</a><br>
+          <a href="mailto:claims@white-horse.ie">claims@white-horse.ie</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <strong>ASM TY Ski Trip 2027</strong> &nbsp;·&nbsp; Biberwier, Austria &nbsp;·&nbsp; 30 Jan – 5 Feb 2027<br>
+  <span style="margin-top:6px; display:block;">Organised by Ardscoil Mhuire in partnership with Topflight for Schools</span>
+</footer>
+
+<script>
+  // Countdown timer
+  const departure = new Date('2027-01-30T12:00:00');
+  function updateCountdown() {
+    const now = new Date();
+    const diff = departure - now;
+    if (diff <= 0) {
+      document.getElementById('cd-days').textContent = '0';
+      document.getElementById('cd-hrs').textContent = '0';
+      document.getElementById('cd-min').textContent = '0';
+      document.getElementById('cd-sec').textContent = '0';
+      return;
+    }
+    const days = Math.floor(diff / 86400000);
+    const hrs  = Math.floor((diff % 86400000) / 3600000);
+    const min  = Math.floor((diff % 3600000) / 60000);
+    const sec  = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-days').textContent = days;
+    document.getElementById('cd-hrs').textContent  = String(hrs).padStart(2,'0');
+    document.getElementById('cd-min').textContent  = String(min).padStart(2,'0');
+    document.getElementById('cd-sec').textContent  = String(sec).padStart(2,'0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // Nav scroll
+  function scrollTo(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Active nav on scroll
+  const sections = ['trip','maps','deadlines','packing','health','travel','day','contact'];
+  const navBtns  = document.querySelectorAll('.nav-btn');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = sections.indexOf(e.target.id);
+        if (idx !== -1) {
+          navBtns.forEach(b => b.classList.remove('active'));
+          navBtns[idx].classList.add('active');
+        }
+      }
+    });
+  }, { rootMargin: '-50% 0px -50% 0px' });
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+</script>
+</body>
+</html>
