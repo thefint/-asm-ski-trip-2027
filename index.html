@@ -637,14 +637,14 @@
 <!-- ── NAV ── -->
 <nav class="nav-bar">
   <div class="nav-inner">
-    <button class="nav-btn active" onclick="scrollTo('trip')">Trip Details</button>
-    <button class="nav-btn" onclick="scrollTo('maps')">Ski Maps</button>
-    <button class="nav-btn" onclick="scrollTo('deadlines')">Deadlines</button>
-    <button class="nav-btn" onclick="scrollTo('packing')">What to Pack</button>
-    <button class="nav-btn" onclick="scrollTo('health')">EHIC & Insurance</button>
-    <button class="nav-btn" onclick="scrollTo('travel')">Travel Info</button>
-    <button class="nav-btn" onclick="scrollTo('day')">Typical Day</button>
-    <button class="nav-btn" onclick="scrollTo('contact')">Contact</button>
+    <button class="nav-btn active" onclick="navTo('trip')">Trip Details</button>
+    <button class="nav-btn" onclick="navTo('maps')">Ski Maps</button>
+    <button class="nav-btn" onclick="navTo('deadlines')">Deadlines</button>
+    <button class="nav-btn" onclick="navTo('packing')">What to Pack</button>
+    <button class="nav-btn" onclick="navTo('health')">EHIC & Insurance</button>
+    <button class="nav-btn" onclick="navTo('travel')">Travel Info</button>
+    <button class="nav-btn" onclick="navTo('day')">Typical Day</button>
+    <button class="nav-btn" onclick="navTo('contact')">Contact</button>
   </div>
 </nav>
 
@@ -1119,7 +1119,7 @@
   setInterval(updateCountdown, 1000);
 
   // Nav scroll
-  function scrollTo(id) {
+  function navTo(id) {
     document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
