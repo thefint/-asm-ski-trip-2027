@@ -51,6 +51,19 @@
       pointer-events: none;
     }
 
+    .snowflake {
+      position: absolute;
+      color: rgba(255,255,255,0.18);
+      font-size: 1.1rem;
+      pointer-events: none;
+      user-select: none;
+      animation: sway 6s ease-in-out infinite alternate;
+    }
+    @keyframes sway {
+      from { transform: translateY(0) rotate(0deg); }
+      to   { transform: translateY(8px) rotate(20deg); }
+    }
+
     .hero-inner {
       max-width: 900px;
       margin: 0 auto;
@@ -126,17 +139,15 @@
       margin: 0 auto;
       padding: 0 16px;
       display: flex;
+      flex-wrap: wrap;
       gap: 0;
-      overflow-x: auto;
-      scrollbar-width: none;
     }
-    .nav-inner::-webkit-scrollbar { display: none; }
 
     .nav-btn {
       background: none;
       border: none;
       color: rgba(255,255,255,0.65);
-      padding: 14px 18px;
+      padding: 12px 16px;
       font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
@@ -148,6 +159,13 @@
     .nav-btn:hover, .nav-btn.active {
       color: var(--white);
       border-bottom-color: var(--sky);
+    }
+
+    @media (max-width: 600px) {
+      .nav-btn {
+        padding: 10px 12px;
+        font-size: 0.78rem;
+      }
     }
 
     /* ── LAYOUT ── */
@@ -621,6 +639,18 @@
 
 <!-- ── HERO ── -->
 <div class="hero">
+  <span class="snowflake" style="top:8%; left:4%; font-size:0.9rem; animation-delay:0s;">❄</span>
+  <span class="snowflake" style="top:15%; left:12%; font-size:1.3rem; animation-delay:1s;">❄</span>
+  <span class="snowflake" style="top:5%; left:25%; font-size:0.8rem; animation-delay:2s;">⛷️</span>
+  <span class="snowflake" style="top:20%; left:38%; font-size:0.85rem; animation-delay:0.5s;">❄</span>
+  <span class="snowflake" style="top:8%; left:55%; font-size:1rem; animation-delay:1.5s;">❄</span>
+  <span class="snowflake" style="top:18%; left:68%; font-size:0.75rem; animation-delay:3s;">⛷️</span>
+  <span class="snowflake" style="top:6%; left:78%; font-size:1.2rem; animation-delay:0.8s;">❄</span>
+  <span class="snowflake" style="top:22%; left:88%; font-size:0.9rem; animation-delay:2s;">❄</span>
+  <span class="snowflake" style="top:35%; left:5%; font-size:0.8rem; animation-delay:1.2s;">❄</span>
+  <span class="snowflake" style="top:40%; left:92%; font-size:1rem; animation-delay:0.3s;">❄</span>
+  <span class="snowflake" style="top:50%; left:18%; font-size:0.7rem; animation-delay:2.5s;">❄</span>
+  <span class="snowflake" style="top:55%; left:82%; font-size:0.8rem; animation-delay:1.8s;">❄</span>
   <div class="hero-inner">
     <div class="hero-badge">Ardscoil Mhuire · Transition Year</div>
     <h1>ASM Ski Trip <span>2027</span></h1>
