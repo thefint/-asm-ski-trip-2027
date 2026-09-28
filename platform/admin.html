@@ -74,6 +74,24 @@
     #save-err { font-size: 0.9rem; color: #c0392b; display: none; }
     .hidden { display: none; }
     .section-note { font-size: 0.83rem; color: #666; margin-bottom: 16px; }
+
+    /* Upload zones */
+    .upload-zone { border: 2px dashed #A8D4EE; border-radius: 10px; padding: 18px; text-align: center; cursor: pointer; transition: background 0.2s; background: #f7fafd; margin-top: 8px; }
+    .upload-zone:hover { background: #EAF4FB; }
+    .upload-zone p { color: #4a6481; font-size: 0.85rem; margin: 0; }
+    .thumb-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .thumb-item { position: relative; }
+    .thumb-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; display: block; }
+    .thumb-item.wide img { width: 140px; height: 80px; }
+    .remove-thumb { position: absolute; top: -6px; right: -6px; background: #c0392b; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; padding: 0; }
+    .upload-prog { height: 4px; background: #e0e8f0; border-radius: 2px; margin-top: 8px; overflow: hidden; display: none; }
+    .upload-prog-bar { height: 100%; background: #5BA4CF; transition: width 0.2s; width: 0; }
+    .yt-item { background: #f7fafd; border: 1.5px solid #d0e4f4; border-radius: 10px; padding: 10px 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+    .yt-item img { width: 80px; height: 56px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
+    .yt-item .yt-info { flex: 1; }
+    .yt-item .yt-title { font-weight: 700; font-size: 0.9rem; color: #0D2B55; }
+    .yt-item .yt-id { font-size: 0.75rem; color: #888; }
+    .yt-item .remove-btn { position: static; }
   </style>
 </head>
 <body>
@@ -295,6 +313,67 @@
       <div class="field"><label>Claims Email</label><input type="email" id="claimsEmail" placeholder="claims@insurer.ie"></div>
     </div>
 
+    <!-- PHOTOS & MEDIA -->
+    <div class="card">
+      <h2>Photos &amp; Media</h2>
+
+      <div class="field">
+        <label>School Crest / Logo</label>
+        <p class="section-note">Appears in the top corner of your public site. PNG or JPG recommended.</p>
+        <div class="thumb-grid" id="crest-thumbs"></div>
+        <div class="upload-zone" onclick="document.getElementById('crest-file').click()">
+          <p>🏫 Click to upload school crest</p>
+        </div>
+        <input type="file" id="crest-file" accept="image/*" style="display:none">
+        <div class="upload-prog" id="crest-prog"><div class="upload-prog-bar" id="crest-bar"></div></div>
+      </div>
+
+      <div class="field" style="margin-top:24px;">
+        <label>Ski Map / Resort Map</label>
+        <p class="section-note">Piste map or resort overview image shown on the public site.</p>
+        <div class="thumb-grid" id="skimap-thumbs"></div>
+        <div class="upload-zone" onclick="document.getElementById('skimap-file').click()">
+          <p>🗺️ Click to upload ski/piste map</p>
+        </div>
+        <input type="file" id="skimap-file" accept="image/*" style="display:none">
+        <div class="upload-prog" id="skimap-prog"><div class="upload-prog-bar" id="skimap-bar"></div></div>
+      </div>
+
+      <div class="field" style="margin-top:24px;">
+        <label>Hotel &amp; Area Photos</label>
+        <p class="section-note">Hotel, slopes, resort scenery etc. Up to 8 photos. No student photos without consent.</p>
+        <div class="thumb-grid" id="hotel-thumbs"></div>
+        <div class="upload-zone" onclick="document.getElementById('hotel-files').click()">
+          <p>🏨 Click to upload hotel/area photos (select multiple)</p>
+        </div>
+        <input type="file" id="hotel-files" accept="image/*" multiple style="display:none">
+        <div class="upload-prog" id="hotel-prog"><div class="upload-prog-bar" id="hotel-bar"></div></div>
+      </div>
+
+      <div class="field" style="margin-top:24px;">
+        <label>Past Ski Trip Photos</label>
+        <p class="section-note">Photos from previous trips. Parental consent required for any student photos.</p>
+        <div class="thumb-grid" id="past-thumbs"></div>
+        <div class="upload-zone" onclick="document.getElementById('past-files').click()">
+          <p>📸 Click to upload past trip photos (select multiple)</p>
+        </div>
+        <input type="file" id="past-files" accept="image/*" multiple style="display:none">
+        <div class="upload-prog" id="past-prog"><div class="upload-prog-bar" id="past-bar"></div></div>
+      </div>
+    </div>
+
+    <!-- YOUTUBE VIDEOS -->
+    <div class="card">
+      <h2>🎥 YouTube Videos</h2>
+      <p class="section-note">Add YouTube links to show past trip highlight videos on your site.</p>
+      <div id="yt-list"></div>
+      <div class="row2" style="margin-top:8px;">
+        <div class="field" style="margin:0;"><label>Video Title</label><input type="text" id="yt-title" placeholder="e.g. Ski Trip 2024 Highlights"></div>
+        <div class="field" style="margin:0;"><label>YouTube URL</label><input type="text" id="yt-url" placeholder="https://www.youtube.com/watch?v=..."></div>
+      </div>
+      <button class="add-btn" style="margin-top:10px;" onclick="addYouTube()">+ Add Video</button>
+    </div>
+
     <!-- GDPR NOTICE -->
     <div class="card" style="background:#fff8e1;border-left:4px solid #f39c12;">
       <h2 style="color:#b7770d;">&#9888;&#65039; GDPR &amp; Photo Consent Reminder</h2>
@@ -324,6 +403,7 @@
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getStorage, ref as sref, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBcZ0Ks2v5mCQbePdoYWHnZElVfsi_Znc8",
@@ -337,7 +417,15 @@ const firebaseConfig = {
 const UNIVERSAL_SETUP_CODE = 'SKITRIP2027';
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
+const storage = getStorage(fbApp);
 let currentSchoolId = '';
+
+// Photo/media state
+let crestUrl = null;
+let skimapUrl = null;
+let hotelPhotos = [];
+let pastTripPhotos = [];
+let youtubeVideos = [];
 
 // ---- DEFAULTS ----
 const DEFAULT_DAY = [
@@ -435,6 +523,7 @@ window.setNewPassword = async function() {
 
 function enterAdmin(schoolId, data) {
   currentSchoolId = schoolId;
+  crestUrl = null; skimapUrl = null; hotelPhotos = []; pastTripPhotos = []; youtubeVideos = [];
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('set-pw-screen').classList.add('hidden');
   document.getElementById('form-screen').classList.remove('hidden');
@@ -443,6 +532,7 @@ function enterAdmin(schoolId, data) {
   initPackingDefaults();
   initApresDefaults();
   initDayDefaults();
+  initUploads();
   if (data && Object.keys(data).length > 2) loadForm(data);
 }
 
@@ -579,6 +669,125 @@ function shadeColour(hex, pct) {
   } catch(e) { return '#'+hex; }
 }
 
+// ---- UPLOADS ----
+function addThumb(containerId, url, urlArray, wide) {
+  var grid = document.getElementById(containerId);
+  var item = document.createElement('div');
+  item.className = wide ? 'thumb-item wide' : 'thumb-item';
+  var img = document.createElement('img');
+  img.src = url;
+  var btn = document.createElement('button');
+  btn.className = 'remove-thumb';
+  btn.textContent = '×';
+  btn.onclick = function() {
+    if (urlArray) { var i = urlArray.indexOf(url); if (i !== -1) urlArray.splice(i,1); }
+    item.remove();
+  };
+  item.appendChild(img);
+  item.appendChild(btn);
+  grid.appendChild(item);
+}
+
+function uploadSingle(fileInputId, progId, barId, thumbsId, wide, onDone) {
+  document.getElementById(fileInputId).addEventListener('change', async function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var ext = file.name.split('.').pop();
+    var path = 'schools/' + currentSchoolId + '/' + fileInputId.replace('-file','') + '.' + ext;
+    var prog = document.getElementById(progId);
+    var bar  = document.getElementById(barId);
+    prog.style.display = 'block'; bar.style.width = '0';
+    var task = uploadBytesResumable(sref(storage, path), file);
+    task.on('state_changed',
+      function(s){ bar.style.width = (s.bytesTransferred/s.totalBytes*100)+'%'; },
+      function(err){ alert('Upload failed: '+err.message); prog.style.display='none'; },
+      async function(){
+        var url = await getDownloadURL(task.snapshot.ref);
+        prog.style.display = 'none';
+        onDone(url);
+        e.target.value = '';
+      }
+    );
+  });
+}
+
+function uploadMultiple(fileInputId, progId, barId, thumbsId, urlArray) {
+  document.getElementById(fileInputId).addEventListener('change', async function(e) {
+    var files = Array.from(e.target.files);
+    if (!files.length) return;
+    var prog = document.getElementById(progId);
+    var bar  = document.getElementById(barId);
+    prog.style.display = 'block'; bar.style.width = '0';
+    for (var i = 0; i < files.length; i++) {
+      var file = files[i];
+      var path = 'schools/' + currentSchoolId + '/' + fileInputId.replace('-files','') + '_' + Date.now() + '_' + i + '.' + file.name.split('.').pop();
+      await new Promise(function(resolve, reject) {
+        var task = uploadBytesResumable(sref(storage, path), file);
+        var fi = i;
+        task.on('state_changed',
+          function(s){ bar.style.width = ((fi + s.bytesTransferred/s.totalBytes)/files.length*100)+'%'; },
+          reject,
+          async function(){
+            var url = await getDownloadURL(task.snapshot.ref);
+            urlArray.push(url);
+            addThumb(thumbsId, url, urlArray, false);
+            resolve();
+          }
+        );
+      });
+    }
+    prog.style.display = 'none';
+    e.target.value = '';
+  });
+}
+
+function initUploads() {
+  uploadSingle('crest-file','crest-prog','crest-bar','crest-thumbs', false, function(url){
+    crestUrl = url;
+    document.getElementById('crest-thumbs').innerHTML = '';
+    addThumb('crest-thumbs', url, null, false);
+    document.getElementById('crest-thumbs').querySelector('.remove-thumb').onclick = function(){ crestUrl=null; document.getElementById('crest-thumbs').innerHTML=''; };
+  });
+  uploadSingle('skimap-file','skimap-prog','skimap-bar','skimap-thumbs', true, function(url){
+    skimapUrl = url;
+    document.getElementById('skimap-thumbs').innerHTML = '';
+    addThumb('skimap-thumbs', url, null, true);
+    document.getElementById('skimap-thumbs').querySelector('.remove-thumb').onclick = function(){ skimapUrl=null; document.getElementById('skimap-thumbs').innerHTML=''; };
+  });
+  uploadMultiple('hotel-files','hotel-prog','hotel-bar','hotel-thumbs', hotelPhotos);
+  uploadMultiple('past-files','past-prog','past-bar','past-thumbs', pastTripPhotos);
+}
+
+// ---- YOUTUBE ----
+window.addYouTube = function() {
+  var title = document.getElementById('yt-title').value.trim();
+  var url = document.getElementById('yt-url').value.trim();
+  if (!url) return;
+  var videoId = extractYTId(url);
+  if (!videoId) { alert('Could not find a YouTube video ID in that URL. Make sure it\'s a youtube.com/watch or youtu.be link.'); return; }
+  youtubeVideos.push({ title: title || 'Trip Video', videoId: videoId });
+  document.getElementById('yt-title').value = '';
+  document.getElementById('yt-url').value = '';
+  renderYouTube();
+};
+
+function extractYTId(url) {
+  var m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+function renderYouTube() {
+  document.getElementById('yt-list').innerHTML = youtubeVideos.map(function(v,i){
+    return '<div class="yt-item">'
+      + '<img src="https://img.youtube.com/vi/'+v.videoId+'/mqdefault.jpg">'
+      + '<div class="yt-info"><div class="yt-title">'+v.title+'</div><div class="yt-id">youtube.com/watch?v='+v.videoId+'</div></div>'
+      + '<button class="remove-btn" style="position:static;" onclick="removeYT('+i+')">×</button>'
+      + '</div>';
+  }).join('');
+}
+
+window.removeYT = function(i){ youtubeVideos.splice(i,1); renderYouTube(); };
+
 // ---- SAVE ----
 window.saveData = async function() {
   var btn = document.getElementById('save-btn');
@@ -654,6 +863,11 @@ window.saveData = async function() {
       tech: mergeList(DEFAULT_PACKING.tech, extras.tech),
       documents: mergeList(DEFAULT_PACKING.docs, extras.docs)
     },
+    crestUrl: crestUrl,
+    skimapUrl: skimapUrl,
+    hotelPhotos: hotelPhotos.slice(),
+    pastTripPhotos: pastTripPhotos.slice(),
+    youtubeVideos: youtubeVideos.slice(),
     shops: {
       new: [{name:'Lidl',url:'https://www.lidl.ie',icon:'🛒'},{name:'Aldi',url:'https://www.aldi.ie',icon:'🛒'},{name:'Decathlon',url:'https://www.decathlon.ie',icon:'🏔️'},{name:'Sports Direct',url:'https://ie.sportsdirect.com',icon:'⚽'}],
       secondhand: [{name:'Vinted',url:'https://www.vinted.ie',icon:'👗'},{name:'Adverts.ie',url:'https://www.adverts.ie',icon:'📋'},{name:'Depop',url:'https://www.depop.com',icon:'🛍️'}]
@@ -702,6 +916,32 @@ function loadForm(d) {
   if (d.typicalDay && d.typicalDay.length) { document.getElementById('day-container').innerHTML = ''; d.typicalDay.forEach(function(r){ addDayRow(r); }); }
 
   (d.deadlines||[]).forEach(function(dl){ window.addDeadline(dl); });
+
+  // Photos
+  if (d.crestUrl) {
+    crestUrl = d.crestUrl;
+    document.getElementById('crest-thumbs').innerHTML = '';
+    addThumb('crest-thumbs', d.crestUrl, null, false);
+    document.getElementById('crest-thumbs').querySelector('.remove-thumb').onclick = function(){ crestUrl=null; document.getElementById('crest-thumbs').innerHTML=''; };
+  }
+  if (d.skimapUrl) {
+    skimapUrl = d.skimapUrl;
+    document.getElementById('skimap-thumbs').innerHTML = '';
+    addThumb('skimap-thumbs', d.skimapUrl, null, true);
+    document.getElementById('skimap-thumbs').querySelector('.remove-thumb').onclick = function(){ skimapUrl=null; document.getElementById('skimap-thumbs').innerHTML=''; };
+  }
+  if (d.hotelPhotos && d.hotelPhotos.length) {
+    hotelPhotos = d.hotelPhotos.slice();
+    hotelPhotos.forEach(function(url){ addThumb('hotel-thumbs', url, hotelPhotos, false); });
+  }
+  if (d.pastTripPhotos && d.pastTripPhotos.length) {
+    pastTripPhotos = d.pastTripPhotos.slice();
+    pastTripPhotos.forEach(function(url){ addThumb('past-thumbs', url, pastTripPhotos, false); });
+  }
+  if (d.youtubeVideos && d.youtubeVideos.length) {
+    youtubeVideos = d.youtubeVideos.slice();
+    renderYouTube();
+  }
 }
 
 window.addDeadline();

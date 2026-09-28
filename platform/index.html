@@ -186,9 +186,20 @@
     const photos = (c.hotelPhotos || []).map(p =>
       `<img src="${p}" alt="Hotel photo">`).join('');
 
-    const skiMaps = (c.skiMaps || []).map(m =>
-      `<div class="info-card" style="padding:20px;"><h3>⛷️ ${m.title}</h3><img src="${m.src}" alt="${m.title}" style="width:100%;border-radius:10px;margin-top:8px;display:block;"></div>`
-    ).join('');
+    const skiMapHtml = c.skimapUrl
+      ? `<div class="info-card" style="padding:20px;"><h3>⛷️ Ski Map</h3><a href="${c.skimapUrl}" target="_blank" rel="noopener"><img src="${c.skimapUrl}" alt="Ski Map" style="width:100%;border-radius:10px;margin-top:8px;display:block;cursor:zoom-in;"></a><p style="font-size:0.78rem;color:var(--muted);margin-top:6px;">Tap to enlarge</p></div>`
+      : (c.skiMaps || []).map(m => `<div class="info-card" style="padding:20px;"><h3>⛷️ ${m.title}</h3><img src="${m.src}" alt="${m.title}" style="width:100%;border-radius:10px;margin-top:8px;display:block;"></div>`).join('');
+
+    const pastPhotos = (c.pastTripPhotos || []).map(p =>
+      `<img src="${p}" alt="Past trip photo">`).join('');
+
+    const ytVideos = (c.youtubeVideos || []).map(v =>
+      `<div class="info-card" style="padding:16px;">
+        <div style="font-weight:700;color:var(--navy);margin-bottom:10px;">🎥 ${v.title || 'Trip Video'}</div>
+        <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;">
+          <iframe src="https://www.youtube.com/embed/${v.videoId}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>`).join('');
 
     const deadlines = (c.deadlines || []).map(d => `
       <div class="tl-item ${d.status === 'done' ? 'done' : ''}">
@@ -237,6 +248,7 @@
         <span class="snowflake" style="top:8%;left:78%;font-size:1.2rem;animation-delay:0.8s">❄</span>
         <span class="snowflake" style="top:22%;left:88%;font-size:0.9rem;animation-delay:2s">❄</span>
         <div class="hero-inner">
+          ${c.crestUrl ? `<img src="${c.crestUrl}" alt="${c.schoolName} crest" style="height:72px;width:auto;border-radius:8px;margin-bottom:14px;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.3));">` : ''}
           <div class="hero-badge">${c.schoolBadge || c.schoolName}</div>
           <h1>${(c.tripName||'').replace(/(\d{4})/,'<span>$1</span>')}</h1>
           <p class="hero-sub">${c.destination || ''} &nbsp;·&nbsp; ${c.departureDateDisplay || ''} – ${c.returnDateDisplay || ''}</p>
@@ -252,13 +264,14 @@
       <nav class="nav-bar">
         <div class="nav-inner">
           <button class="nav-btn active" onclick="navTo('trip')">Trip Details</button>
-          ${skiMaps ? '<button class="nav-btn" onclick="navTo(\'maps\')">Ski Maps</button>' : ''}
+          ${skiMapHtml ? '<button class="nav-btn" onclick="navTo(\'maps\')">Ski Map</button>' : ''}
           ${deadlines ? '<button class="nav-btn" onclick="navTo(\'deadlines\')">Deadlines</button>' : ''}
           <button class="nav-btn" onclick="navTo('packing')">What to Pack</button>
           <button class="nav-btn" onclick="navTo('health')">EHIC & Insurance</button>
           <button class="nav-btn" onclick="navTo('travel')">Travel Info</button>
           ${scheduleRows ? '<button class="nav-btn" onclick="navTo(\'day\')">Typical Day</button>' : ''}
-          ${videos ? '<button class="nav-btn" onclick="navTo(\'videos\')">Past Trip Videos</button>' : ''}
+          ${pastPhotos ? '<button class="nav-btn" onclick="navTo(\'pastphotos\')">Past Trips</button>' : ''}
+          ${ytVideos ? '<button class="nav-btn" onclick="navTo(\'videos\')">Videos</button>' : ''}
           <button class="nav-btn" onclick="navTo('contact')">Contact</button>
         </div>
       </nav>
@@ -289,7 +302,7 @@
           ${photos ? `<div class="section-title" style="margin-top:36px;font-size:1.1rem;">🏨 ${c.hotelName}</div><div class="photo-grid" style="margin-top:12px;">${photos}</div>` : ''}
         </section>
 
-        ${skiMaps ? `<section id="maps"><hr class="divider"><div class="section-title">🗺️ Ski Maps</div><p class="section-sub">Ski areas at ${c.destination}.</p><div style="display:flex;flex-direction:column;gap:20px;">${skiMaps}</div></section>` : ''}
+        ${skiMapHtml ? `<section id="maps"><hr class="divider"><div class="section-title">🗺️ Ski Map</div><p class="section-sub">Ski area at ${c.destination}.</p><div style="display:flex;flex-direction:column;gap:20px;">${skiMapHtml}</div></section>` : ''}
 
         ${deadlines ? `<section id="deadlines"><hr class="divider"><div class="section-title">📅 Payment Deadlines</div><p class="section-sub">Key dates — mark these in your calendar.</p><div class="timeline">${deadlines}</div></section>` : ''}
 
@@ -337,7 +350,9 @@
 
         ${scheduleRows ? `<section id="day"><hr class="divider"><div class="section-title">🗓️ A Typical Day</div><p class="section-sub">The schedule varies each day. Some lunches may be prepaid — check with your school.</p><div class="schedule">${scheduleRows}</div></section>` : ''}
 
-        ${videos ? `<section id="videos"><hr class="divider"><div class="section-title">🎥 Past Ski Trip Videos</div><p class="section-sub">A look back at previous trips.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">${videos}</div></section>` : ''}
+        ${pastPhotos ? `<section id="pastphotos"><hr class="divider"><div class="section-title">📸 Past Ski Trips</div><p class="section-sub">A look back at previous trips.</p><div class="photo-grid">${pastPhotos}</div></section>` : ''}
+
+        ${ytVideos ? `<section id="videos"><hr class="divider"><div class="section-title">🎥 Trip Videos</div><p class="section-sub">Highlights from previous ski trips.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">${ytVideos}</div></section>` : ''}
 
         <section id="contact">
           <hr class="divider">
