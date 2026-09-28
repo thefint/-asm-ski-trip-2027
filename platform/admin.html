@@ -63,7 +63,7 @@
 
 <!-- LOGIN -->
 <div id="login-screen">
-  <div style="font-size:2.5rem;margin-bottom:12px;">⛷️</div>
+  <div style="font-size:2.5rem;margin-bottom:12px;">&#x26F7;&#xFE0F;</div>
   <h2>Ski Trip Admin</h2>
   <p>Enter your school's admin password to set up or edit your trip website.</p>
   <div id="login-err">Incorrect password. Try again.</div>
@@ -75,7 +75,7 @@
 <!-- FORM (hidden until login) -->
 <div id="form-screen" class="hidden">
   <div class="header">
-    <div style="font-size:1.8rem">⛷️</div>
+    <div style="font-size:1.8rem">&#x26F7;&#xFE0F;</div>
     <div>
       <h1>Ski Trip Admin Panel</h1>
       <p id="header-school"></p>
@@ -85,10 +85,10 @@
   <div class="container">
 
     <div class="card">
-      <h2>🏫 School & Trip</h2>
+      <h2>School &amp; Trip</h2>
       <div class="row2">
         <div class="field"><label>School Name</label><input type="text" id="schoolName" placeholder="e.g. St Clare's CBS"></div>
-        <div class="field"><label>School Badge / Subtitle</label><input type="text" id="schoolBadge" placeholder="e.g. St Clare's · Transition Year"></div>
+        <div class="field"><label>School Badge / Subtitle</label><input type="text" id="schoolBadge" placeholder="e.g. St Clare's - Transition Year"></div>
       </div>
       <div class="row2">
         <div class="field"><label>Trip Name</label><input type="text" id="tripName" placeholder="e.g. St Clare's TY Ski Trip 2027"></div>
@@ -97,16 +97,16 @@
     </div>
 
     <div class="card">
-      <h2>🎨 Colours</h2>
-      <p style="font-size:0.85rem;color:#666;margin-bottom:16px;">Choose your school colours. Navy is the main dark colour, Sky is the accent.</p>
+      <h2>Colours</h2>
+      <p style="font-size:0.85rem;color:#666;margin-bottom:16px;">Choose your school colours. Primary is the main dark colour, Accent is the highlight.</p>
       <div class="row2">
-        <div class="field"><label>Primary (Navy)</label><div class="colour-row"><input type="color" id="col-navy" value="#0D2B55" oninput="syncColour('col-navy','txt-navy')"><input type="text" id="txt-navy" value="#0D2B55" oninput="syncColourText('txt-navy','col-navy')"></div></div>
-        <div class="field"><label>Accent (Sky)</label><div class="colour-row"><input type="color" id="col-sky" value="#5BA4CF" oninput="syncColour('col-sky','txt-sky')"><input type="text" id="txt-sky" value="#5BA4CF" oninput="syncColourText('txt-sky','col-sky')"></div></div>
+        <div class="field"><label>Primary Colour</label><div class="colour-row"><input type="color" id="col-navy" value="#0D2B55" oninput="syncColour('col-navy','txt-navy')"><input type="text" id="txt-navy" value="#0D2B55" oninput="syncColourText('txt-navy','col-navy')"></div></div>
+        <div class="field"><label>Accent Colour</label><div class="colour-row"><input type="color" id="col-sky" value="#5BA4CF" oninput="syncColour('col-sky','txt-sky')"><input type="text" id="txt-sky" value="#5BA4CF" oninput="syncColourText('txt-sky','col-sky')"></div></div>
       </div>
     </div>
 
     <div class="card">
-      <h2>✈️ Dates & Destination</h2>
+      <h2>Dates &amp; Destination</h2>
       <div class="row2">
         <div class="field"><label>Destination</label><input type="text" id="destination" placeholder="e.g. Biberwier, Austria"></div>
         <div class="field"><label>Destination Subtitle</label><input type="text" id="destinationSub" placeholder="e.g. Zugspitz Arena ski region"></div>
@@ -117,27 +117,43 @@
       </div>
       <div class="row2">
         <div class="field"><label>Return Display Text</label><input type="text" id="returnDateDisplay" placeholder="e.g. Friday, 5 Feb 2027"></div>
-        <div class="field"><label>Duration</label><input type="text" id="duration" placeholder="e.g. 7 days · 6 nights"></div>
+        <div class="field"><label>Duration</label><input type="text" id="duration" placeholder="e.g. 7 days - 6 nights"></div>
       </div>
     </div>
 
     <div class="card">
-      <h2>🏨 Hotel</h2>
+      <h2>Hotel</h2>
       <div class="row2">
         <div class="field"><label>Hotel Name</label><input type="text" id="hotelName" placeholder="e.g. Hotel Alpina Regina"></div>
         <div class="field"><label>Hotel Website</label><input type="url" id="hotelWebsite" placeholder="https://..."></div>
       </div>
-      <div class="field"><label>Hotel Address</label><input type="text" id="hotelAddress" placeholder="e.g. Fernpaßstraße 54, 6633 Biberwier, Austria"></div>
+      <div class="field"><label>Hotel Address</label><input type="text" id="hotelAddress" placeholder="e.g. Main Street, Resort Town, Austria"></div>
     </div>
 
     <div class="card">
-      <h2>📅 Payment Deadlines</h2>
+      <h2>Payment Deadlines</h2>
       <div id="deadlines-container"></div>
       <button class="add-btn" onclick="addDeadline()">+ Add Deadline</button>
     </div>
 
     <div class="card">
-      <h2>🎿 Organiser & Portal</h2>
+      <h2>Phone Policy</h2>
+      <div class="field">
+        <label>Student Phone Rules</label>
+        <select id="phonePolicy" onchange="togglePhoneCustom()">
+          <option value="collected">Phones collected at 11:00 pm nightly (recommended)</option>
+          <option value="kept">Students keep their phones overnight</option>
+          <option value="custom">Custom rule (type below)</option>
+        </select>
+      </div>
+      <div class="field" id="phone-custom-field" style="display:none;">
+        <label>Custom Phone Rule</label>
+        <input type="text" id="phoneCustom" placeholder="e.g. Phones on silent after midnight">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Organiser &amp; Portal</h2>
       <div class="row2">
         <div class="field"><label>Organiser Name</label><input type="text" id="organiserName" placeholder="e.g. Topflight for Schools"></div>
         <div class="field"><label>Organiser Email</label><input type="email" id="organiserEmail" placeholder="schools@organiser.ie"></div>
@@ -146,7 +162,7 @@
     </div>
 
     <div class="card">
-      <h2>🏥 Medical & Insurance</h2>
+      <h2>Medical &amp; Insurance</h2>
       <div class="row2">
         <div class="field"><label>Medical Screening Phone</label><input type="text" id="medicalPhone" placeholder="+353 1 ..."></div>
         <div class="field"><label>Claims Phone</label><input type="text" id="claimsPhone" placeholder="+353 1 ..."></div>
@@ -157,12 +173,12 @@
     <div class="submit-bar">
       <div>
         <div class="school-url">Your site URL will be:</div>
-        <div class="school-id-display" id="url-preview">—</div>
+        <div class="school-id-display" id="url-preview">-</div>
       </div>
       <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-        <div id="save-status">✅ Saved!</div>
-        <div id="save-err">❌ Save failed. Try again.</div>
-        <button class="btn-primary" id="save-btn" onclick="saveData()">💾 Save &amp; Publish</button>
+        <div id="save-status">Saved!</div>
+        <div id="save-err">Save failed. Try again.</div>
+        <button class="btn-primary" id="save-btn" onclick="saveData()">Save &amp; Publish</button>
       </div>
     </div>
 
@@ -196,6 +212,7 @@
 
     if (pw !== ADMIN_PASSWORD) {
       err.style.display = 'block';
+      err.textContent = 'Incorrect password. Try again.';
       return;
     }
     if (!schoolId) { err.style.display = 'block'; err.textContent = 'Please enter a school ID.'; return; }
@@ -205,11 +222,10 @@
 
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('form-screen').classList.remove('hidden');
-    document.getElementById('header-school').textContent = `School ID: ${schoolId}`;
+    document.getElementById('header-school').textContent = 'School ID: ' + schoolId;
 
     updateUrlPreview();
 
-    // Load existing data if available
     const snap = await getDoc(doc(db, 'schools', schoolId));
     if (snap.exists()) loadForm(snap.data());
   };
@@ -218,13 +234,18 @@
     document.getElementById(textId).value = document.getElementById(colorId).value;
   };
   window.syncColourText = function(textId, colorId) {
-    const val = document.getElementById(textId).value;
-    if (/^#[0-9A-Fa-f]{6}$/.test(val)) document.getElementById(colorId).value = val;
+    const v = document.getElementById(textId).value;
+    if (/^#[0-9A-Fa-f]{6}$/.test(v)) document.getElementById(colorId).value = v;
+  };
+
+  window.togglePhoneCustom = function() {
+    const policy = document.getElementById('phonePolicy').value;
+    document.getElementById('phone-custom-field').style.display = policy === 'custom' ? 'block' : 'none';
   };
 
   function updateUrlPreview() {
     const base = window.location.origin + window.location.pathname.replace('admin.html','index.html');
-    document.getElementById('url-preview').textContent = `${base}?school=${currentSchoolId}`;
+    document.getElementById('url-preview').textContent = base + '?school=' + currentSchoolId;
   }
 
   let deadlineCount = 0;
@@ -232,29 +253,39 @@
     const id = deadlineCount++;
     const div = document.createElement('div');
     div.className = 'deadline-item';
-    div.id = `dl-${id}`;
-    div.innerHTML = `
-      <button class="remove-btn" onclick="this.parentElement.remove()">✕</button>
-      <div class="row2">
-        <div class="field"><label>Date</label><input type="text" class="dl-date" value="${data?.date||''}" placeholder="e.g. End of April 2026"></div>
-        <div class="field"><label>Status</label><select class="dl-status"><option value="upcoming" ${data?.status!=='done'?'selected':''}>Upcoming</option><option value="done" ${data?.status==='done'?'selected':''}>Done</option></select></div>
-      </div>
-      <div class="field"><label>Title</label><input type="text" class="dl-title" value="${data?.title||''}" placeholder="e.g. €300 Deposit Due"></div>
-      <div class="field"><label>Description</label><textarea class="dl-desc" placeholder="Details...">${data?.description||''}</textarea></div>
-    `;
+    div.id = 'dl-' + id;
+    div.innerHTML = '<button class="remove-btn" onclick="this.parentElement.remove()">x</button>'
+      + '<div class="row2">'
+      + '<div class="field"><label>Date</label><input type="text" class="dl-date" value="' + (data && data.date ? data.date : '') + '" placeholder="e.g. End of April 2026"></div>'
+      + '<div class="field"><label>Status</label><select class="dl-status"><option value="upcoming"' + (data && data.status === 'done' ? '' : ' selected') + '>Upcoming</option><option value="done"' + (data && data.status === 'done' ? ' selected' : '') + '>Done</option></select></div>'
+      + '</div>'
+      + '<div class="field"><label>Title</label><input type="text" class="dl-title" value="' + (data && data.title ? data.title : '') + '" placeholder="e.g. 300 Deposit Due"></div>'
+      + '<div class="field"><label>Description</label><textarea class="dl-desc" placeholder="Details...">' + (data && data.description ? data.description : '') + '</textarea></div>';
     document.getElementById('deadlines-container').appendChild(div);
   };
 
   function getDeadlines() {
-    return Array.from(document.querySelectorAll('.deadline-item')).map(el => ({
-      date: el.querySelector('.dl-date').value,
-      title: el.querySelector('.dl-title').value,
-      description: el.querySelector('.dl-desc').value,
-      status: el.querySelector('.dl-status').value
-    })).filter(d => d.title);
+    return Array.from(document.querySelectorAll('.deadline-item')).map(function(el) {
+      return {
+        date: el.querySelector('.dl-date').value,
+        title: el.querySelector('.dl-title').value,
+        description: el.querySelector('.dl-desc').value,
+        status: el.querySelector('.dl-status').value
+      };
+    }).filter(function(d) { return d.title; });
   }
 
-  function val(id) { return document.getElementById(id)?.value?.trim() || ''; }
+  function val(id) {
+    var el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  function getPhoneText() {
+    var policy = val('phonePolicy');
+    if (policy === 'collected') return 'Phones collected at 11:00 pm nightly';
+    if (policy === 'kept') return 'Students may keep their phones overnight';
+    return val('phoneCustom') || 'Phones on silent after 11:00 pm';
+  }
 
   window.saveData = async function() {
     const btn = document.getElementById('save-btn');
@@ -265,8 +296,8 @@
 
     const navyHex = val('txt-navy') || '#0D2B55';
     const skyHex  = val('txt-sky')  || '#5BA4CF';
+    const phoneText = getPhoneText();
 
-    // Derive shades automatically
     const data = {
       schoolName: val('schoolName'),
       schoolBadge: val('schoolBadge'),
@@ -278,7 +309,7 @@
         navyMid:  shadeColour(navyHex, 15),
         sky: skyHex,
         skyLight: shadeColour(skyHex, 40),
-        skyPale:  shadeColour(skyHex, 80),
+        skyPale:  shadeColour(skyHex, 80)
       },
       destination: val('destination'),
       destinationSub: val('destinationSub'),
@@ -295,16 +326,16 @@
       medicalPhone: val('medicalPhone'),
       claimsPhone: val('claimsPhone'),
       claimsEmail: val('claimsEmail'),
+      phonePolicy: val('phonePolicy'),
       ehicUrl: 'https://www.ehic.ie',
       deadlines: getDeadlines(),
-      // Defaults included so site renders fully
       packingList: {
         outerLayers: ['Ski jacket (waterproof)','Ski pants / salopettes','Ski gloves','Ski goggles or sunglasses','Hat','Snood / neck warmer'],
-        midBaseLayers: ['3–4 thermal pants & tops (base layer)','2–3 fleeces or ¼-zip tops (mid layer)','Everyday tops / t-shirts','Ski socks — 5 pairs minimum'],
-        footwear: ['Runners / trainers (for evenings)','Sliders or Crocs (hotel / après ski)','Ski boots are provided on the mountain'],
-        personalCare: ['Sun cream / high SPF moisturiser','Lip balm (UV-protecting)','Toiletries as normal','Swimwear & swim hat (pool)'],
-        tech: ['Phone charger & EU adapter','Power pack / portable charger','Headphones (NO Bluetooth speakers)','Travel pillow','Books / Kindle','Snacks for the journey'],
-        documents: ['Passport (teachers will collect on the day)','EHIC card','Any medication — clearly labelled','Cash or card for lunches (€12–€15/day)','Extra spending money']
+        midBaseLayers: ['3-4 thermal pants and tops (base layer)','2-3 fleeces or quarter-zip tops (mid layer)','Everyday tops / t-shirts','Ski socks - 5 pairs minimum'],
+        footwear: ['Runners / trainers (for evenings)','Sliders or Crocs (hotel / apres ski)','Ski boots are provided on the mountain'],
+        personalCare: ['Sun cream / high SPF moisturiser','Lip balm (UV-protecting)','Toiletries as normal','Swimwear and swim hat (pool)'],
+        tech: ['Phone charger and EU adapter','Power pack / portable charger','Headphones (NO Bluetooth speakers)','Travel pillow','Books / Kindle','Snacks for the journey'],
+        documents: ['Passport (teachers will collect on the day)','EHIC card','Any medication - clearly labelled','Cash or card for lunches (12-15 per day)','Extra spending money']
       },
       shops: {
         new: [{name:'Lidl',url:'https://www.lidl.ie',icon:'🛒'},{name:'Aldi',url:'https://www.aldi.ie',icon:'🛒'},{name:'Decathlon',url:'https://www.decathlon.ie',icon:'🏔️'},{name:'Sports Direct',url:'https://ie.sportsdirect.com',icon:'⚽'}],
@@ -316,10 +347,10 @@
         {time:'9:30 am',icon:'⛷️',text:'Morning ski lesson',badge:'included'},
         {time:'12:00 pm',icon:'🍕',text:'Lunch on the mountain',badge:'cash'},
         {time:'1:00 pm',icon:'🏂',text:'Afternoon ski lesson',badge:'included'},
-        {time:'3:30 pm',icon:'🏨',text:'Return to hotel · rest & freshen up'},
+        {time:'3:30 pm',icon:'🏨',text:'Return to hotel, rest and freshen up'},
         {time:'Dinner',icon:'🍽️',text:'Dinner at the hotel',badge:'included'},
-        {time:'Evening',icon:'🎉',text:'Après ski — movie night, bingo, swimming, tubing & more'},
-        {time:'11:00 pm',icon:'📵',text:'Phones collected · lights out'}
+        {time:'Evening',icon:'🎉',text:'Apres ski - movie night, bingo, swimming, tubing and more'},
+        {time:'11:00 pm',icon:'📵',text: phoneText}
       ],
       updatedAt: new Date().toISOString()
     };
@@ -327,19 +358,19 @@
     try {
       await setDoc(doc(db, 'schools', currentSchoolId), data);
       document.getElementById('save-status').style.display = 'block';
-      btn.textContent = '💾 Save & Publish';
+      btn.textContent = 'Save and Publish';
       btn.disabled = false;
-      setTimeout(() => document.getElementById('save-status').style.display = 'none', 3000);
+      setTimeout(function() { document.getElementById('save-status').style.display = 'none'; }, 3000);
     } catch (e) {
       console.error(e);
       document.getElementById('save-err').style.display = 'block';
-      btn.textContent = '💾 Save & Publish';
+      btn.textContent = 'Save and Publish';
       btn.disabled = false;
     }
   };
 
   function loadForm(d) {
-    const set = (id, v) => { const el = document.getElementById(id); if (el && v !== undefined) el.value = v; };
+    var set = function(id, v) { var el = document.getElementById(id); if (el && v !== undefined) el.value = v; };
     set('schoolName', d.schoolName);
     set('schoolBadge', d.schoolBadge);
     set('tripName', d.tripName);
@@ -359,29 +390,28 @@
     set('medicalPhone', d.medicalPhone);
     set('claimsPhone', d.claimsPhone);
     set('claimsEmail', d.claimsEmail);
+    if (d.phonePolicy) {
+      set('phonePolicy', d.phonePolicy);
+      window.togglePhoneCustom();
+    }
     if (d.theme) {
       set('col-navy', d.theme.navy); set('txt-navy', d.theme.navy);
       set('col-sky', d.theme.sky);   set('txt-sky', d.theme.sky);
     }
-    (d.deadlines || []).forEach(dl => window.addDeadline(dl));
+    (d.deadlines || []).forEach(function(dl) { window.addDeadline(dl); });
   }
 
-  // Auto-derive lighter/darker shades from a hex colour
   function shadeColour(hex, percent) {
     try {
       hex = hex.replace('#','');
-      const num = parseInt(hex, 16);
-      let r = (num >> 16) + Math.round(255 * percent / 100);
-      let g = ((num >> 8) & 0xff) + Math.round(255 * percent / 100);
-      let b = (num & 0xff) + Math.round(255 * percent / 100);
-      r = Math.max(0, Math.min(255, r));
-      g = Math.max(0, Math.min(255, g));
-      b = Math.max(0, Math.min(255, b));
+      var num = parseInt(hex, 16);
+      var r = Math.max(0, Math.min(255, (num >> 16) + Math.round(255 * percent / 100)));
+      var g = Math.max(0, Math.min(255, ((num >> 8) & 0xff) + Math.round(255 * percent / 100)));
+      var b = Math.max(0, Math.min(255, (num & 0xff) + Math.round(255 * percent / 100)));
       return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6,'0');
-    } catch { return hex; }
+    } catch(e) { return '#' + hex; }
   }
 
-  // Add one empty deadline by default
   window.addDeadline();
 </script>
 </body>
