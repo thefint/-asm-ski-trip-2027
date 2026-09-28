@@ -81,11 +81,22 @@
 <div id="login-screen">
   <div style="font-size:2.5rem;margin-bottom:12px;">&#9975;</div>
   <h2>Ski Trip Admin</h2>
-  <p>Enter your school ID and admin password to set up or edit your trip website.</p>
-  <div id="login-err">Incorrect. Try again.</div>
+  <p>Enter your school ID and password to manage your trip website.</p>
+  <div id="login-err" style="color:#c0392b;font-size:0.85rem;margin-bottom:10px;display:none;">Incorrect. Try again.</div>
   <input type="text" id="school-id-input" placeholder="School ID (e.g. stclares)" autocomplete="off">
-  <input type="password" id="pw-input" placeholder="Admin password" autocomplete="off">
+  <input type="password" id="pw-input" placeholder="Password" autocomplete="off">
   <button class="btn-primary" style="width:100%;" onclick="doLogin()">Sign In</button>
+</div>
+
+<!-- SET PASSWORD (first time or setup code used) -->
+<div id="set-pw-screen" class="hidden">
+  <div style="font-size:2.5rem;margin-bottom:12px;">&#9975;</div>
+  <h2>Set Your Password</h2>
+  <p style="color:#666;font-size:0.9rem;margin-bottom:20px;">First time signing in — choose a password for your school's admin panel.</p>
+  <div id="set-pw-err" style="color:#c0392b;font-size:0.85rem;margin-bottom:10px;display:none;">Passwords do not match.</div>
+  <input type="password" id="new-pw-1" placeholder="New password" autocomplete="new-password">
+  <input type="password" id="new-pw-2" placeholder="Confirm password" autocomplete="new-password">
+  <button class="btn-primary" style="width:100%;" onclick="setNewPassword()">Set Password &amp; Continue</button>
 </div>
 
 <div id="form-screen" class="hidden">
@@ -313,7 +324,7 @@ const firebaseConfig = {
   appId: "1:1083239970180:web:d8cdeac69c05efce9819d1"
 };
 
-const ADMIN_PASSWORD = "skitrip2027";
+const SETUP_PREFIX = 'SETUP-';
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
 let currentSchoolId = '';
@@ -370,20 +381,61 @@ window.doLogin = async function() {
   var schoolId = document.getElementById('school-id-input').value.trim().toLowerCase().replace(/\s+/g,'-');
   var pw = document.getElementById('pw-input').value;
   var err = document.getElementById('login-err');
-  if (pw !== ADMIN_PASSWORD) { err.style.display = 'block'; err.textContent = 'Incorrect password.'; return; }
   if (!schoolId) { err.style.display = 'block'; err.textContent = 'Please enter a school ID.'; return; }
+  if (!pw) { err.style.display = 'block'; err.textContent = 'Please enter a password.'; return; }
   err.style.display = 'none';
+
+  // Check Firestore for this school's password
+  var snap = await getDoc(doc(db, 'schools', schoolId));
+  var storedPw = snap.exists() ? snap.data().adminPassword : null;
+  var setupCode = snap.exists() ? snap.data().setupCode : null;
+
+  // Case 1: school has a real password set
+  if (storedPw) {
+    if (pw !== storedPw) { err.style.display = 'block'; err.textContent = 'Incorrect password.'; return; }
+    enterAdmin(schoolId, snap.data());
+    return;
+  }
+
+  // Case 2: school has a setup code (first time)
+  if (setupCode && pw === setupCode) {
+    currentSchoolId = schoolId;
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('set-pw-screen').classList.remove('hidden');
+    return;
+  }
+
+  // Case 3: no record at all
+  err.style.display = 'block';
+  err.textContent = 'School not found or incorrect password. Contact your administrator.';
+};
+
+window.setNewPassword = async function() {
+  var pw1 = document.getElementById('new-pw-1').value;
+  var pw2 = document.getElementById('new-pw-2').value;
+  var err = document.getElementById('set-pw-err');
+  if (!pw1 || pw1.length < 6) { err.style.display = 'block'; err.textContent = 'Password must be at least 6 characters.'; return; }
+  if (pw1 !== pw2) { err.style.display = 'block'; err.textContent = 'Passwords do not match.'; return; }
+  err.style.display = 'none';
+  // Save new password, clear setup code
+  await setDoc(doc(db, 'schools', currentSchoolId), { adminPassword: pw1, setupCode: null }, { merge: true });
+  var snap = await getDoc(doc(db, 'schools', currentSchoolId));
+  document.getElementById('set-pw-screen').classList.add('hidden');
+  enterAdmin(currentSchoolId, snap.exists() ? snap.data() : {});
+};
+
+function enterAdmin(schoolId, data) {
   currentSchoolId = schoolId;
   document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('set-pw-screen').classList.add('hidden');
   document.getElementById('form-screen').classList.remove('hidden');
   document.getElementById('header-school').textContent = 'School ID: ' + schoolId;
   updateUrlPreview();
   initPackingDefaults();
   initApresDefaults();
   initDayDefaults();
-  var snap = await getDoc(doc(db, 'schools', schoolId));
-  if (snap.exists()) loadForm(snap.data());
-};
+  if (data && Object.keys(data).length > 2) loadForm(data);
+}
 
 function updateUrlPreview() {
   var base = window.location.origin + window.location.pathname.replace('admin.html','index.html');
