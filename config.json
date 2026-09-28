@@ -1,0 +1,155 @@
+{
+  "school": {
+    "name": "Ardscoil Mhuire",
+    "tripName": "ASM TY Ski Trip 2027",
+    "badge": "Ardscoil Mhuire · Transition Year"
+  },
+  "theme": {
+    "navy": "#0D2B55",
+    "navyDark": "#081C38",
+    "navyMid": "#153A6E",
+    "sky": "#5BA4CF",
+    "skyLight": "#A8D4EE",
+    "skyPale": "#EAF4FB"
+  },
+  "trip": {
+    "destination": "Biberwier, Austria",
+    "destinationSub": "Zugspitz Arena ski region",
+    "departureDate": "2027-01-30T12:00:00",
+    "departureDateDisplay": "Saturday, 30 Jan 2027",
+    "returnDateDisplay": "Friday, 5 Feb 2027",
+    "duration": "7 days · 6 nights"
+  },
+  "hotel": {
+    "name": "Alpina Regina",
+    "address": "Fernpaßstraße 54, 6633 Biberwier, Austria",
+    "phone": "0043 5673 2469",
+    "website": "https://hotel-alpina-regina.hotelsintyrol.com/en/",
+    "mapsLink": "https://maps.google.com/?q=Alpina+Regina+Fernpassstrasse+54+6633+Biberwier+Austria",
+    "photos": [
+      { "src": "biberwier-hotel-alpina-regina-picture-26.jpg", "alt": "Hotel exterior" },
+      { "src": "biberwier-hotel-alpina-regina-picture-17.jpg", "alt": "Winter view" },
+      { "src": "biberwier-hotel-alpina-regina-picture-19.jpg", "alt": "Hotel terrace" },
+      { "src": "biberwier-hotel-alpina-regina-picture-20.jpg", "alt": "Bedroom" },
+      { "src": "biberwier-hotel-alpina-regina-picture-21.jpg", "alt": "Common room" }
+    ]
+  },
+  "organiser": {
+    "name": "Topflight for Schools",
+    "portalUrl": "https://portal.topflightforschools.ie/Login?returnUrl=%2F",
+    "portalVideoUrl": "https://topflightforschools.ie/parents-portal-3/",
+    "email": "schools@topflight.ie"
+  },
+  "contact": {
+    "schoolEmail": "fcross@asmlimerick.ie",
+    "medicalPhone": "+353 1 533 7357",
+    "claimsPhone": "+353 1 533 7352",
+    "claimsEmail": "claims@white-horse.ie"
+  },
+  "deadlines": [
+    {
+      "date": "End of April 2026",
+      "title": "€300 Non-Refundable Deposit",
+      "description": "Deposit due to secure your place on the trip. <strong>Deposits are non-refundable.</strong>",
+      "status": "done"
+    },
+    {
+      "date": "~Saturday, 21st November 2026 (10 weeks before departure)",
+      "title": "Full Balance Due — via Topflight Parent Portal",
+      "description": "Final payment must be paid via the Topflight Parent Portal. <br><br><strong>Cancellation policy:</strong><br>More than 10 weeks before departure — deposit forfeited only<br>10–8 weeks before — 75% of cost forfeited<br>Within 8 weeks — 100% forfeited",
+      "status": "upcoming"
+    },
+    {
+      "date": "Sunday, 21st December 2026 (6 weeks before departure)",
+      "title": "All Student Details Due — via Parent Portal",
+      "description": "Passport details, height, weight, shoe size, dietary needs, and medical information must all be entered through the Parent Portal. Do this as early as possible.",
+      "status": "upcoming"
+    },
+    {
+      "date": "~Friday, 2nd January 2027 (4 weeks before departure)",
+      "title": "Name Change Deadline",
+      "description": "Airline fees apply for any name changes made after this date.",
+      "status": "upcoming"
+    }
+  ],
+  "packingList": {
+    "outerLayers": [
+      "Ski jacket (waterproof)",
+      "Ski pants / salopettes",
+      "Ski gloves",
+      "Ski goggles or sunglasses",
+      "Hat",
+      "Snood / neck warmer"
+    ],
+    "midBaseLayers": [
+      "3–4 thermal pants & tops (base layer)",
+      "2–3 fleeces or ¼-zip tops (mid layer)",
+      "Everyday tops / t-shirts",
+      "Ski socks — 5 pairs minimum"
+    ],
+    "footwear": [
+      "Runners / trainers (for evenings)",
+      "Sliders or Crocs (hotel / après ski)",
+      "Ski boots are provided on the mountain"
+    ],
+    "personalCare": [
+      "Sun cream / high SPF moisturiser",
+      "Lip balm (UV-protecting)",
+      "Toiletries as normal",
+      "Swimwear & swim hat (pool)"
+    ],
+    "tech": [
+      "Phone charger & EU adapter",
+      "Power pack / portable charger",
+      "Headphones (NO Bluetooth speakers)",
+      "Travel pillow",
+      "Books / Kindle",
+      "Snacks for the journey"
+    ],
+    "documents": [
+      "Passport (teachers will collect on the day)",
+      "EHIC card",
+      "Any medication — clearly labelled, inform teachers of dosage & storage",
+      "Cash or card for lunches (€12–€15/day, 3 days on mountain)",
+      "Extra spending money"
+    ]
+  },
+  "shops": {
+    "new": [
+      { "name": "Lidl", "url": "https://www.lidl.ie", "icon": "🛒" },
+      { "name": "Aldi", "url": "https://www.aldi.ie", "icon": "🛒" },
+      { "name": "Decathlon", "url": "https://www.decathlon.ie", "icon": "🏔️" },
+      { "name": "Sports Direct", "url": "https://ie.sportsdirect.com", "icon": "⚽" }
+    ],
+    "secondhand": [
+      { "name": "Vinted", "url": "https://www.vinted.ie", "icon": "👗" },
+      { "name": "Adverts.ie", "url": "https://www.adverts.ie", "icon": "📋" },
+      { "name": "Depop", "url": "https://www.depop.com", "icon": "🛍️" }
+    ]
+  },
+  "skiMaps": [
+    { "src": "almbahn.jpg", "title": "Ehrwalder Almbahn — Zugspitz Tirol" },
+    { "src": "biberwier.jpg", "title": "Lermoos–Biberwier — Grubigstein & Marienberg" }
+  ],
+  "typicalDay": [
+    { "time": "7:00 am", "icon": "⏰", "text": "Wake-up call" },
+    { "time": "8:00 am", "icon": "🍳", "text": "Breakfast", "badge": "included" },
+    { "time": "9:30 am", "icon": "⛷️", "text": "Morning ski lesson", "badge": "included" },
+    { "time": "12:00 pm", "icon": "🍕", "text": "Lunch on the mountain — 2 days are paid in advance via the Parent Portal. For the remaining 3 days bring cash or card (€12–€15 per day).", "badge": "cash" },
+    { "time": "1:00 pm", "icon": "🏂", "text": "Afternoon ski lesson", "badge": "included" },
+    { "time": "3:30 pm", "icon": "🏨", "text": "Return to hotel · rest & freshen up" },
+    { "time": "Dinner", "icon": "🍽️", "text": "Dinner at the hotel", "badge": "included" },
+    { "time": "Evening", "icon": "🎉", "text": "Après ski activities — movie night, bingo, swimming, tubing, sledging & more" },
+    { "time": "11:00 pm", "icon": "📵", "text": "Phones collected · lights out" }
+  ],
+  "videos": [
+    { "src": "Mieders 2026.mp4", "title": "Mieders 2026" },
+    { "src": "Folgaria 2025.mp4", "title": "Folgaria 2025" },
+    { "src": "Folgaria 2024.mp4", "title": "Folgaria 2024" },
+    { "src": "Ehrwald 2022.mp4", "title": "Ehrwald 2022" },
+    { "src": "Andolo 2023.mp4", "title": "Andolo 2023" }
+  ],
+  "ehic": {
+    "applyUrl": "https://www.ehic.ie"
+  }
+}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ASM TY Ski Trip 2027 — Biberwier, Austria</title>
+  <title>Ski Trip Info</title>
   <style>
     :root {
       --navy: #0D2B55;
@@ -18,1185 +18,497 @@
       --muted: #4a6481;
       --border: #C8DFF0;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--off-white); color: var(--text); line-height: 1.6; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--off-white);
-      color: var(--text);
-      line-height: 1.6;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      background: linear-gradient(160deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-mid) 100%);
-      color: var(--white);
-      padding: 0;
-      position: relative;
-      overflow: hidden;
-      min-height: 420px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 120px;
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='%23EAF4FB' d='M0,120 L0,80 L120,30 L240,70 L360,20 L480,60 L600,10 L720,55 L840,15 L960,50 L1080,5 L1200,45 L1320,0 L1440,40 L1440,120 Z'/%3E%3C/svg%3E") no-repeat bottom center / cover;
-      pointer-events: none;
-    }
-
-    .snowflake {
-      position: absolute;
-      color: rgba(255,255,255,0.18);
-      font-size: 1.1rem;
-      pointer-events: none;
-      user-select: none;
-      animation: sway 6s ease-in-out infinite alternate;
-    }
-    @keyframes sway {
-      from { transform: translateY(0) rotate(0deg); }
-      to   { transform: translateY(8px) rotate(20deg); }
-    }
-
-    .hero-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 56px 24px 100px;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero-badge {
-      display: inline-block;
-      background: rgba(91,164,207,0.25);
-      border: 1px solid rgba(91,164,207,0.5);
-      color: var(--sky-light);
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 5px 14px;
-      border-radius: 20px;
-      margin-bottom: 20px;
-    }
-
-    .hero h1 {
-      font-size: clamp(2rem, 6vw, 3.4rem);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      margin-bottom: 14px;
-    }
-
+    /* HERO */
+    .hero { background: linear-gradient(160deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-mid) 100%); color: var(--white); position: relative; overflow: hidden; min-height: 420px; display: flex; flex-direction: column; }
+    .hero::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='%23F5FAFD' d='M0,120 L0,80 L120,30 L240,70 L360,20 L480,60 L600,10 L720,55 L840,15 L960,50 L1080,5 L1200,45 L1320,0 L1440,40 L1440,120 Z'/%3E%3C/svg%3E") no-repeat bottom center / cover; pointer-events: none; }
+    .snowflake { position: absolute; color: rgba(255,255,255,0.18); pointer-events: none; user-select: none; animation: sway 6s ease-in-out infinite alternate; }
+    @keyframes sway { from { transform: translateY(0) rotate(0deg); } to { transform: translateY(8px) rotate(20deg); } }
+    .hero-inner { max-width: 900px; margin: 0 auto; padding: 56px 24px 100px; text-align: center; position: relative; z-index: 1; }
+    .hero-badge { display: inline-block; background: rgba(91,164,207,0.25); border: 1px solid rgba(91,164,207,0.5); color: var(--sky-light); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
+    .hero h1 { font-size: clamp(2rem, 6vw, 3.4rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 14px; }
     .hero h1 span { color: var(--sky-light); }
+    .hero-sub { font-size: 1.1rem; color: rgba(255,255,255,0.75); margin-bottom: 36px; }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 36px; }
+    .chip { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: var(--white); padding: 8px 18px; border-radius: 24px; font-size: 0.9rem; display: flex; align-items: center; gap: 7px; }
 
-    .hero-sub {
-      font-size: 1.1rem;
-      color: rgba(255,255,255,0.75);
-      margin-bottom: 36px;
-    }
+    /* NAV */
+    .nav-bar { position: sticky; top: 0; z-index: 100; background: var(--navy); box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+    .nav-inner { max-width: 960px; margin: 0 auto; padding: 0 16px; display: flex; flex-wrap: wrap; }
+    .nav-btn { background: none; border: none; color: rgba(255,255,255,0.65); padding: 12px 16px; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; border-bottom: 3px solid transparent; transition: color 0.2s, border-color 0.2s; font-family: inherit; }
+    .nav-btn:hover, .nav-btn.active { color: var(--white); border-bottom-color: var(--sky); }
+    @media (max-width: 600px) { .nav-btn { padding: 10px 12px; font-size: 0.78rem; } }
 
-    .hero-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-      margin-bottom: 36px;
-    }
-
-    .chip {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: var(--white);
-      padding: 8px 18px;
-      border-radius: 24px;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .chip-icon { font-size: 1.1rem; }
-
-    /* ── NAV ── */
-    .nav-bar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: var(--navy);
-      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
-    }
-
-    .nav-inner {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 16px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0;
-    }
-
-    .nav-btn {
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.65);
-      padding: 12px 16px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      border-bottom: 3px solid transparent;
-      transition: color 0.2s, border-color 0.2s;
-      font-family: inherit;
-    }
-    .nav-btn:hover, .nav-btn.active {
-      color: var(--white);
-      border-bottom-color: var(--sky);
-    }
-
-    @media (max-width: 600px) {
-      .nav-btn {
-        padding: 10px 12px;
-        font-size: 0.78rem;
-      }
-    }
-
-    /* ── LAYOUT ── */
+    /* LAYOUT */
     .page { max-width: 960px; margin: 0 auto; padding: 0 20px 60px; }
-
     section { padding-top: 56px; }
+    .section-title { font-size: 1.5rem; font-weight: 800; color: var(--navy); margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .section-sub { color: var(--muted); font-size: 0.93rem; margin-bottom: 28px; }
+    .divider { border: none; border-top: 2px solid var(--border); margin-bottom: 32px; }
 
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--navy);
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    /* COUNTDOWN */
+    .countdown-bar { background: var(--navy); border-radius: 14px; padding: 24px 28px; color: var(--white); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+    .countdown-label { font-size: 0.85rem; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
+    .countdown-title { font-size: 1.1rem; font-weight: 700; }
+    .countdown-digits { display: flex; gap: 12px; }
+    .cd-unit { text-align: center; }
+    .cd-num { font-size: 2rem; font-weight: 800; line-height: 1; color: var(--sky-light); }
+    .cd-lbl { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.55); }
 
-    .section-sub {
-      color: var(--muted);
-      font-size: 0.93rem;
-      margin-bottom: 28px;
-    }
-
-    .divider {
-      border: none;
-      border-top: 2px solid var(--border);
-      margin-bottom: 32px;
-    }
-
-    /* ── TRIP DETAILS ── */
-    .detail-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .detail-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .detail-card .icon {
-      font-size: 1.6rem;
-      margin-bottom: 4px;
-    }
-
-    .detail-card .label {
-      font-size: 0.73rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .detail-card .value {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--navy);
-    }
-
-    .detail-card .value-sub {
-      font-size: 0.83rem;
-      color: var(--muted);
-    }
-
-    .detail-card a {
-      color: var(--sky);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.88rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: 4px;
-    }
+    /* DETAIL CARDS */
+    .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .detail-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 6px; }
+    .detail-card .icon { font-size: 1.6rem; margin-bottom: 4px; }
+    .detail-card .label { font-size: 0.73rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .detail-card .value { font-size: 1rem; font-weight: 700; color: var(--navy); }
+    .detail-card .value-sub { font-size: 0.83rem; color: var(--muted); }
+    .detail-card a { color: var(--sky); text-decoration: none; font-weight: 600; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; }
     .detail-card a:hover { text-decoration: underline; }
 
-    /* ── COUNTDOWN ── */
-    .countdown-bar {
-      background: var(--navy);
-      border-radius: 14px;
-      padding: 24px 28px;
-      color: var(--white);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
+    /* PHOTO GALLERY */
+    .photo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .photo-grid img { width: 100%; border-radius: 12px; object-fit: cover; height: 200px; }
 
-    .countdown-label {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.65);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-weight: 700;
-    }
-
-    .countdown-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-
-    .countdown-digits {
-      display: flex;
-      gap: 12px;
-    }
-
-    .cd-unit {
-      text-align: center;
-    }
-
-    .cd-num {
-      font-size: 2rem;
-      font-weight: 800;
-      line-height: 1;
-      color: var(--sky-light);
-    }
-
-    .cd-lbl {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: rgba(255,255,255,0.55);
-    }
-
-    /* ── DEADLINES ── */
-    .timeline {
-      position: relative;
-      padding-left: 32px;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 10px;
-      top: 8px;
-      bottom: 8px;
-      width: 2px;
-      background: var(--border);
-    }
-
-    .tl-item {
-      position: relative;
-      margin-bottom: 24px;
-    }
-
-    .tl-item::before {
-      content: '';
-      position: absolute;
-      left: -26px;
-      top: 6px;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--sky);
-      border: 2px solid var(--white);
-      box-shadow: 0 0 0 2px var(--sky);
-    }
-
-    .tl-item.urgent::before { background: #E53E3E; box-shadow: 0 0 0 2px #E53E3E; }
+    /* TIMELINE */
+    .timeline { position: relative; padding-left: 32px; }
+    .timeline::before { content: ''; position: absolute; left: 10px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+    .tl-item { position: relative; margin-bottom: 24px; }
+    .tl-item::before { content: ''; position: absolute; left: -26px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--sky); border: 2px solid var(--white); box-shadow: 0 0 0 2px var(--sky); }
     .tl-item.done::before { background: #38A169; box-shadow: 0 0 0 2px #38A169; }
-
-    .tl-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px 20px;
-    }
-
-    .tl-date {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--sky);
-      margin-bottom: 4px;
-    }
-    .tl-item.urgent .tl-date { color: #E53E3E; }
+    .tl-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; }
+    .tl-date { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--sky); margin-bottom: 4px; }
     .tl-item.done .tl-date { color: #38A169; }
+    .tl-title { font-weight: 700; font-size: 0.98rem; color: var(--navy); margin-bottom: 4px; }
+    .tl-desc { font-size: 0.86rem; color: var(--muted); line-height: 1.5; }
+    .tl-desc a { color: var(--sky); text-decoration: none; font-weight: 600; }
 
-    .tl-title {
-      font-weight: 700;
-      font-size: 0.98rem;
-      color: var(--navy);
-      margin-bottom: 4px;
-    }
+    /* PACKING */
+    .pack-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .pack-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+    .pack-card h3 { font-size: 0.95rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--navy); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .pack-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .pack-list li { font-size: 0.9rem; color: var(--text); display: flex; align-items: flex-start; gap: 8px; }
+    .pack-list li::before { content: '✓'; color: var(--sky); font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+    .shop-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+    .shop-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--white); border: 1.5px solid var(--border); border-radius: 24px; padding: 8px 18px; font-size: 0.87rem; font-weight: 600; color: var(--navy); text-decoration: none; transition: border-color 0.2s, background 0.2s; }
+    .shop-btn:hover { border-color: var(--sky); background: var(--sky-pale); }
+    .shop-btn.secondhand { border-style: dashed; }
+    .shop-label { font-size: 0.73rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; margin-top: 20px; }
 
-    .tl-desc {
-      font-size: 0.86rem;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .tl-desc a {
-      color: var(--sky);
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .tl-desc a:hover { text-decoration: underline; }
-
-    /* ── PACKING ── */
-    .pack-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .pack-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 22px;
-    }
-
-    .pack-card h3 {
-      font-size: 0.95rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--navy);
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .pack-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .pack-list li {
-      font-size: 0.9rem;
-      color: var(--text);
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-    }
-
-    .pack-list li::before {
-      content: '✓';
-      color: var(--sky);
-      font-weight: 800;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .shop-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 24px;
-    }
-
-    .shop-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--white);
-      border: 1.5px solid var(--border);
-      border-radius: 24px;
-      padding: 8px 18px;
-      font-size: 0.87rem;
-      font-weight: 600;
-      color: var(--navy);
-      text-decoration: none;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .shop-btn:hover {
-      border-color: var(--sky);
-      background: var(--sky-pale);
-      color: var(--navy);
-    }
-    .shop-btn.secondhand {
-      border-style: dashed;
-    }
-
-    .shop-label {
-      font-size: 0.73rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
-
-    /* ── INFO CARDS ── */
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .info-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px;
-    }
-
-    .info-card h3 {
-      font-size: 1rem;
-      font-weight: 800;
-      color: var(--navy);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .info-card p, .info-card li {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
+    /* INFO CARDS */
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .info-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+    .info-card h3 { font-size: 1rem; font-weight: 800; color: var(--navy); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .info-card p, .info-card li { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
     .info-card ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-
-    .info-card li::before {
-      content: '→ ';
-      color: var(--sky);
-      font-weight: 800;
-    }
-
-    .info-card a {
-      color: var(--sky);
-      text-decoration: none;
-      font-weight: 600;
-    }
+    .info-card li::before { content: '→ '; color: var(--sky); font-weight: 800; }
+    .info-card a { color: var(--sky); text-decoration: none; font-weight: 600; }
     .info-card a:hover { text-decoration: underline; }
+    .highlight-box { background: var(--sky-pale); border: 1.5px solid var(--sky-light); border-radius: 12px; padding: 18px 22px; margin-bottom: 24px; }
+    .highlight-box p { font-size: 0.92rem; color: var(--navy); line-height: 1.6; }
 
-    .highlight-box {
-      background: var(--sky-pale);
-      border: 1.5px solid var(--sky-light);
-      border-radius: 12px;
-      padding: 18px 22px;
-      margin-bottom: 24px;
-    }
-
-    .highlight-box p {
-      font-size: 0.92rem;
-      color: var(--navy);
-      line-height: 1.6;
-    }
-
-    .highlight-box strong { color: var(--navy); }
-
-    /* ── DAY SCHEDULE ── */
-    .schedule {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-    }
-
-    .schedule-row {
-      display: flex;
-      border-bottom: 1px solid var(--border);
-    }
+    /* SCHEDULE */
+    .schedule { background: var(--white); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .schedule-row { display: flex; border-bottom: 1px solid var(--border); }
     .schedule-row:last-child { border-bottom: none; }
-
-    .sched-time {
-      width: 100px;
-      flex-shrink: 0;
-      background: var(--navy);
-      color: var(--sky-light);
-      font-size: 0.82rem;
-      font-weight: 700;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-    }
-
-    .sched-content {
-      padding: 14px 18px;
-      font-size: 0.91rem;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .sched-icon { font-size: 1.1rem; }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 10px;
-      border-radius: 12px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
+    .sched-time { width: 100px; flex-shrink: 0; background: var(--navy); color: var(--sky-light); font-size: 0.82rem; font-weight: 700; padding: 14px 16px; display: flex; align-items: center; }
+    .sched-content { padding: 14px 18px; font-size: 0.91rem; color: var(--text); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
     .badge-green { background: #E6F4EA; color: #276749; }
     .badge-amber { background: #FEF3CD; color: #7A5E0A; }
+    @media (max-width: 600px) { .sched-time { width: 80px; font-size: 0.75rem; } }
 
-    /* ── CONTACT ── */
-    .contact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 16px;
-    }
-
-    .contact-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 22px;
-    }
-
-    .contact-card h3 {
-      font-size: 0.82rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .contact-card .cname {
-      font-size: 1rem;
-      font-weight: 800;
-      color: var(--navy);
-      margin-bottom: 6px;
-    }
-
-    .contact-card .cdetail {
-      font-size: 0.87rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .contact-card a {
-      color: var(--sky);
-      text-decoration: none;
-      font-weight: 600;
-    }
+    /* CONTACT */
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+    .contact-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+    .contact-card h3 { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 10px; }
+    .contact-card .cname { font-size: 1rem; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+    .contact-card .cdetail { font-size: 0.87rem; color: var(--muted); line-height: 1.6; }
+    .contact-card a { color: var(--sky); text-decoration: none; font-weight: 600; }
     .contact-card a:hover { text-decoration: underline; }
 
-    /* ── FOOTER ── */
-    footer {
-      background: var(--navy-dark);
-      color: rgba(255,255,255,0.45);
-      text-align: center;
-      padding: 28px 20px;
-      font-size: 0.82rem;
-    }
-
+    footer { background: var(--navy-dark); color: rgba(255,255,255,0.45); text-align: center; padding: 28px 20px; font-size: 0.82rem; }
     footer strong { color: rgba(255,255,255,0.7); }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 600px) {
-      .hero-inner { padding: 40px 20px 80px; }
-      .sched-time { width: 80px; font-size: 0.75rem; }
-      .countdown-digits { gap: 8px; }
-      .cd-num { font-size: 1.5rem; }
-    }
   </style>
 </head>
 <body>
 
-<!-- ── HERO ── -->
-<div class="hero">
-  <span class="snowflake" style="top:8%; left:4%; font-size:0.9rem; animation-delay:0s;">❄</span>
-  <span class="snowflake" style="top:15%; left:12%; font-size:1.3rem; animation-delay:1s;">❄</span>
-  <span class="snowflake" style="top:5%; left:25%; font-size:0.8rem; animation-delay:2s;">⛷️</span>
-  <span class="snowflake" style="top:20%; left:38%; font-size:0.85rem; animation-delay:0.5s;">❄</span>
-  <span class="snowflake" style="top:8%; left:55%; font-size:1rem; animation-delay:1.5s;">❄</span>
-  <span class="snowflake" style="top:18%; left:68%; font-size:0.75rem; animation-delay:3s;">⛷️</span>
-  <span class="snowflake" style="top:6%; left:78%; font-size:1.2rem; animation-delay:0.8s;">❄</span>
-  <span class="snowflake" style="top:22%; left:88%; font-size:0.9rem; animation-delay:2s;">❄</span>
-  <span class="snowflake" style="top:35%; left:5%; font-size:0.8rem; animation-delay:1.2s;">❄</span>
-  <span class="snowflake" style="top:40%; left:92%; font-size:1rem; animation-delay:0.3s;">❄</span>
-  <span class="snowflake" style="top:50%; left:18%; font-size:0.7rem; animation-delay:2.5s;">❄</span>
-  <span class="snowflake" style="top:55%; left:82%; font-size:0.8rem; animation-delay:1.8s;">❄</span>
-  <div class="hero-inner">
-    <div class="hero-badge">Ardscoil Mhuire · Transition Year</div>
-    <h1>ASM Ski Trip <span>2027</span></h1>
-    <p class="hero-sub">Biberwier, Austria &nbsp;·&nbsp; January – February 2027</p>
-    <div class="hero-chips">
-      <div class="chip"><span class="chip-icon">✈️</span> 30 Jan – 5 Feb 2027</div>
-      <div class="chip"><span class="chip-icon">⛷️</span> Biberwier, Austria</div>
-      <div class="chip"><span class="chip-icon">🏨</span> Alpina Regina Hotel</div>
-      <div class="chip"><span class="chip-icon">🌙</span> 7 Days, 6 Nights</div>
-    </div>
-  </div>
+<div id="app">
+  <div style="text-align:center; padding:80px 20px; color:#4a6481;">Loading...</div>
 </div>
-
-<!-- ── NAV ── -->
-<nav class="nav-bar">
-  <div class="nav-inner">
-    <button class="nav-btn active" onclick="navTo('trip')">Trip Details</button>
-    <button class="nav-btn" onclick="navTo('maps')">Ski Maps</button>
-    <button class="nav-btn" onclick="navTo('deadlines')">Deadlines</button>
-    <button class="nav-btn" onclick="navTo('packing')">What to Pack</button>
-    <button class="nav-btn" onclick="navTo('health')">EHIC & Insurance</button>
-    <button class="nav-btn" onclick="navTo('travel')">Travel Info</button>
-    <button class="nav-btn" onclick="navTo('day')">Typical Day</button>
-    <button class="nav-btn" onclick="navTo('videos')">Past Trip Videos</button>
-    <button class="nav-btn" onclick="navTo('contact')">Contact</button>
-  </div>
-</nav>
-
-<div class="page">
-
-  <!-- ── TRIP DETAILS ── -->
-  <section id="trip">
-    <div class="section-title">⛷️ Trip Details</div>
-    <p class="section-sub">Everything you need to know about the destination.</p>
-
-    <div class="countdown-bar">
-      <div>
-        <div class="countdown-label">Countdown to departure</div>
-        <div class="countdown-title">Saturday, 30th January 2027</div>
-      </div>
-      <div class="countdown-digits">
-        <div class="cd-unit"><div class="cd-num" id="cd-days">--</div><div class="cd-lbl">Days</div></div>
-        <div class="cd-unit"><div class="cd-num" id="cd-hrs">--</div><div class="cd-lbl">Hrs</div></div>
-        <div class="cd-unit"><div class="cd-num" id="cd-min">--</div><div class="cd-lbl">Min</div></div>
-        <div class="cd-unit"><div class="cd-num" id="cd-sec">--</div><div class="cd-lbl">Sec</div></div>
-      </div>
-    </div>
-
-    <div class="detail-grid">
-      <div class="detail-card">
-        <div class="icon">📅</div>
-        <div class="label">Departure</div>
-        <div class="value">Saturday, 30 Jan 2027</div>
-      </div>
-      <div class="detail-card">
-        <div class="icon">🏁</div>
-        <div class="label">Return</div>
-        <div class="value">Friday, 5 Feb 2027</div>
-        <div class="value-sub">7 days · 6 nights</div>
-      </div>
-      <div class="detail-card">
-        <div class="icon">🏔️</div>
-        <div class="label">Resort</div>
-        <div class="value">Biberwier, Austria</div>
-        <div class="value-sub">Zugspitz Arena ski region</div>
-        <a href="#maps">🗺️ View Ski Maps ↓</a>
-      </div>
-      <div class="detail-card">
-        <div class="icon">🏨</div>
-        <div class="label">Hotel</div>
-        <div class="value">Alpina Regina</div>
-        <div class="value-sub">Fernpaßstraße 54, 6633 Biberwier<br>Tel: 0043 5673 2469</div>
-        <a href="https://hotel-alpina-regina.hotelsintyrol.com/en/" target="_blank" rel="noopener">🔗 Hotel Website</a>
-        <a href="https://maps.google.com/?q=Alpina+Regina+Fernpassstrasse+54+6633+Biberwier+Austria" target="_blank" rel="noopener">📍 Google Maps</a>
-      </div>
-      <div class="detail-card">
-        <div class="icon">🎿</div>
-        <div class="label">Organiser</div>
-        <div class="value">Topflight for Schools</div>
-        <div class="value-sub">Ski lessons, accommodation & transport included</div>
-        <a href="https://portal.topflightforschools.ie/Login?returnUrl=%2F" target="_blank" rel="noopener">🔗 Parent Portal</a>
-      </div>
-    </div>
-    <div class="section-title" style="margin-top:36px; font-size:1.1rem;">🏨 Hotel Alpina Regina</div>
-    <p class="section-sub" style="margin-bottom:16px;">Fernpaßstraße 54, 6633 Biberwier, Austria</p>
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:12px;">
-      <img src="biberwier-hotel-alpina-regina-picture-26.jpg" alt="Hotel exterior" style="width:100%; border-radius:12px; object-fit:cover; height:200px;">
-      <img src="biberwier-hotel-alpina-regina-picture-17.jpg" alt="Winter view" style="width:100%; border-radius:12px; object-fit:cover; height:200px;">
-      <img src="biberwier-hotel-alpina-regina-picture-19.jpg" alt="Hotel terrace" style="width:100%; border-radius:12px; object-fit:cover; height:200px;">
-      <img src="biberwier-hotel-alpina-regina-picture-20.jpg" alt="Bedroom" style="width:100%; border-radius:12px; object-fit:cover; height:200px;">
-      <img src="biberwier-hotel-alpina-regina-picture-21.jpg" alt="Common room" style="width:100%; border-radius:12px; object-fit:cover; height:200px;">
-    </div>
-
-  </section>
-
-  <!-- ── SKI MAPS ── -->
-  <section id="maps">
-    <hr class="divider">
-    <div class="section-title">🗺️ Ski Maps</div>
-    <p class="section-sub">Two ski areas accessible from Biberwier — Ehrwalder Alm and Grubigstein/Marienberg.</p>
-
-    <div style="display:flex; flex-direction:column; gap:20px;">
-      <div class="info-card" style="padding:20px;">
-        <h3>⛷️ Ehrwalder Almbahn — Zugspitz Tirol</h3>
-        <img src="almbahn.jpg" alt="Ehrwalder Almbahn ski map" style="width:100%; border-radius:10px; margin-top:8px; display:block;">
-      </div>
-      <div class="info-card" style="padding:20px;">
-        <h3>🏔️ Lermoos–Biberwier — Grubigstein &amp; Marienberg</h3>
-        <img src="biberwier.jpg" alt="Lermoos Biberwier ski map" style="width:100%; border-radius:10px; margin-top:8px; display:block;">
-      </div>
-    </div>
-  </section>
-
-  <!-- ── DEADLINES ── -->
-  <section id="deadlines">
-    <hr class="divider">
-    <div class="section-title">📅 Payment Deadlines</div>
-    <p class="section-sub">Key dates — mark these in your calendar now.</p>
-
-    <div class="timeline">
-
-      <div class="tl-item done">
-        <div class="tl-card">
-          <div class="tl-date">✅ End of April 2026</div>
-          <div class="tl-title">€300 Non-Refundable Deposit</div>
-          <div class="tl-desc">Deposit due to secure your place on the trip. <strong>Deposits are non-refundable.</strong></div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-card">
-          <div class="tl-date">~Saturday, 21st November 2026 &nbsp;(10 weeks before departure)</div>
-          <div class="tl-title">Full Balance Due — via Topflight Parent Portal</div>
-          <div class="tl-desc">
-            Final payment of the full trip cost (~€1,450–€1,480) must be paid via the
-            <a href="https://portal.topflightforschools.ie/Login?returnUrl=%2F" target="_blank" rel="noopener">Topflight Parent Portal</a>.
-            See their <a href="https://portal.topflightforschools.ie/Login?returnUrl=%2F" target="_blank" rel="noopener">Terms &amp; Conditions</a> for cancellation rules.
-            <br><br>
-            <strong>Cancellation policy:</strong><br>
-            More than 10 weeks before departure — deposit forfeited only<br>
-            10–8 weeks before — 75% of cost forfeited<br>
-            Within 8 weeks — 100% forfeited
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-card">
-          <div class="tl-date">Sunday, 21st December 2026 &nbsp;(6 weeks before departure)</div>
-          <div class="tl-title">All Student Details Due — via Parent Portal</div>
-          <div class="tl-desc">
-            Passport details, height, weight, shoe size, dietary needs, and medical information must all be entered through the
-            <a href="https://portal.topflightforschools.ie/Login?returnUrl=%2F" target="_blank" rel="noopener">Parent Portal</a>.
-            Do this as early as possible — don't leave it to the last minute.
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-card">
-          <div class="tl-date">~Friday, 2nd January 2027 &nbsp;(4 weeks before departure)</div>
-          <div class="tl-title">Name Change Deadline</div>
-          <div class="tl-desc">Airline fees apply for any name changes made after this date.</div>
-        </div>
-      </div>
-
-
-    </div>
-  </section>
-
-  <!-- ── PACKING ── -->
-  <section id="packing">
-    <hr class="divider">
-    <div class="section-title">🎒 What to Pack</div>
-    <p class="section-sub">Each student is allowed <strong>one 20kg suitcase</strong> and one small backpack that fits under the seat. Do not overpack.</p>
-
-    <div class="pack-grid">
-      <div class="pack-card">
-        <h3>🧥 Ski Outer Layers</h3>
-        <ul class="pack-list">
-          <li>Ski jacket (waterproof)</li>
-          <li>Ski pants / salopettes</li>
-          <li>Ski gloves</li>
-          <li>Ski goggles or sunglasses</li>
-          <li>Hat</li>
-          <li>Snood / neck warmer</li>
-        </ul>
-      </div>
-
-      <div class="pack-card">
-        <h3>🧣 Mid & Base Layers</h3>
-        <ul class="pack-list">
-          <li>3–4 thermal pants &amp; tops (base layer)</li>
-          <li>2–3 fleeces or ¼-zip tops (mid layer)</li>
-          <li>Everyday tops / t-shirts</li>
-          <li>Ski socks — 5 pairs minimum</li>
-        </ul>
-      </div>
-
-      <div class="pack-card">
-        <h3>👟 Footwear</h3>
-        <ul class="pack-list">
-          <li>Runners / trainers (for evenings)</li>
-          <li>Sliders or Crocs (hotel / après ski)</li>
-          <li>Ski boots are provided on the mountain</li>
-        </ul>
-      </div>
-
-      <div class="pack-card">
-        <h3>🧴 Personal Care</h3>
-        <ul class="pack-list">
-          <li>Sun cream / high SPF moisturiser</li>
-          <li>Lip balm (UV-protecting)</li>
-          <li>Toiletries as normal</li>
-          <li>Swimwear &amp; swim hat (pool)</li>
-        </ul>
-      </div>
-
-      <div class="pack-card">
-        <h3>🔌 Tech &amp; Essentials</h3>
-        <ul class="pack-list">
-          <li>Phone charger &amp; EU adapter</li>
-          <li>Power pack / portable charger</li>
-          <li>Headphones (NO Bluetooth speakers)</li>
-          <li>Travel pillow</li>
-          <li>Books / Kindle</li>
-          <li>Snacks for the journey</li>
-        </ul>
-      </div>
-
-      <div class="pack-card">
-        <h3>💊 Medical &amp; Documents</h3>
-        <ul class="pack-list">
-          <li>Passport (teachers will collect on the day)</li>
-          <li>EHIC card</li>
-          <li>Any medication — clearly labelled, inform teachers of dosage &amp; storage</li>
-          <li>Cash for lunches on the mountain (€12–€15/day)</li>
-          <li>Extra spending money</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="highlight-box" style="margin-top:24px;">
-      <p>⚠️ <strong>One per room:</strong> One hairdryer/straightener and one adapter/extension plug per room — coordinate with your roommates before packing.</p>
-    </div>
-
-    <div class="section-title" style="margin-top:32px; font-size:1.1rem;">🛍️ Where to Buy Ski Gear</div>
-    <p class="section-sub" style="margin-bottom:16px;">New gear from these stores, or save money buying second-hand:</p>
-
-    <div class="shop-label">New</div>
-    <div class="shop-grid" style="margin-bottom:20px;">
-      <a class="shop-btn" href="https://www.lidl.ie" target="_blank" rel="noopener">🛒 Lidl</a>
-      <a class="shop-btn" href="https://www.aldi.ie" target="_blank" rel="noopener">🛒 Aldi</a>
-      <a class="shop-btn" href="https://www.decathlon.ie" target="_blank" rel="noopener">🏔️ Decathlon</a>
-      <a class="shop-btn" href="https://ie.sportsdirect.com" target="_blank" rel="noopener">⚽ Sports Direct</a>
-    </div>
-
-    <div class="shop-label">Second-Hand</div>
-    <div class="shop-grid">
-      <a class="shop-btn secondhand" href="https://www.vinted.ie" target="_blank" rel="noopener">👗 Vinted</a>
-      <a class="shop-btn secondhand" href="https://www.adverts.ie" target="_blank" rel="noopener">📋 Adverts.ie</a>
-      <a class="shop-btn secondhand" href="https://www.depop.com" target="_blank" rel="noopener">🛍️ Depop</a>
-    </div>
-  </section>
-
-  <!-- ── HEALTH & INSURANCE ── -->
-  <section id="health">
-    <hr class="divider">
-    <div class="section-title">🏥 EHIC Card &amp; Insurance</div>
-    <p class="section-sub">All students are fully insured through Topflight. An EHIC card is also strongly recommended.</p>
-
-    <div class="highlight-box">
-      <p>
-        <strong>European Health Insurance Card (EHIC)</strong> — While not essential, we <strong>strongly recommend</strong> every student has one.
-        It makes visiting hospitals and doctors in Austria significantly easier and faster.
-        It is free to get — apply well in advance of the trip.
-      </p>
-    </div>
-
-    <div class="info-grid">
-      <div class="info-card">
-        <h3>🪪 Apply for Your EHIC Card</h3>
-        <p style="margin-bottom:10px;">Groups travelling from Ireland should apply at:</p>
-        <p><a href="https://www.ehic.ie" target="_blank" rel="noopener">www.ehic.ie</a> — it's free and takes a few minutes online.</p>
-        <p style="margin-top:10px; font-size:0.85rem;">Apply as early as possible — cards can take a few weeks to arrive.</p>
-      </div>
-
-      <div class="info-card">
-        <h3>⚕️ Pre-Existing Medical Conditions</h3>
-        <p style="margin-bottom:8px;">If your daughter has any pre-existing medical condition, it is <strong>mandatory</strong> to contact Medical Screening to ensure she is covered for winter sports:</p>
-        <p><strong>Phone:</strong> <a href="tel:+35315337357">+353 1 533 7357</a></p>
-        <p style="margin-top:6px; font-size:0.85rem;">Declare all conditions within 14 days of purchasing the policy. Some conditions require screening before winter sports cover applies.</p>
-      </div>
-
-      <div class="info-card">
-        <h3>📋 Insurance Claims</h3>
-        <p style="margin-bottom:8px;">If you need to make an insurance claim or cancel a place, contact:</p>
-        <ul>
-          <li><a href="tel:+35315337352">+353 1 533 7352</a></li>
-          <li><a href="mailto:claims@white-horse.ie">claims@white-horse.ie</a></li>
-        </ul>
-        <p style="margin-top:8px; font-size:0.85rem;">All cancellations must also be advised to the school directly.</p>
-      </div>
-
-      <div class="info-card">
-        <h3>🔗 Topflight Parent Portal</h3>
-        <p style="margin-bottom:8px;">For payments, FAQs, and a video tutorial on using the portal:</p>
-        <ul>
-          <li><a href="https://portal.topflightforschools.ie/Login?returnUrl=%2F" target="_blank" rel="noopener">Parent Portal FAQs</a></li>
-          <li><a href="https://topflightforschools.ie/parents-portal-3/" target="_blank" rel="noopener">Portal Video Tutorial</a></li>
-          <li><a href="mailto:schools@topflight.ie">schools@topflight.ie</a> (login/payment issues only)</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── TRAVEL INFO ── -->
-  <section id="travel">
-    <hr class="divider">
-    <div class="section-title">✈️ Travel Information</div>
-    <p class="section-sub">Important reminders for the journey.</p>
-
-    <div class="info-grid">
-      <div class="info-card">
-        <h3>🛂 Passports</h3>
-        <ul>
-          <li>Irish passports must be valid for at least 3 months from the date of travel</li>
-          <li>Passports will be collected by teachers on the day — bring yours to Shannon</li>
-          <li>Non-EU passport holders may need a visa — check in advance</li>
-        </ul>
-      </div>
-
-      <div class="info-card">
-        <h3>🧳 Luggage Allowance</h3>
-        <ul>
-          <li>One 20kg suitcase per student</li>
-          <li>One small backpack that fits under the seat</li>
-          <li>Do not overpack — you will be able to buy anything you forget in a local shop on day 2</li>
-        </ul>
-      </div>
-
-
-      <div class="info-card">
-        <h3>📱 Phones &amp; Devices</h3>
-        <ul>
-          <li>Phones may be used during the day</li>
-          <li>Phones are collected at <strong>11:00 pm</strong> every evening and returned at wake-up</li>
-          <li>Students who need to contact home during lights-out will be facilitated by teachers</li>
-          <li>Bluetooth speakers are <strong>not permitted</strong></li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── TYPICAL DAY ── -->
-  <section id="day">
-    <hr class="divider">
-    <div class="section-title">🗓️ A Typical Day</div>
-    <p class="section-sub">The schedule varies slightly each day — this is a general guide. 2 lunches are prepaid, bring cash or card for the other 3 days.</p>
-
-    <div class="schedule">
-      <div class="schedule-row">
-        <div class="sched-time">7:00 am</div>
-        <div class="sched-content"><span class="sched-icon">⏰</span> Wake-up call</div>
-      </div>
-      <div class="schedule-row">
-        <div class="sched-time">8:00 am</div>
-        <div class="sched-content"><span class="sched-icon">🍳</span> Breakfast &nbsp;<span class="badge badge-green">Included</span></div>
-      </div>
-      <div class="schedule-row">
-        <div class="sched-time">9:30 am</div>
-        <div class="sched-content"><span class="sched-icon">⛷️</span> Morning ski lesson &nbsp;<span class="badge badge-green">Included</span></div>
-      </div>
-      <div class="schedule-row">
-        <div class="sched-time">12:00 pm</div>
-        <div class="sched-content"><span class="sched-icon">🍕</span> Lunch on the mountain — 2 days are paid in advance via the Parent Portal. For the remaining 3 days bring cash or card (€12–€15 per day).</div>
-      </div>
-      <div class="schedule-row">
-        <div class="sched-time">1:00 pm</div>
-        <div class="sched-content"><span class="sched-icon">🏂</span> Afternoon ski lesson &nbsp;<span class="badge badge-green">Included</span></div>
-      </div>
-      <div class="schedule-row">
-        <div class="sched-time">3:30 pm</div>
-        <div class="sched-content"><span class="sched-icon">🏨</span> Return to hotel · rest &amp; freshen up</div>
-      </div>
-      <div class="schedule-row">
-        <div class="sched-time">Dinner</div>
-        <div class="sched-content"><span class="sched-icon">🍽️</span> Dinner at the hotel &nbsp;<span class="badge badge-green">Included</span></div>
-      </div>
-      <div class="schedule-row">
-        <div class="sched-time">Evening</div>
-        <div class="sched-content"><span class="sched-icon">🎉</span> Après ski activities — movie night, bingo, swimming, tubing, sledging &amp; more</div>
-      </div>
-      <div class="schedule-row">
-        <div class="sched-time">11:00 pm</div>
-        <div class="sched-content"><span class="sched-icon">📵</span> Phones collected · lights out. Maximum participation expected at all times.</div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- ── VIDEOS ── -->
-  <section id="videos">
-    <hr class="divider">
-    <div class="section-title">🎥 Past Ski Trip Videos</div>
-    <p class="section-sub">A look back at previous ASM ski trips.</p>
-
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
-
-      <div class="info-card" style="padding:16px;">
-        <div style="font-weight:700; color:var(--navy); margin-bottom:10px;">🎿 Mieders 2026</div>
-        <video controls style="width:100%; border-radius:8px;">
-          <source src="Mieders 2026.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="info-card" style="padding:16px;">
-        <div style="font-weight:700; color:var(--navy); margin-bottom:10px;">🎿 Folgaria 2025</div>
-        <video controls style="width:100%; border-radius:8px;">
-          <source src="Folgaria 2025.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="info-card" style="padding:16px;">
-        <div style="font-weight:700; color:var(--navy); margin-bottom:10px;">🎿 Folgaria 2024</div>
-        <video controls style="width:100%; border-radius:8px;">
-          <source src="Folgaria 2024.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="info-card" style="padding:16px;">
-        <div style="font-weight:700; color:var(--navy); margin-bottom:10px;">🎿 Ehrwald 2022</div>
-        <video controls style="width:100%; border-radius:8px;">
-          <source src="Ehrwald 2022.mp4" type="video/mp4">
-        </video>
-      </div>
-
-      <div class="info-card" style="padding:16px;">
-        <div style="font-weight:700; color:var(--navy); margin-bottom:10px;">🎿 Andolo 2023</div>
-        <video controls style="width:100%; border-radius:8px;">
-          <source src="Andolo 2023.mp4" type="video/mp4">
-        </video>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ── CONTACT ── -->
-  <section id="contact">
-    <hr class="divider">
-    <div class="section-title">📞 Contact</div>
-    <p class="section-sub">For all queries not covered here, contact the school directly.</p>
-
-    <div class="contact-grid">
-      <div class="contact-card">
-        <h3>School</h3>
-        <div class="cname">Ardscoil Mhuire</div>
-        <div class="cdetail">For all trip-specific queries, cancellations, and medical information:<br>
-        <a href="mailto:fcross@asmlimerick.ie">fcross@asmlimerick.ie</a></div>
-      </div>
-
-      <div class="contact-card">
-        <h3>Topflight for Schools</h3>
-        <div class="cname">Parent Portal &amp; Payments</div>
-        <div class="cdetail">
-          <a href="mailto:schools@topflight.ie">schools@topflight.ie</a> — for login and payment issues only.<br>
-          <a href="https://portal.topflightforschools.ie/Login?returnUrl=%2F" target="_blank" rel="noopener">Parent Portal FAQs →</a>
-        </div>
-      </div>
-
-      <div class="contact-card">
-        <h3>Medical Screening</h3>
-        <div class="cname">Pre-existing Conditions</div>
-        <div class="cdetail">
-          <a href="tel:+35315337357">+353 1 533 7357</a><br>
-          Quote reference: <strong>A&amp;G Group Travel</strong>
-        </div>
-      </div>
-
-      <div class="contact-card">
-        <h3>Insurance Claims</h3>
-        <div class="cname">Accident &amp; General</div>
-        <div class="cdetail">
-          <a href="tel:+35315337352">+353 1 533 7352</a><br>
-          <a href="mailto:claims@white-horse.ie">claims@white-horse.ie</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-</div>
-
-<!-- ── FOOTER ── -->
-<footer>
-  <strong>ASM TY Ski Trip 2027</strong> &nbsp;·&nbsp; Biberwier, Austria &nbsp;·&nbsp; 30 Jan – 5 Feb 2027<br>
-  <span style="margin-top:6px; display:block;">Organised by Ardscoil Mhuire in partnership with Topflight for Schools</span>
-</footer>
 
 <script>
-  // Countdown timer
-  const departure = new Date('2027-01-30T12:00:00');
+async function loadConfig() {
+  const res = await fetch('config.json');
+  return res.json();
+}
+
+function applyTheme(theme) {
+  const root = document.documentElement;
+  root.style.setProperty('--navy', theme.navy);
+  root.style.setProperty('--navy-dark', theme.navyDark);
+  root.style.setProperty('--navy-mid', theme.navyMid);
+  root.style.setProperty('--sky', theme.sky);
+  root.style.setProperty('--sky-light', theme.skyLight);
+  root.style.setProperty('--sky-pale', theme.skyPale);
+}
+
+function buildPage(c) {
+  applyTheme(c.theme);
+  document.title = c.school.tripName;
+
+  const sections = ['trip','maps','deadlines','packing','health','travel','day','videos','contact'];
+
+  const html = `
+    <!-- HERO -->
+    <div class="hero">
+      <span class="snowflake" style="top:8%;left:4%;font-size:0.9rem;animation-delay:0s">❄</span>
+      <span class="snowflake" style="top:15%;left:12%;font-size:1.3rem;animation-delay:1s">❄</span>
+      <span class="snowflake" style="top:5%;left:25%;font-size:0.8rem;animation-delay:2s">⛷️</span>
+      <span class="snowflake" style="top:20%;left:38%;font-size:0.85rem;animation-delay:0.5s">❄</span>
+      <span class="snowflake" style="top:8%;left:55%;font-size:1rem;animation-delay:1.5s">❄</span>
+      <span class="snowflake" style="top:18%;left:68%;font-size:0.75rem;animation-delay:3s">⛷️</span>
+      <span class="snowflake" style="top:6%;left:78%;font-size:1.2rem;animation-delay:0.8s">❄</span>
+      <span class="snowflake" style="top:22%;left:88%;font-size:0.9rem;animation-delay:2s">❄</span>
+      <span class="snowflake" style="top:35%;left:5%;font-size:0.8rem;animation-delay:1.2s">❄</span>
+      <span class="snowflake" style="top:40%;left:92%;font-size:1rem;animation-delay:0.3s">❄</span>
+      <div class="hero-inner">
+        <div class="hero-badge">${c.school.badge}</div>
+        <h1>${c.school.tripName.replace(/(\d{4})/, '<span>$1</span>')}</h1>
+        <p class="hero-sub">${c.trip.destination} &nbsp;·&nbsp; ${c.trip.departureDateDisplay.split(' ').slice(1).join(' ')} – ${c.trip.returnDateDisplay.split(' ').slice(1).join(' ')}</p>
+        <div class="hero-chips">
+          <div class="chip"><span>✈️</span> ${c.trip.departureDateDisplay.replace('Saturday, ','').replace('Friday, ','')} – ${c.trip.returnDateDisplay.replace('Friday, ','')}</div>
+          <div class="chip"><span>⛷️</span> ${c.trip.destination}</div>
+          <div class="chip"><span>🏨</span> ${c.hotel.name}</div>
+          <div class="chip"><span>🌙</span> ${c.trip.duration}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAV -->
+    <nav class="nav-bar">
+      <div class="nav-inner">
+        <button class="nav-btn active" onclick="navTo('trip')">Trip Details</button>
+        <button class="nav-btn" onclick="navTo('maps')">Ski Maps</button>
+        <button class="nav-btn" onclick="navTo('deadlines')">Deadlines</button>
+        <button class="nav-btn" onclick="navTo('packing')">What to Pack</button>
+        <button class="nav-btn" onclick="navTo('health')">EHIC & Insurance</button>
+        <button class="nav-btn" onclick="navTo('travel')">Travel Info</button>
+        <button class="nav-btn" onclick="navTo('day')">Typical Day</button>
+        <button class="nav-btn" onclick="navTo('videos')">Past Trip Videos</button>
+        <button class="nav-btn" onclick="navTo('contact')">Contact</button>
+      </div>
+    </nav>
+
+    <div class="page">
+
+      <!-- TRIP DETAILS -->
+      <section id="trip">
+        <div class="section-title">⛷️ Trip Details</div>
+        <p class="section-sub">Everything you need to know about the destination.</p>
+        <div class="countdown-bar">
+          <div>
+            <div class="countdown-label">Countdown to departure</div>
+            <div class="countdown-title">${c.trip.departureDateDisplay}</div>
+          </div>
+          <div class="countdown-digits">
+            <div class="cd-unit"><div class="cd-num" id="cd-days">--</div><div class="cd-lbl">Days</div></div>
+            <div class="cd-unit"><div class="cd-num" id="cd-hrs">--</div><div class="cd-lbl">Hrs</div></div>
+            <div class="cd-unit"><div class="cd-num" id="cd-min">--</div><div class="cd-lbl">Min</div></div>
+            <div class="cd-unit"><div class="cd-num" id="cd-sec">--</div><div class="cd-lbl">Sec</div></div>
+          </div>
+        </div>
+        <div class="detail-grid">
+          <div class="detail-card">
+            <div class="icon">📅</div>
+            <div class="label">Departure</div>
+            <div class="value">${c.trip.departureDateDisplay}</div>
+          </div>
+          <div class="detail-card">
+            <div class="icon">🏁</div>
+            <div class="label">Return</div>
+            <div class="value">${c.trip.returnDateDisplay}</div>
+            <div class="value-sub">${c.trip.duration}</div>
+          </div>
+          <div class="detail-card">
+            <div class="icon">🏔️</div>
+            <div class="label">Resort</div>
+            <div class="value">${c.trip.destination}</div>
+            <div class="value-sub">${c.trip.destinationSub}</div>
+            <a href="#maps">🗺️ View Ski Maps ↓</a>
+          </div>
+          <div class="detail-card">
+            <div class="icon">🏨</div>
+            <div class="label">Hotel</div>
+            <div class="value">${c.hotel.name}</div>
+            <div class="value-sub">${c.hotel.address}<br>Tel: ${c.hotel.phone}</div>
+            <a href="${c.hotel.website}" target="_blank" rel="noopener">🔗 Hotel Website</a>
+            <a href="${c.hotel.mapsLink}" target="_blank" rel="noopener">📍 Google Maps</a>
+          </div>
+          <div class="detail-card">
+            <div class="icon">🎿</div>
+            <div class="label">Organiser</div>
+            <div class="value">${c.organiser.name}</div>
+            <div class="value-sub">Ski lessons, accommodation & transport included</div>
+            <a href="${c.organiser.portalUrl}" target="_blank" rel="noopener">🔗 Parent Portal</a>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:36px;font-size:1.1rem;">🏨 ${c.hotel.name}</div>
+        <p class="section-sub" style="margin-bottom:16px;">${c.hotel.address}</p>
+        <div class="photo-grid">
+          ${c.hotel.photos.map(p => `<img src="${p.src}" alt="${p.alt}">`).join('')}
+        </div>
+      </section>
+
+      <!-- SKI MAPS -->
+      <section id="maps">
+        <hr class="divider">
+        <div class="section-title">🗺️ Ski Maps</div>
+        <p class="section-sub">Ski areas accessible from ${c.trip.destination}.</p>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          ${c.skiMaps.map(m => `
+            <div class="info-card" style="padding:20px;">
+              <h3>⛷️ ${m.title}</h3>
+              <img src="${m.src}" alt="${m.title}" style="width:100%;border-radius:10px;margin-top:8px;display:block;">
+            </div>`).join('')}
+        </div>
+      </section>
+
+      <!-- DEADLINES -->
+      <section id="deadlines">
+        <hr class="divider">
+        <div class="section-title">📅 Payment Deadlines</div>
+        <p class="section-sub">Key dates — mark these in your calendar now.</p>
+        <div class="timeline">
+          ${c.deadlines.map(d => `
+            <div class="tl-item ${d.status === 'done' ? 'done' : ''}">
+              <div class="tl-card">
+                <div class="tl-date">${d.status === 'done' ? '✅ ' : ''}${d.date}</div>
+                <div class="tl-title">${d.title}</div>
+                <div class="tl-desc">${d.description}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </section>
+
+      <!-- PACKING -->
+      <section id="packing">
+        <hr class="divider">
+        <div class="section-title">🎒 What to Pack</div>
+        <p class="section-sub">Each student is allowed <strong>one 20kg suitcase</strong> and one small backpack that fits under the seat.</p>
+        <div class="pack-grid">
+          <div class="pack-card"><h3>🧥 Ski Outer Layers</h3><ul class="pack-list">${c.packingList.outerLayers.map(i=>`<li>${i}</li>`).join('')}</ul></div>
+          <div class="pack-card"><h3>🧣 Mid & Base Layers</h3><ul class="pack-list">${c.packingList.midBaseLayers.map(i=>`<li>${i}</li>`).join('')}</ul></div>
+          <div class="pack-card"><h3>👟 Footwear</h3><ul class="pack-list">${c.packingList.footwear.map(i=>`<li>${i}</li>`).join('')}</ul></div>
+          <div class="pack-card"><h3>🧴 Personal Care</h3><ul class="pack-list">${c.packingList.personalCare.map(i=>`<li>${i}</li>`).join('')}</ul></div>
+          <div class="pack-card"><h3>🔌 Tech & Essentials</h3><ul class="pack-list">${c.packingList.tech.map(i=>`<li>${i}</li>`).join('')}</ul></div>
+          <div class="pack-card"><h3>💊 Medical & Documents</h3><ul class="pack-list">${c.packingList.documents.map(i=>`<li>${i}</li>`).join('')}</ul></div>
+        </div>
+        <div class="highlight-box" style="margin-top:24px;">
+          <p>⚠️ <strong>One per room:</strong> One hairdryer/straightener and one adapter/extension plug per room — coordinate with your roommates before packing.</p>
+        </div>
+        <div class="section-title" style="margin-top:32px;font-size:1.1rem;">🛍️ Where to Buy Ski Gear</div>
+        <div class="shop-label">New</div>
+        <div class="shop-grid">${c.shops.new.map(s=>`<a class="shop-btn" href="${s.url}" target="_blank" rel="noopener">${s.icon} ${s.name}</a>`).join('')}</div>
+        <div class="shop-label">Second-Hand</div>
+        <div class="shop-grid">${c.shops.secondhand.map(s=>`<a class="shop-btn secondhand" href="${s.url}" target="_blank" rel="noopener">${s.icon} ${s.name}</a>`).join('')}</div>
+      </section>
+
+      <!-- HEALTH -->
+      <section id="health">
+        <hr class="divider">
+        <div class="section-title">🏥 EHIC Card & Insurance</div>
+        <p class="section-sub">All students are fully insured through ${c.organiser.name}. An EHIC card is also strongly recommended.</p>
+        <div class="highlight-box">
+          <p><strong>European Health Insurance Card (EHIC)</strong> — While not essential, we <strong>strongly recommend</strong> every student has one. It makes visiting hospitals and doctors significantly easier and is free to get.</p>
+        </div>
+        <div class="info-grid">
+          <div class="info-card">
+            <h3>🪪 Apply for Your EHIC Card</h3>
+            <p style="margin-bottom:10px;">Groups travelling from Ireland should apply at:</p>
+            <p><a href="${c.ehic.applyUrl}" target="_blank" rel="noopener">${c.ehic.applyUrl}</a> — it's free and takes a few minutes online.</p>
+            <p style="margin-top:10px;font-size:0.85rem;">Apply as early as possible — cards can take a few weeks to arrive.</p>
+          </div>
+          <div class="info-card">
+            <h3>⚕️ Pre-Existing Medical Conditions</h3>
+            <p style="margin-bottom:8px;">If your daughter has any pre-existing medical condition, it is <strong>mandatory</strong> to contact Medical Screening:</p>
+            <p><strong>Phone:</strong> <a href="tel:${c.contact.medicalPhone}">${c.contact.medicalPhone}</a></p>
+            <p style="margin-top:6px;font-size:0.85rem;">Declare all conditions within 14 days of purchasing the policy.</p>
+          </div>
+          <div class="info-card">
+            <h3>📋 Insurance Claims</h3>
+            <p style="margin-bottom:8px;">To make a claim or cancel a place:</p>
+            <ul>
+              <li><a href="tel:${c.contact.claimsPhone}">${c.contact.claimsPhone}</a></li>
+              <li><a href="mailto:${c.contact.claimsEmail}">${c.contact.claimsEmail}</a></li>
+            </ul>
+            <p style="margin-top:8px;font-size:0.85rem;">All cancellations must also be advised to the school directly.</p>
+          </div>
+          <div class="info-card">
+            <h3>🔗 ${c.organiser.name} Parent Portal</h3>
+            <p style="margin-bottom:8px;">For payments, FAQs, and a video tutorial:</p>
+            <ul>
+              <li><a href="${c.organiser.portalUrl}" target="_blank" rel="noopener">Parent Portal Login</a></li>
+              <li><a href="${c.organiser.portalVideoUrl}" target="_blank" rel="noopener">Portal Video Tutorial</a></li>
+              <li><a href="mailto:${c.organiser.email}">${c.organiser.email}</a> (login/payment issues only)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRAVEL INFO -->
+      <section id="travel">
+        <hr class="divider">
+        <div class="section-title">✈️ Travel Information</div>
+        <p class="section-sub">Important reminders for the journey.</p>
+        <div class="info-grid">
+          <div class="info-card">
+            <h3>🛂 Passports</h3>
+            <ul>
+              <li>Irish passports must be valid for at least 3 months from the date of travel</li>
+              <li>Passports will be collected by teachers on the day</li>
+              <li>Non-EU passport holders may need a visa — check in advance</li>
+            </ul>
+          </div>
+          <div class="info-card">
+            <h3>🧳 Luggage Allowance</h3>
+            <ul>
+              <li>One 20kg suitcase per student</li>
+              <li>One small backpack that fits under the seat</li>
+              <li>Do not overpack — you can buy anything you forget in a local shop</li>
+            </ul>
+          </div>
+          <div class="info-card">
+            <h3>📱 Phones & Devices</h3>
+            <ul>
+              <li>Phones may be used during the day</li>
+              <li>Phones are collected at <strong>11:00 pm</strong> every evening and returned at wake-up</li>
+              <li>Bluetooth speakers are <strong>not permitted</strong></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- TYPICAL DAY -->
+      <section id="day">
+        <hr class="divider">
+        <div class="section-title">🗓️ A Typical Day</div>
+        <p class="section-sub">The schedule varies slightly each day. 2 lunches are prepaid, bring cash or card for the other 3 days.</p>
+        <div class="schedule">
+          ${c.typicalDay.map(row => `
+            <div class="schedule-row">
+              <div class="sched-time">${row.time}</div>
+              <div class="sched-content">
+                <span>${row.icon}</span>
+                ${row.text}
+                ${row.badge === 'included' ? '<span class="badge badge-green">Included</span>' : ''}
+                ${row.badge === 'cash' ? '<span class="badge badge-amber">Cash/Card</span>' : ''}
+              </div>
+            </div>`).join('')}
+        </div>
+      </section>
+
+      <!-- VIDEOS -->
+      <section id="videos">
+        <hr class="divider">
+        <div class="section-title">🎥 Past Ski Trip Videos</div>
+        <p class="section-sub">A look back at previous ski trips.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+          ${c.videos.map(v => `
+            <div class="info-card" style="padding:16px;">
+              <div style="font-weight:700;color:var(--navy);margin-bottom:10px;">🎿 ${v.title}</div>
+              <video controls style="width:100%;border-radius:8px;">
+                <source src="${v.src}" type="video/mp4">
+              </video>
+            </div>`).join('')}
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact">
+        <hr class="divider">
+        <div class="section-title">📞 Contact</div>
+        <p class="section-sub">For all queries not covered here, contact the school directly.</p>
+        <div class="contact-grid">
+          <div class="contact-card">
+            <h3>School</h3>
+            <div class="cname">${c.school.name}</div>
+            <div class="cdetail">For all trip-specific queries, cancellations, and medical information:<br>
+              <a href="mailto:${c.contact.schoolEmail}">${c.contact.schoolEmail}</a>
+            </div>
+          </div>
+          <div class="contact-card">
+            <h3>${c.organiser.name}</h3>
+            <div class="cname">Parent Portal & Payments</div>
+            <div class="cdetail">
+              <a href="mailto:${c.organiser.email}">${c.organiser.email}</a> — login/payment issues only.<br>
+              <a href="${c.organiser.portalUrl}" target="_blank" rel="noopener">Parent Portal →</a>
+            </div>
+          </div>
+          <div class="contact-card">
+            <h3>Medical Screening</h3>
+            <div class="cname">Pre-existing Conditions</div>
+            <div class="cdetail"><a href="tel:${c.contact.medicalPhone}">${c.contact.medicalPhone}</a><br>Quote reference: <strong>A&G Group Travel</strong></div>
+          </div>
+          <div class="contact-card">
+            <h3>Insurance Claims</h3>
+            <div class="cname">Accident & General</div>
+            <div class="cdetail">
+              <a href="tel:${c.contact.claimsPhone}">${c.contact.claimsPhone}</a><br>
+              <a href="mailto:${c.contact.claimsEmail}">${c.contact.claimsEmail}</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <footer>
+      <strong>${c.school.tripName}</strong> &nbsp;·&nbsp; ${c.trip.destination} &nbsp;·&nbsp; ${c.trip.departureDateDisplay} – ${c.trip.returnDateDisplay}<br>
+      <span style="margin-top:6px;display:block;">Organised by ${c.school.name} in partnership with ${c.organiser.name}</span>
+    </footer>
+  `;
+
+  document.getElementById('app').innerHTML = html;
+
+  // Countdown
+  const departure = new Date(c.trip.departureDate);
   function updateCountdown() {
-    const now = new Date();
-    const diff = departure - now;
-    if (diff <= 0) {
-      document.getElementById('cd-days').textContent = '0';
-      document.getElementById('cd-hrs').textContent = '0';
-      document.getElementById('cd-min').textContent = '0';
-      document.getElementById('cd-sec').textContent = '0';
-      return;
-    }
-    const days = Math.floor(diff / 86400000);
-    const hrs  = Math.floor((diff % 86400000) / 3600000);
-    const min  = Math.floor((diff % 3600000) / 60000);
-    const sec  = Math.floor((diff % 60000) / 1000);
-    document.getElementById('cd-days').textContent = days;
-    document.getElementById('cd-hrs').textContent  = String(hrs).padStart(2,'0');
-    document.getElementById('cd-min').textContent  = String(min).padStart(2,'0');
-    document.getElementById('cd-sec').textContent  = String(sec).padStart(2,'0');
+    const diff = departure - new Date();
+    if (diff <= 0) { ['days','hrs','min','sec'].forEach(id => document.getElementById('cd-'+id).textContent = '0'); return; }
+    document.getElementById('cd-days').textContent = Math.floor(diff / 86400000);
+    document.getElementById('cd-hrs').textContent  = String(Math.floor((diff % 86400000) / 3600000)).padStart(2,'0');
+    document.getElementById('cd-min').textContent  = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
+    document.getElementById('cd-sec').textContent  = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
   }
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
-  // Nav scroll
-  function navTo(id) {
-    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  // Active nav on scroll
-  const sections = ['trip','maps','deadlines','packing','health','travel','day','videos','contact'];
-  const navBtns  = document.querySelectorAll('.nav-btn');
-  const observer = new IntersectionObserver((entries) => {
+  // Active nav
+  const sectionIds = ['trip','maps','deadlines','packing','health','travel','day','videos','contact'];
+  const navBtns = document.querySelectorAll('.nav-btn');
+  const observer = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
-        const idx = sections.indexOf(e.target.id);
-        if (idx !== -1) {
-          navBtns.forEach(b => b.classList.remove('active'));
-          navBtns[idx].classList.add('active');
-        }
+        const idx = sectionIds.indexOf(e.target.id);
+        if (idx !== -1) { navBtns.forEach(b => b.classList.remove('active')); navBtns[idx].classList.add('active'); }
       }
     });
   }, { rootMargin: '-50% 0px -50% 0px' });
-  sections.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) observer.observe(el);
-  });
+  sectionIds.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
+}
+
+function navTo(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+loadConfig().then(buildPage).catch(err => {
+  document.getElementById('app').innerHTML = '<div style="text-align:center;padding:80px 20px;color:red;">Failed to load config. Make sure config.json exists.</div>';
+});
 </script>
 </body>
 </html>
