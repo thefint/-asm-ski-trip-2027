@@ -81,7 +81,7 @@
 <div id="login-screen">
   <div style="font-size:2.5rem;margin-bottom:12px;">&#9975;</div>
   <h2>Ski Trip Admin</h2>
-  <p>Enter your school ID and password to manage your trip website.</p>
+  <p>Enter your school ID and your password. First time? Use the setup code you were given.</p>
   <div id="login-err" style="color:#c0392b;font-size:0.85rem;margin-bottom:10px;display:none;">Incorrect. Try again.</div>
   <input type="text" id="school-id-input" placeholder="School ID (e.g. stclares)" autocomplete="off">
   <input type="password" id="pw-input" placeholder="Password" autocomplete="off">
@@ -324,7 +324,7 @@ const firebaseConfig = {
   appId: "1:1083239970180:web:d8cdeac69c05efce9819d1"
 };
 
-const SETUP_PREFIX = 'SETUP-';
+const UNIVERSAL_SETUP_CODE = 'SKITRIP2027';
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
 let currentSchoolId = '';
@@ -385,29 +385,28 @@ window.doLogin = async function() {
   if (!pw) { err.style.display = 'block'; err.textContent = 'Please enter a password.'; return; }
   err.style.display = 'none';
 
-  // Check Firestore for this school's password
+  // Check Firestore for this school
   var snap = await getDoc(doc(db, 'schools', schoolId));
   var storedPw = snap.exists() ? snap.data().adminPassword : null;
-  var setupCode = snap.exists() ? snap.data().setupCode : null;
 
-  // Case 1: school has a real password set
+  // Case 1: school exists and has a password — check it
   if (storedPw) {
     if (pw !== storedPw) { err.style.display = 'block'; err.textContent = 'Incorrect password.'; return; }
     enterAdmin(schoolId, snap.data());
     return;
   }
 
-  // Case 2: school has a setup code (first time)
-  if (setupCode && pw === setupCode) {
+  // Case 2: new school using the universal setup code — let them set their password
+  if (pw === UNIVERSAL_SETUP_CODE) {
     currentSchoolId = schoolId;
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('set-pw-screen').classList.remove('hidden');
     return;
   }
 
-  // Case 3: no record at all
+  // Case 3: wrong password / unknown school
   err.style.display = 'block';
-  err.textContent = 'School not found or incorrect password. Contact your administrator.';
+  err.textContent = snap.exists() ? 'Incorrect password.' : 'School not found. Use the setup code to register for the first time.';
 };
 
 window.setNewPassword = async function() {
