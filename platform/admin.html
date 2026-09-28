@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ski Trip — School Setup</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f4f8; min-height: 100vh; }
+
+    .header { background: #0D2B55; color: white; padding: 20px 24px; display: flex; align-items: center; gap: 14px; }
+    .header h1 { font-size: 1.2rem; font-weight: 800; }
+    .header p { font-size: 0.82rem; color: rgba(255,255,255,0.6); }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 32px 20px; }
+
+    /* LOGIN */
+    #login-screen { max-width: 400px; margin: 80px auto; background: white; border-radius: 16px; padding: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); text-align: center; }
+    #login-screen h2 { font-size: 1.4rem; color: #0D2B55; margin-bottom: 8px; }
+    #login-screen p { color: #666; font-size: 0.9rem; margin-bottom: 24px; }
+    #login-screen input { width: 100%; padding: 12px 16px; border: 2px solid #e0e8f0; border-radius: 10px; font-size: 1rem; margin-bottom: 14px; outline: none; }
+    #login-screen input:focus { border-color: #5BA4CF; }
+    #login-err { color: #c0392b; font-size: 0.85rem; margin-bottom: 10px; display: none; }
+
+    /* FORM */
+    .card { background: white; border-radius: 14px; padding: 28px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .card h2 { font-size: 1rem; font-weight: 800; color: #0D2B55; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #EAF4FB; display: flex; align-items: center; gap: 8px; }
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-size: 0.8rem; font-weight: 700; color: #4a6481; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .field input, .field select, .field textarea { width: 100%; padding: 10px 14px; border: 2px solid #e0e8f0; border-radius: 10px; font-size: 0.95rem; font-family: inherit; outline: none; transition: border-color 0.2s; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: #5BA4CF; }
+    .field textarea { resize: vertical; min-height: 70px; }
+    .field .hint { font-size: 0.75rem; color: #888; margin-top: 4px; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 600px) { .row2 { grid-template-columns: 1fr; } }
+
+    /* Colour pickers */
+    .colour-row { display: flex; align-items: center; gap: 12px; }
+    .colour-row input[type="color"] { width: 48px; height: 40px; border: 2px solid #e0e8f0; border-radius: 8px; cursor: pointer; padding: 2px; background: none; }
+    .colour-row input[type="text"] { flex: 1; }
+
+    /* Deadline repeater */
+    .deadline-item { background: #f7fafd; border: 1.5px solid #d0e4f4; border-radius: 10px; padding: 16px; margin-bottom: 12px; position: relative; }
+    .deadline-item .remove-btn { position: absolute; top: 10px; right: 12px; background: none; border: none; color: #c0392b; font-size: 1.1rem; cursor: pointer; }
+    .add-btn { display: inline-flex; align-items: center; gap: 6px; background: #EAF4FB; border: 1.5px solid #A8D4EE; border-radius: 24px; padding: 8px 18px; font-size: 0.85rem; font-weight: 700; color: #0D2B55; cursor: pointer; transition: background 0.2s; }
+    .add-btn:hover { background: #d0e9f8; }
+
+    /* Submit */
+    .submit-bar { background: white; border-radius: 14px; padding: 24px 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .submit-bar .school-url { font-size: 0.85rem; color: #4a6481; }
+    .submit-bar .school-url a { color: #5BA4CF; font-weight: 700; text-decoration: none; }
+    .btn-primary { background: #0D2B55; color: white; border: none; border-radius: 10px; padding: 14px 32px; font-size: 1rem; font-weight: 700; cursor: pointer; font-family: inherit; transition: background 0.2s; }
+    .btn-primary:hover { background: #153A6E; }
+    .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+    #save-status { font-size: 0.9rem; color: #27ae60; font-weight: 700; display: none; }
+    #save-err { font-size: 0.9rem; color: #c0392b; display: none; }
+
+    .school-id-display { background: #0D2B55; color: #A8D4EE; font-family: monospace; font-size: 0.85rem; padding: 8px 14px; border-radius: 8px; display: inline-block; margin-top: 6px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div style="font-size:2.5rem;margin-bottom:12px;">⛷️</div>
+  <h2>Ski Trip Admin</h2>
+  <p>Enter your school's admin password to set up or edit your trip website.</p>
+  <div id="login-err">Incorrect password. Try again.</div>
+  <input type="text" id="school-id-input" placeholder="Your school ID (e.g. stclares)" autocomplete="off">
+  <input type="password" id="pw-input" placeholder="Admin password" autocomplete="off">
+  <button class="btn-primary" style="width:100%;" onclick="doLogin()">Sign In</button>
+</div>
+
+<!-- FORM (hidden until login) -->
+<div id="form-screen" class="hidden">
+  <div class="header">
+    <div style="font-size:1.8rem">⛷️</div>
+    <div>
+      <h1>Ski Trip Admin Panel</h1>
+      <p id="header-school"></p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="card">
+      <h2>🏫 School & Trip</h2>
+      <div class="row2">
+        <div class="field"><label>School Name</label><input type="text" id="schoolName" placeholder="e.g. St Clare's CBS"></div>
+        <div class="field"><label>School Badge / Subtitle</label><input type="text" id="schoolBadge" placeholder="e.g. St Clare's · Transition Year"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Trip Name</label><input type="text" id="tripName" placeholder="e.g. St Clare's TY Ski Trip 2027"></div>
+        <div class="field"><label>School Contact Email</label><input type="email" id="schoolEmail" placeholder="teacher@school.ie"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🎨 Colours</h2>
+      <p style="font-size:0.85rem;color:#666;margin-bottom:16px;">Choose your school colours. Navy is the main dark colour, Sky is the accent.</p>
+      <div class="row2">
+        <div class="field"><label>Primary (Navy)</label><div class="colour-row"><input type="color" id="col-navy" value="#0D2B55" oninput="syncColour('col-navy','txt-navy')"><input type="text" id="txt-navy" value="#0D2B55" oninput="syncColourText('txt-navy','col-navy')"></div></div>
+        <div class="field"><label>Accent (Sky)</label><div class="colour-row"><input type="color" id="col-sky" value="#5BA4CF" oninput="syncColour('col-sky','txt-sky')"><input type="text" id="txt-sky" value="#5BA4CF" oninput="syncColourText('txt-sky','col-sky')"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>✈️ Dates & Destination</h2>
+      <div class="row2">
+        <div class="field"><label>Destination</label><input type="text" id="destination" placeholder="e.g. Biberwier, Austria"></div>
+        <div class="field"><label>Destination Subtitle</label><input type="text" id="destinationSub" placeholder="e.g. Zugspitz Arena ski region"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Departure Date (for countdown)</label><input type="datetime-local" id="departureDate"></div>
+        <div class="field"><label>Departure Display Text</label><input type="text" id="departureDateDisplay" placeholder="e.g. Saturday, 30 Jan 2027"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Return Display Text</label><input type="text" id="returnDateDisplay" placeholder="e.g. Friday, 5 Feb 2027"></div>
+        <div class="field"><label>Duration</label><input type="text" id="duration" placeholder="e.g. 7 days · 6 nights"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🏨 Hotel</h2>
+      <div class="row2">
+        <div class="field"><label>Hotel Name</label><input type="text" id="hotelName" placeholder="e.g. Hotel Alpina Regina"></div>
+        <div class="field"><label>Hotel Website</label><input type="url" id="hotelWebsite" placeholder="https://..."></div>
+      </div>
+      <div class="field"><label>Hotel Address</label><input type="text" id="hotelAddress" placeholder="e.g. Fernpaßstraße 54, 6633 Biberwier, Austria"></div>
+    </div>
+
+    <div class="card">
+      <h2>📅 Payment Deadlines</h2>
+      <div id="deadlines-container"></div>
+      <button class="add-btn" onclick="addDeadline()">+ Add Deadline</button>
+    </div>
+
+    <div class="card">
+      <h2>🎿 Organiser & Portal</h2>
+      <div class="row2">
+        <div class="field"><label>Organiser Name</label><input type="text" id="organiserName" placeholder="e.g. Topflight for Schools"></div>
+        <div class="field"><label>Organiser Email</label><input type="email" id="organiserEmail" placeholder="schools@organiser.ie"></div>
+      </div>
+      <div class="field"><label>Parent Portal URL</label><input type="url" id="portalUrl" placeholder="https://portal.organiser.ie/login"></div>
+    </div>
+
+    <div class="card">
+      <h2>🏥 Medical & Insurance</h2>
+      <div class="row2">
+        <div class="field"><label>Medical Screening Phone</label><input type="text" id="medicalPhone" placeholder="+353 1 ..."></div>
+        <div class="field"><label>Claims Phone</label><input type="text" id="claimsPhone" placeholder="+353 1 ..."></div>
+      </div>
+      <div class="field"><label>Claims Email</label><input type="email" id="claimsEmail" placeholder="claims@insurer.ie"></div>
+    </div>
+
+    <div class="submit-bar">
+      <div>
+        <div class="school-url">Your site URL will be:</div>
+        <div class="school-id-display" id="url-preview">—</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div id="save-status">✅ Saved!</div>
+        <div id="save-err">❌ Save failed. Try again.</div>
+        <button class="btn-primary" id="save-btn" onclick="saveData()">💾 Save &amp; Publish</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBcZ0Ks2v5mCQbePdoYWHnZElVfsi_Znc8",
+    authDomain: "ski-trip-platform.firebaseapp.com",
+    projectId: "ski-trip-platform",
+    storageBucket: "ski-trip-platform.firebasestorage.app",
+    messagingSenderId: "1083239970180",
+    appId: "1:1083239970180:web:d8cdeac69c05efce9819d1"
+  };
+
+  const ADMIN_PASSWORD = "skitrip2027";
+
+  const fbApp = initializeApp(firebaseConfig);
+  const db = getFirestore(fbApp);
+
+  let currentSchoolId = '';
+
+  window.doLogin = async function() {
+    const schoolId = document.getElementById('school-id-input').value.trim().toLowerCase().replace(/\s+/g,'-');
+    const pw = document.getElementById('pw-input').value;
+    const err = document.getElementById('login-err');
+
+    if (pw !== ADMIN_PASSWORD) {
+      err.style.display = 'block';
+      return;
+    }
+    if (!schoolId) { err.style.display = 'block'; err.textContent = 'Please enter a school ID.'; return; }
+
+    err.style.display = 'none';
+    currentSchoolId = schoolId;
+
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('form-screen').classList.remove('hidden');
+    document.getElementById('header-school').textContent = `School ID: ${schoolId}`;
+
+    updateUrlPreview();
+
+    // Load existing data if available
+    const snap = await getDoc(doc(db, 'schools', schoolId));
+    if (snap.exists()) loadForm(snap.data());
+  };
+
+  window.syncColour = function(colorId, textId) {
+    document.getElementById(textId).value = document.getElementById(colorId).value;
+  };
+  window.syncColourText = function(textId, colorId) {
+    const val = document.getElementById(textId).value;
+    if (/^#[0-9A-Fa-f]{6}$/.test(val)) document.getElementById(colorId).value = val;
+  };
+
+  function updateUrlPreview() {
+    const base = window.location.origin + window.location.pathname.replace('admin.html','index.html');
+    document.getElementById('url-preview').textContent = `${base}?school=${currentSchoolId}`;
+  }
+
+  let deadlineCount = 0;
+  window.addDeadline = function(data) {
+    const id = deadlineCount++;
+    const div = document.createElement('div');
+    div.className = 'deadline-item';
+    div.id = `dl-${id}`;
+    div.innerHTML = `
+      <button class="remove-btn" onclick="this.parentElement.remove()">✕</button>
+      <div class="row2">
+        <div class="field"><label>Date</label><input type="text" class="dl-date" value="${data?.date||''}" placeholder="e.g. End of April 2026"></div>
+        <div class="field"><label>Status</label><select class="dl-status"><option value="upcoming" ${data?.status!=='done'?'selected':''}>Upcoming</option><option value="done" ${data?.status==='done'?'selected':''}>Done</option></select></div>
+      </div>
+      <div class="field"><label>Title</label><input type="text" class="dl-title" value="${data?.title||''}" placeholder="e.g. €300 Deposit Due"></div>
+      <div class="field"><label>Description</label><textarea class="dl-desc" placeholder="Details...">${data?.description||''}</textarea></div>
+    `;
+    document.getElementById('deadlines-container').appendChild(div);
+  };
+
+  function getDeadlines() {
+    return Array.from(document.querySelectorAll('.deadline-item')).map(el => ({
+      date: el.querySelector('.dl-date').value,
+      title: el.querySelector('.dl-title').value,
+      description: el.querySelector('.dl-desc').value,
+      status: el.querySelector('.dl-status').value
+    })).filter(d => d.title);
+  }
+
+  function val(id) { return document.getElementById(id)?.value?.trim() || ''; }
+
+  window.saveData = async function() {
+    const btn = document.getElementById('save-btn');
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    document.getElementById('save-status').style.display = 'none';
+    document.getElementById('save-err').style.display = 'none';
+
+    const navyHex = val('txt-navy') || '#0D2B55';
+    const skyHex  = val('txt-sky')  || '#5BA4CF';
+
+    // Derive shades automatically
+    const data = {
+      schoolName: val('schoolName'),
+      schoolBadge: val('schoolBadge'),
+      tripName: val('tripName'),
+      schoolEmail: val('schoolEmail'),
+      theme: {
+        navy: navyHex,
+        navyDark: shadeColour(navyHex, -25),
+        navyMid:  shadeColour(navyHex, 15),
+        sky: skyHex,
+        skyLight: shadeColour(skyHex, 40),
+        skyPale:  shadeColour(skyHex, 80),
+      },
+      destination: val('destination'),
+      destinationSub: val('destinationSub'),
+      departureDate: val('departureDate'),
+      departureDateDisplay: val('departureDateDisplay'),
+      returnDateDisplay: val('returnDateDisplay'),
+      duration: val('duration'),
+      hotelName: val('hotelName'),
+      hotelWebsite: val('hotelWebsite'),
+      hotelAddress: val('hotelAddress'),
+      organiserName: val('organiserName'),
+      organiserEmail: val('organiserEmail'),
+      portalUrl: val('portalUrl'),
+      medicalPhone: val('medicalPhone'),
+      claimsPhone: val('claimsPhone'),
+      claimsEmail: val('claimsEmail'),
+      ehicUrl: 'https://www.ehic.ie',
+      deadlines: getDeadlines(),
+      // Defaults included so site renders fully
+      packingList: {
+        outerLayers: ['Ski jacket (waterproof)','Ski pants / salopettes','Ski gloves','Ski goggles or sunglasses','Hat','Snood / neck warmer'],
+        midBaseLayers: ['3–4 thermal pants & tops (base layer)','2–3 fleeces or ¼-zip tops (mid layer)','Everyday tops / t-shirts','Ski socks — 5 pairs minimum'],
+        footwear: ['Runners / trainers (for evenings)','Sliders or Crocs (hotel / après ski)','Ski boots are provided on the mountain'],
+        personalCare: ['Sun cream / high SPF moisturiser','Lip balm (UV-protecting)','Toiletries as normal','Swimwear & swim hat (pool)'],
+        tech: ['Phone charger & EU adapter','Power pack / portable charger','Headphones (NO Bluetooth speakers)','Travel pillow','Books / Kindle','Snacks for the journey'],
+        documents: ['Passport (teachers will collect on the day)','EHIC card','Any medication — clearly labelled','Cash or card for lunches (€12–€15/day)','Extra spending money']
+      },
+      shops: {
+        new: [{name:'Lidl',url:'https://www.lidl.ie',icon:'🛒'},{name:'Aldi',url:'https://www.aldi.ie',icon:'🛒'},{name:'Decathlon',url:'https://www.decathlon.ie',icon:'🏔️'},{name:'Sports Direct',url:'https://ie.sportsdirect.com',icon:'⚽'}],
+        secondhand: [{name:'Vinted',url:'https://www.vinted.ie',icon:'👗'},{name:'Adverts.ie',url:'https://www.adverts.ie',icon:'📋'},{name:'Depop',url:'https://www.depop.com',icon:'🛍️'}]
+      },
+      typicalDay: [
+        {time:'7:00 am',icon:'⏰',text:'Wake-up call'},
+        {time:'8:00 am',icon:'🍳',text:'Breakfast',badge:'included'},
+        {time:'9:30 am',icon:'⛷️',text:'Morning ski lesson',badge:'included'},
+        {time:'12:00 pm',icon:'🍕',text:'Lunch on the mountain',badge:'cash'},
+        {time:'1:00 pm',icon:'🏂',text:'Afternoon ski lesson',badge:'included'},
+        {time:'3:30 pm',icon:'🏨',text:'Return to hotel · rest & freshen up'},
+        {time:'Dinner',icon:'🍽️',text:'Dinner at the hotel',badge:'included'},
+        {time:'Evening',icon:'🎉',text:'Après ski — movie night, bingo, swimming, tubing & more'},
+        {time:'11:00 pm',icon:'📵',text:'Phones collected · lights out'}
+      ],
+      updatedAt: new Date().toISOString()
+    };
+
+    try {
+      await setDoc(doc(db, 'schools', currentSchoolId), data);
+      document.getElementById('save-status').style.display = 'block';
+      btn.textContent = '💾 Save & Publish';
+      btn.disabled = false;
+      setTimeout(() => document.getElementById('save-status').style.display = 'none', 3000);
+    } catch (e) {
+      console.error(e);
+      document.getElementById('save-err').style.display = 'block';
+      btn.textContent = '💾 Save & Publish';
+      btn.disabled = false;
+    }
+  };
+
+  function loadForm(d) {
+    const set = (id, v) => { const el = document.getElementById(id); if (el && v !== undefined) el.value = v; };
+    set('schoolName', d.schoolName);
+    set('schoolBadge', d.schoolBadge);
+    set('tripName', d.tripName);
+    set('schoolEmail', d.schoolEmail);
+    set('destination', d.destination);
+    set('destinationSub', d.destinationSub);
+    set('departureDate', d.departureDate);
+    set('departureDateDisplay', d.departureDateDisplay);
+    set('returnDateDisplay', d.returnDateDisplay);
+    set('duration', d.duration);
+    set('hotelName', d.hotelName);
+    set('hotelWebsite', d.hotelWebsite);
+    set('hotelAddress', d.hotelAddress);
+    set('organiserName', d.organiserName);
+    set('organiserEmail', d.organiserEmail);
+    set('portalUrl', d.portalUrl);
+    set('medicalPhone', d.medicalPhone);
+    set('claimsPhone', d.claimsPhone);
+    set('claimsEmail', d.claimsEmail);
+    if (d.theme) {
+      set('col-navy', d.theme.navy); set('txt-navy', d.theme.navy);
+      set('col-sky', d.theme.sky);   set('txt-sky', d.theme.sky);
+    }
+    (d.deadlines || []).forEach(dl => window.addDeadline(dl));
+  }
+
+  // Auto-derive lighter/darker shades from a hex colour
+  function shadeColour(hex, percent) {
+    try {
+      hex = hex.replace('#','');
+      const num = parseInt(hex, 16);
+      let r = (num >> 16) + Math.round(255 * percent / 100);
+      let g = ((num >> 8) & 0xff) + Math.round(255 * percent / 100);
+      let b = (num & 0xff) + Math.round(255 * percent / 100);
+      r = Math.max(0, Math.min(255, r));
+      g = Math.max(0, Math.min(255, g));
+      b = Math.max(0, Math.min(255, b));
+      return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6,'0');
+    } catch { return hex; }
+  }
+
+  // Add one empty deadline by default
+  window.addDeadline();
+</script>
+</body>
+</html>
