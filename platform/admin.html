@@ -155,13 +155,14 @@
         <div class="field"><label>Destination Subtitle</label><input type="text" id="destinationSub" placeholder="e.g. Zugspitz Arena ski region"></div>
       </div>
       <div class="row2">
-        <div class="field"><label>Departure Date (countdown)</label><input type="datetime-local" id="departureDate"></div>
-        <div class="field"><label>Departure Display Text</label><input type="text" id="departureDateDisplay" placeholder="e.g. Saturday, 30 Jan 2027"></div>
+        <div class="field"><label>Departure Date &amp; Time (pick from calendar)</label><input type="datetime-local" id="departureDate" onchange="onTripDateChange()"></div>
+        <div class="field"><label>Departure Display Text (auto-filled, editable)</label><input type="text" id="departureDateDisplay" placeholder="e.g. Saturday, 30 Jan 2027"></div>
       </div>
       <div class="row2">
-        <div class="field"><label>Return Display Text</label><input type="text" id="returnDateDisplay" placeholder="e.g. Friday, 5 Feb 2027"></div>
-        <div class="field"><label>Duration</label><input type="text" id="duration" placeholder="e.g. 7 days - 6 nights"></div>
+        <div class="field"><label>Return Date (pick from calendar)</label><input type="date" id="returnDate" onchange="onTripDateChange()"></div>
+        <div class="field"><label>Return Display Text (auto-filled, editable)</label><input type="text" id="returnDateDisplay" placeholder="e.g. Friday, 5 Feb 2027"></div>
       </div>
+      <div class="field"><label>Duration (auto-filled, editable)</label><input type="text" id="duration" placeholder="e.g. 7 days - 6 nights"></div>
     </div>
 
     <!-- HOTEL -->
@@ -555,6 +556,32 @@ window.copyLink = function() {
 window.syncColour = function(cId, tId) { document.getElementById(tId).value = document.getElementById(cId).value; };
 window.syncColourText = function(tId, cId) { var v = document.getElementById(tId).value; if (/^#[0-9A-Fa-f]{6}$/.test(v)) document.getElementById(cId).value = v; };
 
+// ---- DATE PICKERS ----
+var DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var MONTH_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+function parseDateOnly(v) {
+  var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(v || '');
+  return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null;
+}
+function formatDisplayDate(d, longMonth) {
+  return DAY_NAMES[d.getDay()] + ', ' + d.getDate() + ' ' + (longMonth ? MONTH_LONG : MONTH_SHORT)[d.getMonth()] + ' ' + d.getFullYear();
+}
+window.onTripDateChange = function() {
+  var dep = parseDateOnly(document.getElementById('departureDate').value);
+  var ret = parseDateOnly(document.getElementById('returnDate').value);
+  if (dep) document.getElementById('departureDateDisplay').value = formatDisplayDate(dep);
+  if (ret) document.getElementById('returnDateDisplay').value = formatDisplayDate(ret);
+  if (dep && ret && ret > dep) {
+    var nights = Math.round((ret - dep) / 86400000);
+    document.getElementById('duration').value = (nights + 1) + ' days · ' + nights + (nights === 1 ? ' night' : ' nights');
+  }
+};
+window.onDeadlinePick = function(el) {
+  var d = parseDateOnly(el.value);
+  if (d) el.closest('.rep-item').querySelector('.dl-date').value = formatDisplayDate(d, true);
+};
+
 // ---- DEADLINES ----
 var dlCount = 0;
 window.addDeadline = function(data) {
@@ -564,7 +591,9 @@ window.addDeadline = function(data) {
   div.id = 'dl-' + id;
   div.innerHTML = '<button class="remove-btn" onclick="this.parentElement.remove()">x</button>'
     + '<div class="row2" style="margin-bottom:8px;">'
-    + '<div class="field" style="margin:0"><label>Date</label><input type="text" class="dl-date" value="' + (data && data.date ? data.date : '') + '" placeholder="e.g. End of April 2026"></div>'
+    + '<div class="field" style="margin:0"><label>Date (pick from calendar or type)</label>'
+    + '<input type="date" class="dl-pick" value="' + (data && data.dateValue ? data.dateValue : '') + '" onchange="onDeadlinePick(this)" style="margin-bottom:6px;">'
+    + '<input type="text" class="dl-date" value="' + (data && data.date ? data.date : '') + '" placeholder="e.g. End of April 2026"></div>'
     + '<div class="field" style="margin:0"><label>Status</label><select class="dl-status"><option value="upcoming"' + (data && data.status === 'done' ? '' : ' selected') + '>Upcoming</option><option value="done"' + (data && data.status === 'done' ? ' selected' : '') + '>Done</option></select></div>'
     + '</div>'
     + '<div class="field" style="margin-bottom:8px;"><label>Title</label><input type="text" class="dl-title" value="' + (data && data.title ? data.title : '') + '" placeholder="e.g. Deposit Due"></div>'
@@ -643,7 +672,7 @@ function getDay() {
 function getDeadlines() {
   return Array.from(document.querySelectorAll('.dl-date')).map(function(el, i) {
     var parent = el.closest('.rep-item');
-    return { date: parent.querySelector('.dl-date').value, title: parent.querySelector('.dl-title').value, description: parent.querySelector('.dl-desc').value, status: parent.querySelector('.dl-status').value };
+    return { date: parent.querySelector('.dl-date').value, dateValue: parent.querySelector('.dl-pick').value, title: parent.querySelector('.dl-title').value, description: parent.querySelector('.dl-desc').value, status: parent.querySelector('.dl-status').value };
   }).filter(function(d) { return d.title; });
 }
 
@@ -846,6 +875,7 @@ window.saveData = async function() {
     destinationSub: val('destinationSub'),
     departureDate: val('departureDate'),
     departureDateDisplay: val('departureDateDisplay'),
+    returnDate: val('returnDate'),
     returnDateDisplay: val('returnDateDisplay'),
     duration: val('duration'),
     hotelName: val('hotelName'),
@@ -903,7 +933,7 @@ function loadForm(d) {
   set('schoolName', d.schoolName); set('schoolBadge', d.schoolBadge); set('tripName', d.tripName); set('schoolEmail', d.schoolEmail);
   set('destination', d.destination); set('destinationSub', d.destinationSub);
   set('departureDate', d.departureDate); set('departureDateDisplay', d.departureDateDisplay);
-  set('returnDateDisplay', d.returnDateDisplay); set('duration', d.duration);
+  set('returnDate', d.returnDate); set('returnDateDisplay', d.returnDateDisplay); set('duration', d.duration);
   set('hotelName', d.hotelName); set('hotelWebsite', d.hotelWebsite); set('hotelAddress', d.hotelAddress);
   set('organiserName', d.organiserName); set('organiserEmail', d.organiserEmail); set('portalUrl', d.portalUrl);
   set('medicalPhone', d.medicalPhone); set('claimsPhone', d.claimsPhone); set('claimsEmail', d.claimsEmail);
