@@ -19,9 +19,10 @@
     "departureDateDisplay": "Saturday, 30 Jan 2027",
     "returnDateDisplay": "Friday, 5 Feb 2027",
     "duration": "7 days · 6 nights",
-    "outboundFlight": "Cork → Austria",
-    "returnFlight": "Austria → Dublin",
-    "flightTimes": "Times TBC"
+    "outboundFlight": "Cork → Munich",
+    "returnFlight": "Munich → Dublin",
+    "flightTimes": "Times TBC",
+    "returnBusNote": "🚌 A bus will be hired by the school to bring everyone from Dublin Airport back to Cork. This will be paid in cash closer to the time."
   },
   "hotel": {
     "name": "Alpina Regina",
