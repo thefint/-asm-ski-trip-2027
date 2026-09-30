@@ -22,7 +22,8 @@
     "outboundFlight": "Cork → Munich",
     "returnFlight": "Munich → Dublin",
     "flightTimes": "Times TBC",
-    "returnBusNote": "🚌 A bus will be hired by the school to bring everyone from Dublin Airport back to Cork. This will be paid in cash closer to the time."
+    "outboundBusNote": "🚌 Bus from Limerick to Cork Airport, hired by the school. Paid in cash closer to the time.",
+    "returnBusNote": "🚌 Bus from Dublin Airport back to Limerick, hired by the school. Paid in cash closer to the time."
   },
   "hotel": {
     "name": "Alpina Regina",
