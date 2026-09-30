@@ -18,7 +18,10 @@
     "departureDate": "2027-01-30T12:00:00",
     "departureDateDisplay": "Saturday, 30 Jan 2027",
     "returnDateDisplay": "Friday, 5 Feb 2027",
-    "duration": "7 days · 6 nights"
+    "duration": "7 days · 6 nights",
+    "outboundFlight": "Cork → Austria",
+    "returnFlight": "Austria → Dublin",
+    "flightTimes": "Times TBC"
   },
   "hotel": {
     "name": "Alpina Regina",
