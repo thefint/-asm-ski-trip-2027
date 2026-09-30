@@ -234,6 +234,20 @@ function buildPage(c) {
             <div class="value-sub">${c.trip.duration}</div>
           </div>
           <div class="detail-card">
+            <div class="icon">🛫</div>
+            <div class="label">Outbound Flight</div>
+            <div class="value">${c.trip.outboundFlight}</div>
+            <div class="value-sub">${c.trip.departureDateDisplay} · ${c.trip.flightTimes}</div>
+            <div class="value-sub">${c.trip.outboundBusNote}</div>
+          </div>
+          <div class="detail-card">
+            <div class="icon">🛬</div>
+            <div class="label">Return Flight</div>
+            <div class="value">${c.trip.returnFlight}</div>
+            <div class="value-sub">${c.trip.returnDateDisplay} · ${c.trip.flightTimes}</div>
+            <div class="value-sub">${c.trip.returnBusNote}</div>
+          </div>
+          <div class="detail-card">
             <div class="icon">🏔️</div>
             <div class="label">Resort</div>
             <div class="value">${c.trip.destination}</div>
