@@ -2,9 +2,11 @@
 
 One-time steps in the Firebase console (https://console.firebase.google.com, project **ski-trip-platform**).
 
-## 1. Turn on email sign-in (before the new form goes live)
+## 1. Turn on sign-in (before the new form goes live)
 
-Authentication → Get started (if shown) → **Sign-in method** → **Email/Password** → Enable → Save.
+1. Authentication → Get started (if shown) → **Sign-in method** → **Email/Password** → Enable → Save.
+2. Same page → **Add new provider** → **Google** → Enable → choose your email as the support email → Save.
+3. Authentication → **Settings** → **Authorised domains** → make sure `thefint.github.io` is listed (Add domain if not).
 
 ## 2. Make yourself Super Admin
 

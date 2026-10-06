@@ -18,6 +18,10 @@
     .auth-box input:focus { border-color: #5BA4CF; }
     .auth-err { color: #c0392b; font-size: 0.85rem; margin-bottom: 10px; display: none; }
     .auth-ok { color: #27ae60; font-size: 0.85rem; margin-bottom: 10px; display: none; }
+    .google-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: white; border: 2px solid #e0e8f0; border-radius: 10px; padding: 12px 16px; font-size: 1rem; font-weight: 600; color: #333; cursor: pointer; font-family: inherit; }
+    .google-btn:hover { border-color: #5BA4CF; }
+    .or-line { display: flex; align-items: center; gap: 10px; color: #999; font-size: 0.8rem; margin: 16px 0; }
+    .or-line::before, .or-line::after { content: ''; flex: 1; height: 1px; background: #e0e8f0; }
     .link-btn { background: none; border: none; color: #2d7fb8; font-size: 0.88rem; cursor: pointer; font-family: inherit; padding: 6px; text-decoration: underline; }
     .pick-box { max-width: 560px; text-align: left; }
     .pick-box h3 { font-size: 0.95rem; color: #0D2B55; margin: 22px 0 10px; }
@@ -121,6 +125,11 @@
   <p id="auth-sub">Sign in with your email and password.</p>
   <div class="auth-err" id="auth-err"></div>
   <div class="auth-ok" id="auth-ok"></div>
+  <button class="google-btn" id="google-btn" onclick="googleSignIn()">
+    <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+    Sign in with Google
+  </button>
+  <div class="or-line"><span>or use email</span></div>
   <input type="email" id="auth-email" placeholder="Email address" autocomplete="email">
   <input type="password" id="auth-pw" placeholder="Password" autocomplete="current-password">
   <input type="password" id="auth-pw2" class="hidden" placeholder="Confirm password" autocomplete="new-password">
@@ -507,7 +516,7 @@
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getFirestore, doc, getDoc, setDoc, deleteField, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, signOut, GoogleAuthProvider, signInWithPopup, signInWithRedirect } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getStorage, ref as sref, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js';
 
 const firebaseConfig = {
@@ -626,6 +635,21 @@ window.authSubmit = async function() {
       await signInWithEmailAndPassword(auth, email, pw);
     }
   } catch (e) { msg('auth-err', friendlyAuthError(e)); }
+};
+
+window.googleSignIn = async function() {
+  msg('auth-err'); msg('auth-ok');
+  var provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (e) {
+    var c = e.code || '';
+    if (c.includes('popup-closed-by-user') || c.includes('cancelled-popup-request')) return;
+    if (c.includes('popup-blocked')) { await signInWithRedirect(auth, provider); return; }
+    if (c.includes('unauthorized-domain')) { msg('auth-err', 'Google sign-in isn\'t set up for this website yet. Use email sign-in, or contact the site administrator.'); return; }
+    msg('auth-err', friendlyAuthError(e));
+  }
 };
 
 window.forgotPassword = async function() {
