@@ -173,6 +173,7 @@
         <div class="field"><label>Hotel Website</label><input type="url" id="hotelWebsite" placeholder="https://..."></div>
       </div>
       <div class="field"><label>Hotel Address</label><input type="text" id="hotelAddress" placeholder="e.g. Main Street, Resort Town, Austria"></div>
+      <div class="field"><label>Room Occupancy (optional)</label><input type="text" id="roomOccupancy" placeholder="e.g. Rooms vary from 2 up to 6 students per room"></div>
     </div>
 
     <!-- DEADLINES -->
@@ -451,7 +452,7 @@ const DEFAULT_PACKING = {
   docs:  ['Passport (teachers will collect on the day)','EHIC card','Any medication - clearly labelled','Cash or card for lunches','Extra spending money']
 };
 
-const DEFAULT_APRES = ['Movie night','Bingo','Swimming','Tubing','Sledging'];
+const DEFAULT_APRES = ['Movie night','Bingo','Swimming','Ski show','Sledging'];
 let customApres = [];
 
 // ---- INIT UI ----
@@ -881,6 +882,7 @@ window.saveData = async function() {
     hotelName: val('hotelName'),
     hotelWebsite: val('hotelWebsite'),
     hotelAddress: val('hotelAddress'),
+    roomOccupancy: val('roomOccupancy'),
     organiserName: val('organiserName'),
     organiserEmail: val('organiserEmail'),
     portalUrl: val('portalUrl'),
@@ -934,7 +936,7 @@ function loadForm(d) {
   set('destination', d.destination); set('destinationSub', d.destinationSub);
   set('departureDate', d.departureDate); set('departureDateDisplay', d.departureDateDisplay);
   set('returnDate', d.returnDate); set('returnDateDisplay', d.returnDateDisplay); set('duration', d.duration);
-  set('hotelName', d.hotelName); set('hotelWebsite', d.hotelWebsite); set('hotelAddress', d.hotelAddress);
+  set('hotelName', d.hotelName); set('hotelWebsite', d.hotelWebsite); set('hotelAddress', d.hotelAddress); set('roomOccupancy', d.roomOccupancy);
   set('organiserName', d.organiserName); set('organiserEmail', d.organiserEmail); set('portalUrl', d.portalUrl);
   set('medicalPhone', d.medicalPhone); set('claimsPhone', d.claimsPhone); set('claimsEmail', d.claimsEmail);
   set('lunchCost', d.lunchCost);

@@ -25,11 +25,11 @@
     /* HERO */
     .hero { background: linear-gradient(160deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-mid) 100%); color: var(--white); position: relative; overflow: hidden; min-height: 420px; display: flex; flex-direction: column; }
     .hero::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='%23F5FAFD' d='M0,120 L0,80 L120,30 L240,70 L360,20 L480,60 L600,10 L720,55 L840,15 L960,50 L1080,5 L1200,45 L1320,0 L1440,40 L1440,120 Z'/%3E%3C/svg%3E") no-repeat bottom center / cover; pointer-events: none; }
-    .snowflake { position: absolute; color: rgba(255,255,255,0.18); pointer-events: none; user-select: none; animation: sway 6s ease-in-out infinite alternate; }
-    @keyframes sway { from { transform: translateY(0) rotate(0deg); } to { transform: translateY(8px) rotate(20deg); } }
-    .bg-snow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
-    .bg-flake { position: absolute; top: -40px; color: var(--sky-light); opacity: 0.18; font-size: 1rem; animation: fall linear infinite; user-select: none; }
-    @keyframes fall { 0% { transform: translateY(-40px) rotate(0deg); opacity: 0.18; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0.05; } }
+    .snowflake { position: absolute; color: rgba(255,255,255,0.18); pointer-events: none; user-select: none; animation: sway 4s ease-in-out infinite alternate; }
+    @keyframes sway { from { transform: translate(0, 0) rotate(0deg); } to { transform: translate(14px, 24px) rotate(40deg); } }
+    .bg-snow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; overflow: hidden; }
+    .bg-flake { position: absolute; top: -40px; color: var(--sky); opacity: 0.45; font-size: 1rem; animation: fall linear infinite; user-select: none; }
+    @keyframes fall { 0% { transform: translateY(-40px) translateX(0) rotate(0deg); opacity: 0.5; } 50% { transform: translateY(55vh) translateX(30px) rotate(180deg); opacity: 0.4; } 100% { transform: translateY(110vh) translateX(0) rotate(360deg); opacity: 0.15; } }
     .page, .nav-bar, .hero, footer { position: relative; z-index: 1; }
     .hero-inner { max-width: 900px; margin: 0 auto; padding: 56px 24px 100px; text-align: center; position: relative; z-index: 1; }
     .hero-badge { display: inline-block; background: rgba(91,164,207,0.25); border: 1px solid rgba(91,164,207,0.5); color: var(--sky-light); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
@@ -104,6 +104,8 @@
 
     /* INFO CARDS */
     .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .hotel-link { color: var(--sky); font-weight: 600; text-decoration: none; }
+    .hotel-link:hover { text-decoration: underline; }
     .info-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
     .info-card h3 { font-size: 1rem; font-weight: 800; color: var(--navy); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
     .info-card p, .info-card li { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
@@ -196,6 +198,7 @@ function buildPage(c) {
     <nav class="nav-bar">
       <div class="nav-inner">
         <button class="nav-btn active" onclick="navTo('trip')">Trip Details</button>
+        <button class="nav-btn" onclick="navTo('hotel')">Hotel</button>
         <button class="nav-btn" onclick="navTo('maps')">Ski Maps</button>
         <button class="nav-btn" onclick="navTo('deadlines')">Deadlines</button>
         <button class="nav-btn" onclick="navTo('packing')">What to Pack</button>
@@ -274,9 +277,19 @@ function buildPage(c) {
             <a href="${c.organiser.portalUrl}" target="_blank" rel="noopener">🔗 Parent Portal</a>
           </div>
         </div>
+      </section>
 
-        <div class="section-title" style="margin-top:36px;font-size:1.1rem;">🏨 ${c.hotel.name}</div>
-        <p class="section-sub" style="margin-bottom:16px;">${c.hotel.address}</p>
+      <!-- HOTEL -->
+      <section id="hotel">
+        <hr class="divider">
+        <div class="section-title">🏨 ${c.hotel.name}</div>
+        <p class="section-sub">${c.hotel.address} &nbsp;·&nbsp; <a class="hotel-link" href="${c.hotel.website}" target="_blank" rel="noopener">🔗 Hotel Website</a> &nbsp;·&nbsp; <a class="hotel-link" href="${c.hotel.mapsLink}" target="_blank" rel="noopener">📍 Google Maps</a></p>
+        ${c.hotel.roomOccupancy || c.hotel.roomNote ? `
+        <div class="info-card" style="margin-bottom:20px;">
+          <h3>🛏️ Rooms</h3>
+          ${c.hotel.roomOccupancy ? `<p><strong>${c.hotel.roomOccupancy}</strong></p>` : ''}
+          ${c.hotel.roomNote ? `<p style="margin-top:6px;">${c.hotel.roomNote}</p>` : ''}
+        </div>` : ''}
         <div class="photo-grid">
           ${c.hotel.photos.map(p => `<img src="${p.src}" alt="${p.alt}">`).join('')}
         </div>
@@ -507,7 +520,7 @@ function buildPage(c) {
   setInterval(updateCountdown, 1000);
 
   // Active nav
-  const sectionIds = ['trip','maps','deadlines','packing','health','travel','day','videos','contact'];
+  const sectionIds = ['trip','hotel','maps','deadlines','packing','health','travel','day','videos','contact'];
   const navBtns = document.querySelectorAll('.nav-btn');
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => {
@@ -536,7 +549,7 @@ function addBgSnow() {
     f.style.left = (Math.random() * 100) + '%';
     f.style.fontSize = (0.6 + Math.random() * 0.8) + 'rem';
     f.style.animationDuration = (8 + Math.random() * 14) + 's';
-    f.style.animationDelay = (Math.random() * 12) + 's';
+    f.style.animationDelay = (-Math.random() * 20) + 's';
     container.appendChild(f);
   }
   document.body.insertBefore(container, document.body.firstChild);
