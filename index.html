@@ -27,6 +27,10 @@
     .hero::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='%23F5FAFD' d='M0,120 L0,80 L120,30 L240,70 L360,20 L480,60 L600,10 L720,55 L840,15 L960,50 L1080,5 L1200,45 L1320,0 L1440,40 L1440,120 Z'/%3E%3C/svg%3E") no-repeat bottom center / cover; pointer-events: none; }
     .snowflake { position: absolute; color: rgba(255,255,255,0.18); pointer-events: none; user-select: none; animation: sway 6s ease-in-out infinite alternate; }
     @keyframes sway { from { transform: translateY(0) rotate(0deg); } to { transform: translateY(8px) rotate(20deg); } }
+    .bg-snow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+    .bg-flake { position: absolute; top: -40px; color: var(--sky-light); opacity: 0.18; font-size: 1rem; animation: fall linear infinite; user-select: none; }
+    @keyframes fall { 0% { transform: translateY(-40px) rotate(0deg); opacity: 0.18; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0.05; } }
+    .page, .nav-bar, .hero, footer { position: relative; z-index: 1; }
     .hero-inner { max-width: 900px; margin: 0 auto; padding: 56px 24px 100px; text-align: center; position: relative; z-index: 1; }
     .hero-badge { display: inline-block; background: rgba(91,164,207,0.25); border: 1px solid rgba(91,164,207,0.5); color: var(--sky-light); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
     .hero h1 { font-size: clamp(2rem, 6vw, 3.4rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 14px; }
@@ -519,6 +523,25 @@ function buildPage(c) {
 function navTo(id) {
   document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+// Background snowflakes
+function addBgSnow() {
+  const container = document.createElement('div');
+  container.className = 'bg-snow';
+  const flakes = ['❄','❄','❄','⛷️','❄','❄'];
+  for (let i = 0; i < 18; i++) {
+    const f = document.createElement('span');
+    f.className = 'bg-flake';
+    f.textContent = flakes[i % flakes.length];
+    f.style.left = (Math.random() * 100) + '%';
+    f.style.fontSize = (0.6 + Math.random() * 0.8) + 'rem';
+    f.style.animationDuration = (8 + Math.random() * 14) + 's';
+    f.style.animationDelay = (Math.random() * 12) + 's';
+    container.appendChild(f);
+  }
+  document.body.insertBefore(container, document.body.firstChild);
+}
+addBgSnow();
 
 loadConfig().then(buildPage).catch(err => {
   document.getElementById('app').innerHTML = '<div style="text-align:center;padding:80px 20px;color:red;">Failed to load config. Make sure config.json exists.</div>';
