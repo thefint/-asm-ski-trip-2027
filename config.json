@@ -77,6 +77,12 @@
       "title": "Name Change Deadline",
       "description": "Airline fees apply for any name changes made after this date.",
       "status": "upcoming"
+    },
+    {
+      "date": "January 2027",
+      "title": "Cash Collection — Hand In to the School",
+      "description": "Cash will be collected and must be handed in to the school. The exact date will be confirmed closer to the time.",
+      "status": "upcoming"
     }
   ],
   "packingList": {

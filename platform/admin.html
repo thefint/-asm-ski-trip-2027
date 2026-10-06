@@ -92,6 +92,10 @@
     .yt-item .yt-title { font-weight: 700; font-size: 0.9rem; color: #0D2B55; }
     .yt-item .yt-id { font-size: 0.75rem; color: #888; }
     .yt-item .remove-btn { position: static; }
+    .yt-item .yt-warn { font-size: 0.75rem; color: #b7770d; margin-top: 3px; }
+    .yt-item .yt-thumb-fallback { width: 80px; height: 56px; border-radius: 6px; background: #e3eef8; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+    .drive-tip { background: #eef6fc; border: 1.5px solid #cfe3f3; border-radius: 10px; padding: 12px 16px; font-size: 0.83rem; color: #334; line-height: 1.55; margin-bottom: 14px; }
+    .drive-tip ol { margin: 6px 0 6px 20px; }
   </style>
 </head>
 <body>
@@ -181,6 +185,17 @@
       <h2>Payment Deadlines</h2>
       <div id="deadlines-container"></div>
       <button class="add-btn" onclick="addDeadline()">+ Add Deadline</button>
+
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid #e5e5e5;">
+        <label class="tag" style="display:inline-flex;"><input type="checkbox" id="cashEnabled" onchange="toggleCashCollection()"> We collect cash to be handed in to the school (optional)</label>
+        <div id="cash-fields" class="hidden" style="margin-top:12px;">
+          <div class="row2">
+            <div class="field"><label>Cash Collection Date (pick from calendar)</label><input type="date" id="cashDateValue" onchange="onCashDatePick()"></div>
+            <div class="field"><label>Date Display Text (auto-filled, editable)</label><input type="text" id="cashDate" placeholder="e.g. January 2027"></div>
+          </div>
+          <div class="field"><label>Details (optional)</label><textarea id="cashNote" placeholder="e.g. Amount, what it covers, who to hand it to..."></textarea></div>
+        </div>
+      </div>
     </div>
 
     <!-- TYPICAL DAY -->
@@ -364,14 +379,23 @@
       </div>
     </div>
 
-    <!-- YOUTUBE VIDEOS -->
+    <!-- VIDEOS -->
     <div class="card">
-      <h2>🎥 YouTube Videos</h2>
-      <p class="section-note">Add YouTube links to show past trip highlight videos on your site.</p>
+      <h2>🎥 Videos</h2>
+      <p class="section-note">Add past trip highlight videos to your site by pasting a <strong>Google Drive</strong> or YouTube link.</p>
+      <div class="drive-tip">
+        <strong>⭐ Recommended: Google Drive</strong> — free, works straight from your phone, and Google prepares the video for smooth playback.
+        <ol>
+          <li>Upload the video to Google Drive (the Drive app on your phone works).</li>
+          <li>Tap <strong>Share</strong> → <strong>General access</strong> → change it to <strong>Anyone with the link</strong> (Viewer).</li>
+          <li>Tap <strong>Copy link</strong> and paste it below.</li>
+        </ol>
+        If the link isn't set to <em>Anyone with the link</em>, parents will see "You need access" instead of the video. Newly uploaded videos can take a few minutes to show a preview while Google processes them.
+      </div>
       <div id="yt-list"></div>
       <div class="row2" style="margin-top:8px;">
         <div class="field" style="margin:0;"><label>Video Title</label><input type="text" id="yt-title" placeholder="e.g. Ski Trip 2024 Highlights"></div>
-        <div class="field" style="margin:0;"><label>YouTube URL</label><input type="text" id="yt-url" placeholder="https://www.youtube.com/watch?v=..."></div>
+        <div class="field" style="margin:0;"><label>Google Drive or YouTube Link</label><input type="text" id="yt-url" placeholder="https://drive.google.com/file/d/..."></div>
       </div>
       <button class="add-btn" style="margin-top:10px;" onclick="addYouTube()">+ Add Video</button>
     </div>
@@ -581,6 +605,14 @@ window.onTripDateChange = function() {
 window.onDeadlinePick = function(el) {
   var d = parseDateOnly(el.value);
   if (d) el.closest('.rep-item').querySelector('.dl-date').value = formatDisplayDate(d, true);
+};
+
+window.toggleCashCollection = function() {
+  document.getElementById('cash-fields').classList.toggle('hidden', !document.getElementById('cashEnabled').checked);
+};
+window.onCashDatePick = function() {
+  var d = parseDateOnly(document.getElementById('cashDateValue').value);
+  if (d) document.getElementById('cashDate').value = formatDisplayDate(d, true);
 };
 
 // ---- DEADLINES ----
@@ -803,14 +835,22 @@ window.addYouTube = function() {
   var title = document.getElementById('yt-title').value.trim();
   var url = document.getElementById('yt-url').value.trim();
   if (!url) return;
-  var videoId = extractYTId(url);
-  if (!videoId) { alert('Could not find a YouTube video ID in that URL. Make sure it\'s a youtube.com/watch or youtu.be link.'); return; }
-  youtubeVideos.push({ title: title || 'Trip Video', videoId: videoId });
+  var driveId = extractDriveId(url);
+  var videoId = driveId ? null : extractYTId(url);
+  if (!driveId && !videoId) { alert('That link doesn\'t look like a Google Drive or YouTube video link.\n\nFor Google Drive, use Share → Copy link (it should start with https://drive.google.com/file/d/...).'); return; }
+  youtubeVideos.push(driveId
+    ? { title: title || 'Trip Video', type: 'drive', videoId: driveId }
+    : { title: title || 'Trip Video', type: 'youtube', videoId: videoId });
   document.getElementById('yt-title').value = '';
   document.getElementById('yt-url').value = '';
   renderYouTube();
 };
 
+function extractDriveId(url) {
+  if (!/drive\.google\.com/.test(url)) return null;
+  var m = url.match(/\/file\/d\/([A-Za-z0-9_-]{10,})/) || url.match(/[?&]id=([A-Za-z0-9_-]{10,})/);
+  return m ? m[1] : null;
+}
 function extractYTId(url) {
   var m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);
   return m ? m[1] : null;
@@ -818,6 +858,13 @@ function extractYTId(url) {
 
 function renderYouTube() {
   document.getElementById('yt-list').innerHTML = youtubeVideos.map(function(v,i){
+    if (v.type === 'drive') {
+      return '<div class="yt-item">'
+        + '<img src="https://drive.google.com/thumbnail?id='+v.videoId+'&sz=w320" onerror="driveThumbFailed(this)">'
+        + '<div class="yt-info"><div class="yt-title">'+v.title+'</div><div class="yt-id">Google Drive video</div><div class="yt-warn" style="display:none;">⚠️ Can\'t load a preview. Check the video is shared as <strong>Anyone with the link</strong>. If you\'ve just uploaded it, wait a few minutes and reload.</div></div>'
+        + '<button class="remove-btn" style="position:static;" onclick="removeYT('+i+')">×</button>'
+        + '</div>';
+    }
     return '<div class="yt-item">'
       + '<img src="https://img.youtube.com/vi/'+v.videoId+'/mqdefault.jpg">'
       + '<div class="yt-info"><div class="yt-title">'+v.title+'</div><div class="yt-id">youtube.com/watch?v='+v.videoId+'</div></div>'
@@ -826,6 +873,11 @@ function renderYouTube() {
   }).join('');
 }
 
+window.driveThumbFailed = function(img) {
+  var fb = document.createElement('div'); fb.className = 'yt-thumb-fallback'; fb.textContent = '🎥';
+  img.replaceWith(fb);
+  fb.parentElement.querySelector('.yt-warn').style.display = 'block';
+};
 window.removeYT = function(i){ youtubeVideos.splice(i,1); renderYouTube(); };
 
 // ---- SAVE ----
@@ -896,6 +948,7 @@ window.saveData = async function() {
     apresSki: apres,
     ehicUrl: 'https://www.ehic.ie',
     deadlines: getDeadlines(),
+    cashCollection: { enabled: document.getElementById('cashEnabled').checked, dateValue: val('cashDateValue'), date: val('cashDate'), note: val('cashNote') },
     typicalDay: dayRows,
     packingList: {
       outerLayers: mergeList(DEFAULT_PACKING.outer, extras.outer),
@@ -958,6 +1011,11 @@ function loadForm(d) {
   if (d.typicalDay && d.typicalDay.length) { document.getElementById('day-container').innerHTML = ''; d.typicalDay.forEach(function(r){ addDayRow(r); }); }
 
   (d.deadlines||[]).forEach(function(dl){ window.addDeadline(dl); });
+  if (d.cashCollection) {
+    document.getElementById('cashEnabled').checked = !!d.cashCollection.enabled;
+    set('cashDateValue', d.cashCollection.dateValue); set('cashDate', d.cashCollection.date); set('cashNote', d.cashCollection.note);
+    window.toggleCashCollection();
+  }
 
   // Photos
   if (d.crestUrl) {
