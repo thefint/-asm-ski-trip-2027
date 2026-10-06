@@ -204,7 +204,14 @@
         </div>
       </div>`).join('');
 
-    const deadlines = (c.deadlines || []).map(d => `
+    const cash = c.cashCollection;
+    const allDeadlines = (c.deadlines || []).concat(cash && cash.enabled ? [{
+      date: cash.date || 'Date to be confirmed',
+      title: 'Cash Collection — Hand In to the School',
+      description: cash.note || 'Cash will be collected and must be handed in to the school.',
+      status: 'upcoming'
+    }] : []);
+    const deadlines = allDeadlines.map(d => `
       <div class="tl-item ${d.status === 'done' ? 'done' : ''}">
         <div class="tl-card">
           <div class="tl-date">${d.status === 'done' ? '✅ ' : ''}${d.date}</div>

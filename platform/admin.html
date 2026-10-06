@@ -181,6 +181,17 @@
       <h2>Payment Deadlines</h2>
       <div id="deadlines-container"></div>
       <button class="add-btn" onclick="addDeadline()">+ Add Deadline</button>
+
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid #e5e5e5;">
+        <label class="tag" style="display:inline-flex;"><input type="checkbox" id="cashEnabled" onchange="toggleCashCollection()"> We collect cash to be handed in to the school (optional)</label>
+        <div id="cash-fields" class="hidden" style="margin-top:12px;">
+          <div class="row2">
+            <div class="field"><label>Cash Collection Date (pick from calendar)</label><input type="date" id="cashDateValue" onchange="onCashDatePick()"></div>
+            <div class="field"><label>Date Display Text (auto-filled, editable)</label><input type="text" id="cashDate" placeholder="e.g. January 2027"></div>
+          </div>
+          <div class="field"><label>Details (optional)</label><textarea id="cashNote" placeholder="e.g. Amount, what it covers, who to hand it to..."></textarea></div>
+        </div>
+      </div>
     </div>
 
     <!-- TYPICAL DAY -->
@@ -583,6 +594,14 @@ window.onDeadlinePick = function(el) {
   if (d) el.closest('.rep-item').querySelector('.dl-date').value = formatDisplayDate(d, true);
 };
 
+window.toggleCashCollection = function() {
+  document.getElementById('cash-fields').classList.toggle('hidden', !document.getElementById('cashEnabled').checked);
+};
+window.onCashDatePick = function() {
+  var d = parseDateOnly(document.getElementById('cashDateValue').value);
+  if (d) document.getElementById('cashDate').value = formatDisplayDate(d, true);
+};
+
 // ---- DEADLINES ----
 var dlCount = 0;
 window.addDeadline = function(data) {
@@ -896,6 +915,7 @@ window.saveData = async function() {
     apresSki: apres,
     ehicUrl: 'https://www.ehic.ie',
     deadlines: getDeadlines(),
+    cashCollection: { enabled: document.getElementById('cashEnabled').checked, dateValue: val('cashDateValue'), date: val('cashDate'), note: val('cashNote') },
     typicalDay: dayRows,
     packingList: {
       outerLayers: mergeList(DEFAULT_PACKING.outer, extras.outer),
@@ -958,6 +978,11 @@ function loadForm(d) {
   if (d.typicalDay && d.typicalDay.length) { document.getElementById('day-container').innerHTML = ''; d.typicalDay.forEach(function(r){ addDayRow(r); }); }
 
   (d.deadlines||[]).forEach(function(dl){ window.addDeadline(dl); });
+  if (d.cashCollection) {
+    document.getElementById('cashEnabled').checked = !!d.cashCollection.enabled;
+    set('cashDateValue', d.cashCollection.dateValue); set('cashDate', d.cashCollection.date); set('cashNote', d.cashCollection.note);
+    window.toggleCashCollection();
+  }
 
   // Photos
   if (d.crestUrl) {
