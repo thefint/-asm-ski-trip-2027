@@ -167,6 +167,7 @@
 
   <h3>Create a new school site</h3>
   <div class="auth-err" id="create-err"></div>
+  <input type="text" id="new-school-name" placeholder="School name, e.g. St Clare's CBS" autocomplete="off" style="margin-bottom:8px !important;">
   <div class="inline-row">
     <input type="text" id="new-school-id" placeholder="Choose a school ID, e.g. stclares" autocomplete="off">
     <button class="btn-primary" onclick="createSchool()">Create</button>
@@ -198,7 +199,7 @@
     <div class="card">
       <h2>School &amp; Trip</h2>
       <div class="row2">
-        <div class="field"><label>School Name</label><input type="text" id="schoolName" placeholder="e.g. St Clare's CBS"></div>
+        <div class="field"><label>School Name <span style="color:#c0392b;">*</span></label><input type="text" id="schoolName" placeholder="e.g. St Clare's CBS"></div>
         <div class="field"><label>Badge / Subtitle</label><input type="text" id="schoolBadge" placeholder="e.g. St Clare's - Transition Year"></div>
       </div>
       <div class="row2">
@@ -717,8 +718,11 @@ window.showPicker = async function() {
   try {
     var owned = await getDocs(query(collection(db, 'schoolOwners'), where('uid', '==', user.uid)));
     var ids = []; owned.forEach(function(d){ ids.push(d.id); });
+    var names = {};
+    await Promise.all(ids.map(async function(id){ try { var sd = await getDoc(doc(db, 'schools', id)); names[id] = sd.exists() ? (sd.data().schoolName || '') : ''; } catch (e) {} }));
+    ids.sort(function(a, b){ return (names[a] || a).localeCompare(names[b] || b); });
     box.innerHTML = ids.length
-      ? '<h3>Edit a site</h3>' + ids.map(function(id){ return '<button class="school-btn" onclick="openSchool(\'' + id + '\')">' + id + ' <span>Edit →</span></button>'; }).join('')
+      ? '<h3>Edit a site</h3>' + ids.map(function(id){ var nm = (names[id] || '').replace(/[&<>"]/g, ''); return '<button class="school-btn" onclick="openSchool(\'' + id + '\')">' + (nm ? nm + ' <span>(' + id + ')</span>' : id) + ' <span>Edit →</span></button>'; }).join('')
       : '<p style="margin:16px 0 0;">You don\'t have any school sites yet. Create one below, or request access to a site you made before.</p>';
     var reqs = await getDocs(query(collection(db, 'accessRequests'), where('uid', '==', user.uid)));
     var pend = []; reqs.forEach(function(d){ pend.push(d.data().schoolId); });
@@ -737,12 +741,15 @@ window.openSchool = async function(schoolId) {
 
 window.createSchool = async function() {
   var id = cleanId(document.getElementById('new-school-id').value);
+  var name = document.getElementById('new-school-name').value.trim();
   msg('create-err');
+  if (!name) { msg('create-err', 'Please enter your school name.'); return; }
   if (!/^[a-z0-9][a-z0-9-]{1,39}$/.test(id)) { msg('create-err', 'Use 2–40 lowercase letters, numbers or dashes (no spaces or @).'); return; }
   try {
     if ((await getDoc(doc(db, 'schools', id))).exists()) { msg('create-err', 'That school ID is already taken. If it\'s your site from before, request access below.'); return; }
     await setDoc(doc(db, 'schoolOwners', id), { uid: auth.currentUser.uid, email: auth.currentUser.email, createdAt: new Date().toISOString() });
-    document.getElementById('new-school-id').value = '';
+    await setDoc(doc(db, 'schools', id), { schoolName: name, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }, { merge: true });
+    document.getElementById('new-school-id').value = ''; document.getElementById('new-school-name').value = '';
     openSchool(id);
   } catch (e) {
     msg('create-err', (e.code || '').includes('permission-denied') ? 'That school ID is already taken. Please choose another.' : friendlyAuthError(e));
@@ -1141,9 +1148,17 @@ window.removeYT = function(i){ youtubeVideos.splice(i,1); renderYouTube(); };
 // ---- SAVE ----
 window.saveData = async function() {
   var btn = document.getElementById('save-btn');
-  btn.disabled = true; btn.textContent = 'Saving...';
+  var errEl = document.getElementById('save-err');
   document.getElementById('save-status').style.display = 'none';
-  document.getElementById('save-err').style.display = 'none';
+  errEl.style.display = 'none';
+  if (!val('schoolName')) {
+    errEl.textContent = 'Please enter your School Name (at the top of the form) before saving.';
+    errEl.style.display = 'block';
+    var nameEl = document.getElementById('schoolName');
+    nameEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); nameEl.focus();
+    return;
+  }
+  btn.disabled = true; btn.textContent = 'Saving...';
 
   var navy = val('txt-navy') || '#0D2B55';
   var sky  = val('txt-sky')  || '#5BA4CF';
@@ -1238,7 +1253,8 @@ window.saveData = async function() {
     setTimeout(function(){ document.getElementById('save-status').style.display='none'; }, 3000);
   } catch(e) {
     console.error(e);
-    document.getElementById('save-err').style.display = 'block';
+    errEl.textContent = 'Save failed. Try again.';
+    errEl.style.display = 'block';
     btn.textContent = 'Save and Publish'; btn.disabled = false;
   }
 };
