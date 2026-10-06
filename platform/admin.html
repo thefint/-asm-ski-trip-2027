@@ -1037,7 +1037,7 @@ window.saveData = async function() {
   };
 
   try {
-    await setDoc(doc(db, 'schools', currentSchoolId), data);
+    await setDoc(doc(db, 'schools', currentSchoolId), data, { merge: true }); // merge so adminPassword isn't wiped
     document.getElementById('save-status').style.display = 'block';
     btn.textContent = 'Save and Publish'; btn.disabled = false;
     setTimeout(function(){ document.getElementById('save-status').style.display='none'; }, 3000);
