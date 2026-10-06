@@ -200,7 +200,7 @@
       `<div class="info-card" style="padding:16px;">
         <div style="font-weight:700;color:var(--navy);margin-bottom:10px;">🎥 ${v.title || 'Trip Video'}</div>
         <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;">
-          <iframe src="https://www.youtube.com/embed/${v.videoId}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;" allowfullscreen loading="lazy"></iframe>
+          <iframe src="${v.type === 'drive' ? `https://drive.google.com/file/d/${v.videoId}/preview` : `https://www.youtube.com/embed/${v.videoId}`}" allow="autoplay; fullscreen" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px;" allowfullscreen loading="lazy"></iframe>
         </div>
       </div>`).join('');
 
