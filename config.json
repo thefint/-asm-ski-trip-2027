@@ -31,6 +31,8 @@
     "phone": "0043 5673 2469",
     "website": "https://hotel-alpina-regina.hotelsintyrol.com/en/",
     "mapsLink": "https://maps.google.com/?q=Alpina+Regina+Fernpassstrasse+54+6633+Biberwier+Austria",
+    "roomOccupancy": "Rooms vary from 2 up to 6 students per room.",
+    "roomNote": "Room allocations will be confirmed much closer to the time, and room lists can change at the last minute. You will be roomed with at least one friend.",
     "photos": [
       { "src": "biberwier-hotel-alpina-regina-picture-26.jpg", "alt": "Hotel exterior" },
       { "src": "biberwier-hotel-alpina-regina-picture-17.jpg", "alt": "Winter view" },
@@ -144,7 +146,7 @@
     { "time": "1:00 pm", "icon": "🏂", "text": "Afternoon ski lesson", "badge": "included" },
     { "time": "3:30 pm", "icon": "🏨", "text": "Return to hotel · rest & freshen up" },
     { "time": "Dinner", "icon": "🍽️", "text": "Dinner at the hotel", "badge": "included" },
-    { "time": "Evening", "icon": "🎉", "text": "Après ski activities — movie night, bingo, swimming, tubing, sledging & more" },
+    { "time": "Evening", "icon": "🎉", "text": "Après ski activities — movie night, bingo, swimming, ski show, sledging & more" },
     { "time": "11:00 pm", "icon": "📵", "text": "Phones collected · lights out" }
   ],
   "videos": [
