@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function verified() { return signedIn() && request.auth.token.email_verified == true; }
+    function isAdmin() { return verified() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)); }
+    function ownerDoc(id) { return /databases/$(database)/documents/schoolOwners/$(id); }
+    function ownsSchool(id) { return verified() && exists(ownerDoc(id)) && get(ownerDoc(id)).data.uid == request.auth.uid; }
+
+    // Public school sites: anyone can read, only the owner or super admin can change
+    match /schools/{id} {
+      allow read: if true;
+      allow create, update: if isAdmin() || ownsSchool(id);
+      allow delete: if isAdmin();
+    }
+
+    // Who owns which school (private)
+    match /schoolOwners/{id} {
+      allow read: if isAdmin() || (verified() && resource.data.uid == request.auth.uid);
+      // A teacher can claim a brand-new school ID that has no site yet
+      allow create: if isAdmin() || (verified()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.email == request.auth.token.email
+        && !exists(/databases/$(database)/documents/schools/$(id)));
+      allow update, delete: if isAdmin();
+    }
+
+    // Teachers asking for access to a site they made before
+    match /accessRequests/{reqId} {
+      allow read: if isAdmin() || (verified() && resource.data.uid == request.auth.uid);
+      allow create: if verified()
+        && reqId == request.auth.uid + '_' + request.resource.data.schoolId
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.email == request.auth.token.email;
+      allow delete: if isAdmin();
+    }
+
+    // Super admins: added by hand in the Firebase console only
+    match /admins/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+  }
+}

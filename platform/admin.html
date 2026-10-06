@@ -11,11 +11,25 @@
     .header h1 { font-size: 1.2rem; font-weight: 800; }
     .header p { font-size: 0.82rem; color: rgba(255,255,255,0.6); }
     .container { max-width: 860px; margin: 0 auto; padding: 32px 20px; }
-    #login-screen { max-width: 400px; margin: 80px auto; background: white; border-radius: 16px; padding: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); text-align: center; }
-    #login-screen h2 { font-size: 1.4rem; color: #0D2B55; margin-bottom: 8px; }
-    #login-screen p { color: #666; font-size: 0.9rem; margin-bottom: 24px; }
-    #login-screen input { width: 100%; padding: 12px 16px; border: 2px solid #e0e8f0; border-radius: 10px; font-size: 1rem; margin-bottom: 14px; outline: none; font-family: inherit; }
-    #login-screen input:focus { border-color: #5BA4CF; }
+    .auth-box { max-width: 420px; margin: 80px auto; background: white; border-radius: 16px; padding: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); text-align: center; }
+    .auth-box h2 { font-size: 1.4rem; color: #0D2B55; margin-bottom: 8px; }
+    .auth-box p { color: #666; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5; }
+    .auth-box input { width: 100%; padding: 12px 16px; border: 2px solid #e0e8f0; border-radius: 10px; font-size: 1rem; margin-bottom: 14px; outline: none; font-family: inherit; }
+    .auth-box input:focus { border-color: #5BA4CF; }
+    .auth-err { color: #c0392b; font-size: 0.85rem; margin-bottom: 10px; display: none; }
+    .auth-ok { color: #27ae60; font-size: 0.85rem; margin-bottom: 10px; display: none; }
+    .link-btn { background: none; border: none; color: #2d7fb8; font-size: 0.88rem; cursor: pointer; font-family: inherit; padding: 6px; text-decoration: underline; }
+    .pick-box { max-width: 560px; text-align: left; }
+    .pick-box h3 { font-size: 0.95rem; color: #0D2B55; margin: 22px 0 10px; }
+    .school-btn { display: flex; justify-content: space-between; align-items: center; width: 100%; background: #f7fafd; border: 1.5px solid #d0e4f4; border-radius: 10px; padding: 12px 16px; margin-bottom: 8px; font-size: 0.95rem; font-weight: 700; color: #0D2B55; cursor: pointer; font-family: inherit; text-align: left; }
+    .school-btn:hover { border-color: #5BA4CF; }
+    .school-btn span { font-weight: 400; font-size: 0.8rem; color: #888; }
+    .pending { font-size: 0.85rem; color: #b7770d; background: #fff8e1; border-radius: 8px; padding: 8px 12px; margin-bottom: 6px; }
+    .inline-row { display: flex; gap: 8px; }
+    .inline-row input { margin-bottom: 0 !important; }
+    .inline-row button { white-space: nowrap; padding: 10px 16px; font-size: 0.9rem; }
+    .header-actions { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+    .header-actions button, .header-actions a { background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; padding: 7px 12px; font-size: 0.82rem; cursor: pointer; font-family: inherit; text-decoration: none; }
     #login-err { color: #c0392b; font-size: 0.85rem; margin-bottom: 10px; display: none; }
     .card { background: white; border-radius: 14px; padding: 28px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     .card h2 { font-size: 1rem; font-weight: 800; color: #0D2B55; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #EAF4FB; }
@@ -100,31 +114,74 @@
 </head>
 <body>
 
-<div id="login-screen">
+<!-- SIGN IN -->
+<div id="auth-screen" class="auth-box hidden">
   <div style="font-size:2.5rem;margin-bottom:12px;">&#9975;</div>
-  <h2>Ski Trip Admin</h2>
-  <p>Enter your school ID and your password. First time? Use the setup code you were given.</p>
-  <div id="login-err" style="color:#c0392b;font-size:0.85rem;margin-bottom:10px;display:none;">Incorrect. Try again.</div>
-  <input type="text" id="school-id-input" placeholder="School ID (e.g. stclares)" autocomplete="off">
-  <input type="password" id="pw-input" placeholder="Password" autocomplete="off">
-  <button class="btn-primary" style="width:100%;" onclick="doLogin()">Sign In</button>
+  <h2 id="auth-title">Ski Trip Admin</h2>
+  <p id="auth-sub">Sign in with your email and password.</p>
+  <div class="auth-err" id="auth-err"></div>
+  <div class="auth-ok" id="auth-ok"></div>
+  <input type="email" id="auth-email" placeholder="Email address" autocomplete="email">
+  <input type="password" id="auth-pw" placeholder="Password" autocomplete="current-password">
+  <input type="password" id="auth-pw2" class="hidden" placeholder="Confirm password" autocomplete="new-password">
+  <button class="btn-primary" id="auth-submit" style="width:100%;" onclick="authSubmit()">Sign In</button>
+  <div style="margin-top:14px;">
+    <button class="link-btn" id="auth-forgot" onclick="forgotPassword()">Forgot password?</button>
+    <button class="link-btn" id="auth-toggle" onclick="toggleAuthMode()">New here? Create an account</button>
+  </div>
 </div>
 
-<!-- SET PASSWORD (first time or setup code used) -->
-<div id="set-pw-screen" class="hidden">
-  <div style="font-size:2.5rem;margin-bottom:12px;">&#9975;</div>
-  <h2>Set Your Password</h2>
-  <p style="color:#666;font-size:0.9rem;margin-bottom:20px;">First time signing in — choose a password for your school's admin panel.</p>
-  <div id="set-pw-err" style="color:#c0392b;font-size:0.85rem;margin-bottom:10px;display:none;">Passwords do not match.</div>
-  <input type="password" id="new-pw-1" placeholder="New password" autocomplete="new-password">
-  <input type="password" id="new-pw-2" placeholder="Confirm password" autocomplete="new-password">
-  <button class="btn-primary" style="width:100%;" onclick="setNewPassword()">Set Password &amp; Continue</button>
+<!-- VERIFY EMAIL -->
+<div id="verify-screen" class="auth-box hidden">
+  <div style="font-size:2.5rem;margin-bottom:12px;">&#9993;&#65039;</div>
+  <h2>Check your email</h2>
+  <p>We've sent a verification link to <strong id="verify-email"></strong>. Click the link in that email, then press Continue. (Check your spam folder if it's not there.)</p>
+  <div class="auth-err" id="verify-err"></div>
+  <div class="auth-ok" id="verify-ok"></div>
+  <button class="btn-primary" style="width:100%;" onclick="checkVerified()">Continue</button>
+  <div style="margin-top:14px;">
+    <button class="link-btn" onclick="resendVerification()">Resend email</button>
+    <button class="link-btn" onclick="doSignOut()">Sign out</button>
+  </div>
+</div>
+
+<!-- PICK SCHOOL -->
+<div id="pick-screen" class="auth-box pick-box hidden">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h2 style="margin:0;">Your school sites</h2>
+    <button class="link-btn" onclick="doSignOut()">Sign out</button>
+  </div>
+  <p style="margin:6px 0 0;">Signed in as <strong id="pick-email"></strong></p>
+  <div id="admin-link" class="hidden" style="margin-top:14px;"><a class="btn-primary" href="superadmin.html" style="display:inline-block;text-decoration:none;padding:10px 18px;font-size:0.9rem;">⭐ Open Super Admin</a></div>
+  <div id="my-schools"></div>
+  <div id="my-requests"></div>
+
+  <h3>Create a new school site</h3>
+  <div class="auth-err" id="create-err"></div>
+  <div class="inline-row">
+    <input type="text" id="new-school-id" placeholder="Choose a school ID, e.g. stclares" autocomplete="off">
+    <button class="btn-primary" onclick="createSchool()">Create</button>
+  </div>
+  <p style="font-size:0.78rem;margin:6px 0 0;">Lowercase letters, numbers and dashes only. This becomes part of your site's link.</p>
+
+  <h3>Already have a site from before?</h3>
+  <div class="auth-err" id="request-err"></div>
+  <div class="auth-ok" id="request-ok"></div>
+  <div class="inline-row">
+    <input type="text" id="request-school-id" placeholder="Your existing school ID" autocomplete="off">
+    <button class="btn-primary" onclick="requestAccess()">Request access</button>
+  </div>
+  <p style="font-size:0.78rem;margin:6px 0 0;">The site administrator will approve your request, usually within a day. Your site stays online in the meantime.</p>
 </div>
 
 <div id="form-screen" class="hidden">
   <div class="header">
     <div style="font-size:1.8rem">&#9975;</div>
     <div><h1>Ski Trip Admin Panel</h1><p id="header-school"></p></div>
+    <div class="header-actions">
+      <button id="switch-btn" onclick="switchSchool()">Switch school</button>
+      <button onclick="doSignOut()">Sign out</button>
+    </div>
   </div>
   <div class="container">
 
@@ -449,7 +506,8 @@
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getFirestore, doc, getDoc, setDoc, deleteField, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getStorage, ref as sref, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js';
 
 const firebaseConfig = {
@@ -461,9 +519,10 @@ const firebaseConfig = {
   appId: "1:1083239970180:web:d8cdeac69c05efce9819d1"
 };
 
-const UNIVERSAL_SETUP_CODE = 'SKITRIP2027';
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
+const auth = getAuth(fbApp);
+let isSuperAdmin = false;
 const storage = getStorage(fbApp);
 let currentSchoolId = '';
 
@@ -522,60 +581,170 @@ function initDayDefaults(rows) {
   (rows || DEFAULT_DAY).forEach(function(r) { addDayRow(r); });
 }
 
-// ---- LOGIN ----
-window.doLogin = async function() {
-  var schoolId = document.getElementById('school-id-input').value.trim().toLowerCase().replace(/\s+/g,'-');
-  var pw = document.getElementById('pw-input').value;
-  var err = document.getElementById('login-err');
-  if (!schoolId) { err.style.display = 'block'; err.textContent = 'Please enter a school ID.'; return; }
-  if (!pw) { err.style.display = 'block'; err.textContent = 'Please enter a password.'; return; }
-  err.style.display = 'none';
+// ---- SIGN IN ----
+var authMode = 'signin';
+var SCREENS = ['auth-screen','verify-screen','pick-screen','form-screen'];
+function showScreen(id) { SCREENS.forEach(function(s){ document.getElementById(s).classList.toggle('hidden', s !== id); }); window.scrollTo(0, 0); }
+function msg(id, text) { var el = document.getElementById(id); el.textContent = text || ''; el.style.display = text ? 'block' : 'none'; }
+function friendlyAuthError(e) {
+  var c = (e && e.code) || '';
+  if (c.includes('invalid-credential') || c.includes('wrong-password') || c.includes('user-not-found')) return 'Email or password is incorrect.';
+  if (c.includes('email-already-in-use')) return 'There is already an account with that email. Sign in instead, or use "Forgot password?".';
+  if (c.includes('weak-password')) return 'Password must be at least 6 characters.';
+  if (c.includes('invalid-email')) return 'Please enter a valid email address.';
+  if (c.includes('too-many-requests')) return 'Too many attempts. Please wait a few minutes and try again.';
+  if (c.includes('permission-denied')) return 'You don\'t have permission to do that.';
+  if (c.includes('operation-not-allowed')) return 'Email sign-in isn\'t switched on yet. Please contact the site administrator.';
+  return 'Something went wrong: ' + ((e && e.message) || e);
+}
+function cleanId(v) { return (v || '').trim().toLowerCase().replace(/\s+/g, '-'); }
 
-  // Check Firestore for this school
-  var snap = await getDoc(doc(db, 'schools', schoolId));
-  var storedPw = snap.exists() ? snap.data().adminPassword : null;
-
-  // Case 1: school exists and has a password — check it
-  if (storedPw) {
-    if (pw !== storedPw) { err.style.display = 'block'; err.textContent = 'Incorrect password.'; return; }
-    enterAdmin(schoolId, snap.data());
-    return;
-  }
-
-  // Case 2: new school using the universal setup code — let them set their password
-  if (pw === UNIVERSAL_SETUP_CODE) {
-    currentSchoolId = schoolId;
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('set-pw-screen').classList.remove('hidden');
-    return;
-  }
-
-  // Case 3: wrong password / unknown school
-  err.style.display = 'block';
-  err.textContent = snap.exists() ? 'Incorrect password.' : 'School not found. Use the setup code to register for the first time.';
+window.toggleAuthMode = function() {
+  authMode = authMode === 'signin' ? 'signup' : 'signin';
+  var up = authMode === 'signup';
+  document.getElementById('auth-title').textContent = up ? 'Create an account' : 'Ski Trip Admin';
+  document.getElementById('auth-sub').textContent = up ? 'Use your school email address. You\'ll be asked to verify it.' : 'Sign in with your email and password.';
+  document.getElementById('auth-pw2').classList.toggle('hidden', !up);
+  document.getElementById('auth-forgot').classList.toggle('hidden', up);
+  document.getElementById('auth-submit').textContent = up ? 'Create Account' : 'Sign In';
+  document.getElementById('auth-toggle').textContent = up ? 'Already have an account? Sign in' : 'New here? Create an account';
+  document.getElementById('auth-pw').autocomplete = up ? 'new-password' : 'current-password';
+  msg('auth-err'); msg('auth-ok');
 };
 
-window.setNewPassword = async function() {
-  var pw1 = document.getElementById('new-pw-1').value;
-  var pw2 = document.getElementById('new-pw-2').value;
-  var err = document.getElementById('set-pw-err');
-  if (!pw1 || pw1.length < 6) { err.style.display = 'block'; err.textContent = 'Password must be at least 6 characters.'; return; }
-  if (pw1 !== pw2) { err.style.display = 'block'; err.textContent = 'Passwords do not match.'; return; }
-  err.style.display = 'none';
-  // Save new password, clear setup code
-  await setDoc(doc(db, 'schools', currentSchoolId), { adminPassword: pw1, setupCode: null }, { merge: true });
-  var snap = await getDoc(doc(db, 'schools', currentSchoolId));
-  document.getElementById('set-pw-screen').classList.add('hidden');
-  enterAdmin(currentSchoolId, snap.exists() ? snap.data() : {});
+window.authSubmit = async function() {
+  var email = document.getElementById('auth-email').value.trim();
+  var pw = document.getElementById('auth-pw').value;
+  msg('auth-err'); msg('auth-ok');
+  if (!email || !pw) { msg('auth-err', 'Please enter your email and password.'); return; }
+  try {
+    if (authMode === 'signup') {
+      if (pw !== document.getElementById('auth-pw2').value) { msg('auth-err', 'Passwords do not match.'); return; }
+      var cred = await createUserWithEmailAndPassword(auth, email, pw);
+      await sendEmailVerification(cred.user);
+    } else {
+      await signInWithEmailAndPassword(auth, email, pw);
+    }
+  } catch (e) { msg('auth-err', friendlyAuthError(e)); }
+};
+
+window.forgotPassword = async function() {
+  var email = document.getElementById('auth-email').value.trim();
+  msg('auth-err'); msg('auth-ok');
+  if (!email) { msg('auth-err', 'Type your email address above first, then press "Forgot password?" again.'); return; }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    msg('auth-ok', 'If there\'s an account for ' + email + ', a password reset link is on its way. Check your spam folder too.');
+  } catch (e) { msg('auth-err', friendlyAuthError(e)); }
+};
+
+window.checkVerified = async function() {
+  msg('verify-err');
+  await auth.currentUser.reload();
+  if (auth.currentUser.emailVerified) { await auth.currentUser.getIdToken(true); handleUser(auth.currentUser); }
+  else msg('verify-err', 'Not verified yet. Click the link in the email, then press Continue.');
+};
+window.resendVerification = async function() {
+  msg('verify-err'); msg('verify-ok');
+  try { await sendEmailVerification(auth.currentUser); msg('verify-ok', 'Sent again. Check your inbox and spam folder.'); }
+  catch (e) { msg('verify-err', friendlyAuthError(e)); }
+};
+window.doSignOut = async function() {
+  await signOut(auth);
+  if (currentSchoolId) location.href = location.pathname;
+};
+window.switchSchool = function() {
+  if (confirm('Switch school? Any changes you haven\'t saved will be lost.')) location.href = location.pathname;
+};
+
+onAuthStateChanged(auth, handleUser);
+async function handleUser(user) {
+  if (!user) {
+    isSuperAdmin = false;
+    document.getElementById('auth-pw').value = ''; document.getElementById('auth-pw2').value = '';
+    showScreen('auth-screen');
+    return;
+  }
+  if (!user.emailVerified) {
+    document.getElementById('verify-email').textContent = user.email;
+    showScreen('verify-screen');
+    return;
+  }
+  try { isSuperAdmin = (await getDoc(doc(db, 'admins', user.uid))).exists(); } catch (e) { isSuperAdmin = false; }
+  var direct = cleanId(new URLSearchParams(location.search).get('school'));
+  if (direct) {
+    var allowed = isSuperAdmin;
+    if (!allowed) { try { var o = await getDoc(doc(db, 'schoolOwners', direct)); allowed = o.exists() && o.data().uid === user.uid; } catch (e) {} }
+    if (allowed) { openSchool(direct); return; }
+  }
+  showPicker();
+}
+
+// ---- PICK / CREATE / REQUEST ----
+window.showPicker = async function() {
+  var user = auth.currentUser;
+  if (!user) return;
+  showScreen('pick-screen');
+  document.getElementById('pick-email').textContent = user.email;
+  document.getElementById('admin-link').classList.toggle('hidden', !isSuperAdmin);
+  ['create-err','request-err','request-ok'].forEach(function(id){ msg(id); });
+  var box = document.getElementById('my-schools');
+  box.innerHTML = '<p style="margin:16px 0 0;">Loading...</p>';
+  try {
+    var owned = await getDocs(query(collection(db, 'schoolOwners'), where('uid', '==', user.uid)));
+    var ids = []; owned.forEach(function(d){ ids.push(d.id); });
+    box.innerHTML = ids.length
+      ? '<h3>Edit a site</h3>' + ids.map(function(id){ return '<button class="school-btn" onclick="openSchool(\'' + id + '\')">' + id + ' <span>Edit →</span></button>'; }).join('')
+      : '<p style="margin:16px 0 0;">You don\'t have any school sites yet. Create one below, or request access to a site you made before.</p>';
+    var reqs = await getDocs(query(collection(db, 'accessRequests'), where('uid', '==', user.uid)));
+    var pend = []; reqs.forEach(function(d){ pend.push(d.data().schoolId); });
+    document.getElementById('my-requests').innerHTML = pend.length
+      ? '<h3>Waiting for approval</h3>' + pend.map(function(id){ return '<div class="pending">⏳ ' + id + ' — access requested</div>'; }).join('')
+      : '';
+  } catch (e) { box.innerHTML = '<p class="auth-err" style="display:block;">' + friendlyAuthError(e) + '</p>'; }
+};
+
+window.openSchool = async function(schoolId) {
+  // Reload for each school so no form values carry over from the previous one
+  if (currentSchoolId) { location.href = location.pathname + '?school=' + encodeURIComponent(schoolId); return; }
+  var snap = await getDoc(doc(db, 'schools', schoolId));
+  enterAdmin(schoolId, snap.exists() ? snap.data() : {});
+};
+
+window.createSchool = async function() {
+  var id = cleanId(document.getElementById('new-school-id').value);
+  msg('create-err');
+  if (!/^[a-z0-9][a-z0-9-]{1,39}$/.test(id)) { msg('create-err', 'Use 2–40 lowercase letters, numbers or dashes (no spaces or @).'); return; }
+  try {
+    if ((await getDoc(doc(db, 'schools', id))).exists()) { msg('create-err', 'That school ID is already taken. If it\'s your site from before, request access below.'); return; }
+    await setDoc(doc(db, 'schoolOwners', id), { uid: auth.currentUser.uid, email: auth.currentUser.email, createdAt: new Date().toISOString() });
+    document.getElementById('new-school-id').value = '';
+    openSchool(id);
+  } catch (e) {
+    msg('create-err', (e.code || '').includes('permission-denied') ? 'That school ID is already taken. Please choose another.' : friendlyAuthError(e));
+  }
+};
+
+window.requestAccess = async function() {
+  var id = cleanId(document.getElementById('request-school-id').value);
+  msg('request-err'); msg('request-ok');
+  if (!id) { msg('request-err', 'Please enter your school ID.'); return; }
+  try {
+    if (!(await getDoc(doc(db, 'schools', id))).exists()) { msg('request-err', 'No site found with the ID "' + id + '". Check the spelling. It\'s the part after ?school= in your site\'s link.'); return; }
+    var u = auth.currentUser;
+    await setDoc(doc(db, 'accessRequests', u.uid + '_' + id), { uid: u.uid, email: u.email, schoolId: id, requestedAt: new Date().toISOString() });
+    document.getElementById('request-school-id').value = '';
+    msg('request-ok', 'Request sent for "' + id + '". You\'ll be able to edit it here once it\'s approved.');
+    showPicker();
+    msg('request-ok', 'Request sent for "' + id + '". You\'ll be able to edit it here once it\'s approved.');
+  } catch (e) { msg('request-err', friendlyAuthError(e)); }
 };
 
 function enterAdmin(schoolId, data) {
   currentSchoolId = schoolId;
   crestUrl = null; skimapUrl = null; hotelPhotos = []; pastTripPhotos = []; youtubeVideos = []; policies = []; renderPolicies();
-  document.getElementById('login-screen').classList.add('hidden');
-  document.getElementById('set-pw-screen').classList.add('hidden');
-  document.getElementById('form-screen').classList.remove('hidden');
-  document.getElementById('header-school').textContent = 'School ID: ' + schoolId;
+  showScreen('form-screen');
+  document.getElementById('header-school').textContent = 'School ID: ' + schoolId + (isSuperAdmin ? ' · Super Admin' : '');
   updateUrlPreview();
   initPackingDefaults();
   initApresDefaults();
@@ -786,7 +955,7 @@ function uploadSingle(fileInputId, progId, barId, thumbsId, wide, onDone) {
     var file = e.target.files[0];
     if (!file) return;
     var ext = file.name.split('.').pop();
-    var path = 'schools/' + currentSchoolId + '/' + fileInputId.replace('-file','') + '.' + ext;
+    var path = 'schools/' + currentSchoolId + '/' + auth.currentUser.uid + '/' + fileInputId.replace('-file','') + '.' + ext;
     var prog = document.getElementById(progId);
     var bar  = document.getElementById(barId);
     prog.style.display = 'block'; bar.style.width = '0';
@@ -813,7 +982,7 @@ function uploadMultiple(fileInputId, progId, barId, thumbsId, urlArray) {
     prog.style.display = 'block'; bar.style.width = '0';
     for (var i = 0; i < files.length; i++) {
       var file = files[i];
-      var path = 'schools/' + currentSchoolId + '/' + fileInputId.replace('-files','') + '_' + Date.now() + '_' + i + '.' + file.name.split('.').pop();
+      var path = 'schools/' + currentSchoolId + '/' + auth.currentUser.uid + '/' + fileInputId.replace('-files','') + '_' + Date.now() + '_' + i + '.' + file.name.split('.').pop();
       await new Promise(function(resolve, reject) {
         var task = uploadBytesResumable(sref(storage, path), file);
         var fi = i;
@@ -912,7 +1081,7 @@ document.getElementById('policy-file').addEventListener('change', function(e) {
   var file = e.target.files[0];
   if (!file) return;
   if (file.size > 10 * 1024 * 1024) { alert('That file is over 10 MB. Please upload a smaller PDF or paste a link instead.'); e.target.value = ''; return; }
-  var path = 'schools/' + currentSchoolId + '/policy_' + Date.now() + '.' + file.name.split('.').pop();
+  var path = 'schools/' + currentSchoolId + '/' + auth.currentUser.uid + '/policy_' + Date.now() + '.' + file.name.split('.').pop();
   var prog = document.getElementById('policy-prog'), bar = document.getElementById('policy-bar');
   prog.style.display = 'block'; bar.style.width = '0';
   var task = uploadBytesResumable(sref(storage, path), file);
@@ -1037,7 +1206,9 @@ window.saveData = async function() {
   };
 
   try {
-    await setDoc(doc(db, 'schools', currentSchoolId), data, { merge: true }); // merge so adminPassword isn't wiped
+    data.adminPassword = deleteField(); // old shared-password system, no longer used
+    data.setupCode = deleteField();
+    await setDoc(doc(db, 'schools', currentSchoolId), data, { merge: true });
     document.getElementById('save-status').style.display = 'block';
     btn.textContent = 'Save and Publish'; btn.disabled = false;
     setTimeout(function(){ document.getElementById('save-status').style.display='none'; }, 3000);
