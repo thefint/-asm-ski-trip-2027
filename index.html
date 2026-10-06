@@ -207,6 +207,7 @@ function buildPage(c) {
         <button class="nav-btn" onclick="navTo('day')">Typical Day</button>
         <button class="nav-btn" onclick="navTo('videos')">Past Trip Videos</button>
         <button class="nav-btn" onclick="navTo('contact')">Contact</button>
+        ${(c.policies || []).length ? `<button class="nav-btn" onclick="navTo('policies')">Policies</button>` : ''}
       </div>
     </nav>
 
@@ -496,6 +497,22 @@ function buildPage(c) {
         </div>
       </section>
 
+      ${(c.policies || []).length ? `
+      <!-- POLICIES -->
+      <section id="policies">
+        <hr class="divider">
+        <div class="section-title">📄 Policies</div>
+        <p class="section-sub">Please read these school policies before the trip.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;">
+          ${c.policies.map(p => `
+            <div class="info-card">
+              <h3>📄 ${p.title}</h3>
+              ${p.description ? `<p style="margin-bottom:10px;">${p.description}</p>` : ''}
+              <a class="hotel-link" href="${p.url}" target="_blank" rel="noopener">View policy →</a>
+            </div>`).join('')}
+        </div>
+      </section>` : ''}
+
     </div>
 
     <footer>
@@ -520,7 +537,7 @@ function buildPage(c) {
   setInterval(updateCountdown, 1000);
 
   // Active nav
-  const sectionIds = ['trip','hotel','maps','deadlines','packing','health','travel','day','videos','contact'];
+  const sectionIds = ['trip','hotel','maps','deadlines','packing','health','travel','day','videos','contact','policies'];
   const navBtns = document.querySelectorAll('.nav-btn');
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => {

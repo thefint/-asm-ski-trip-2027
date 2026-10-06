@@ -400,6 +400,26 @@
       <button class="add-btn" style="margin-top:10px;" onclick="addYouTube()">+ Add Video</button>
     </div>
 
+    <!-- POLICIES -->
+    <div class="card">
+      <h2>📄 Policies</h2>
+      <p class="section-note">Add school policies for parents to read before the trip, e.g. School Tour Policy, Code of Behaviour. Paste a link (Google Drive, school website) or upload a PDF. These appear in a Policies section at the end of your site.</p>
+      <div id="policy-list"></div>
+      <div class="row2" style="margin-top:8px;">
+        <div class="field" style="margin:0;"><label>Policy Title</label><input type="text" id="policy-title" placeholder="e.g. School Tour Policy"></div>
+        <div class="field" style="margin:0;"><label>Link to Policy</label><input type="text" id="policy-url" placeholder="https://..."></div>
+      </div>
+      <div class="field" style="margin-top:12px;"><label>Short Description (optional)</label><input type="text" id="policy-desc" placeholder="e.g. Rules and expectations for all school trips"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <button class="add-btn" onclick="addPolicy()">+ Add Policy (with link)</button>
+        <span style="font-size:0.83rem;color:#888;">or</span>
+        <button class="add-btn" onclick="startPolicyUpload()">📎 Upload PDF instead</button>
+      </div>
+      <input type="file" id="policy-file" accept=".pdf,.doc,.docx,application/pdf" style="display:none">
+      <div class="upload-prog" id="policy-prog"><div class="upload-prog-bar" id="policy-bar"></div></div>
+      <p class="section-note" style="margin:10px 0 0;">Using a Google Drive link? Set sharing to <strong>Anyone with the link</strong> so parents can open it.</p>
+    </div>
+
     <!-- GDPR NOTICE -->
     <div class="card" style="background:#fff8e1;border-left:4px solid #f39c12;">
       <h2 style="color:#b7770d;">&#9888;&#65039; GDPR &amp; Photo Consent Reminder</h2>
@@ -453,6 +473,7 @@ let skimapUrl = null;
 let hotelPhotos = [];
 let pastTripPhotos = [];
 let youtubeVideos = [];
+let policies = [];
 
 // ---- DEFAULTS ----
 const DEFAULT_DAY = [
@@ -550,7 +571,7 @@ window.setNewPassword = async function() {
 
 function enterAdmin(schoolId, data) {
   currentSchoolId = schoolId;
-  crestUrl = null; skimapUrl = null; hotelPhotos = []; pastTripPhotos = []; youtubeVideos = [];
+  crestUrl = null; skimapUrl = null; hotelPhotos = []; pastTripPhotos = []; youtubeVideos = []; policies = []; renderPolicies();
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('set-pw-screen').classList.add('hidden');
   document.getElementById('form-screen').classList.remove('hidden');
@@ -873,6 +894,50 @@ function renderYouTube() {
   }).join('');
 }
 
+// ---- POLICIES ----
+window.addPolicy = function(uploadedUrl) {
+  var title = document.getElementById('policy-title').value.trim();
+  var url = uploadedUrl || document.getElementById('policy-url').value.trim();
+  if (!title) { alert('Please enter a policy title first.'); return; }
+  if (!/^https?:\/\//i.test(url)) { alert('Please paste a link starting with https://, or use Upload PDF instead.'); return; }
+  policies.push({ title: title, description: document.getElementById('policy-desc').value.trim(), url: url });
+  ['policy-title','policy-url','policy-desc'].forEach(function(id){ document.getElementById(id).value = ''; });
+  renderPolicies();
+};
+window.startPolicyUpload = function() {
+  if (!document.getElementById('policy-title').value.trim()) { alert('Please enter a policy title first, then upload the file.'); return; }
+  document.getElementById('policy-file').click();
+};
+document.getElementById('policy-file').addEventListener('change', function(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) { alert('That file is over 10 MB. Please upload a smaller PDF or paste a link instead.'); e.target.value = ''; return; }
+  var path = 'schools/' + currentSchoolId + '/policy_' + Date.now() + '.' + file.name.split('.').pop();
+  var prog = document.getElementById('policy-prog'), bar = document.getElementById('policy-bar');
+  prog.style.display = 'block'; bar.style.width = '0';
+  var task = uploadBytesResumable(sref(storage, path), file);
+  task.on('state_changed',
+    function(s){ bar.style.width = (s.bytesTransferred/s.totalBytes*100)+'%'; },
+    function(err){ alert('Upload failed: '+err.message); prog.style.display='none'; },
+    async function(){
+      var url = await getDownloadURL(task.snapshot.ref);
+      prog.style.display = 'none';
+      e.target.value = '';
+      window.addPolicy(url);
+    }
+  );
+});
+function renderPolicies() {
+  document.getElementById('policy-list').innerHTML = policies.map(function(p, i) {
+    return '<div class="yt-item"><div class="yt-thumb-fallback">📄</div>'
+      + '<div class="yt-info"><div class="yt-title">' + p.title + '</div>'
+      + (p.description ? '<div class="yt-id">' + p.description + '</div>' : '')
+      + '<div class="yt-id"><a href="' + p.url + '" target="_blank" rel="noopener">Open to check</a></div></div>'
+      + '<button class="remove-btn" style="position:static;" onclick="removePolicy(' + i + ')">×</button></div>';
+  }).join('');
+}
+window.removePolicy = function(i) { policies.splice(i, 1); renderPolicies(); };
+
 window.driveThumbFailed = function(img) {
   var fb = document.createElement('div'); fb.className = 'yt-thumb-fallback'; fb.textContent = '🎥';
   img.replaceWith(fb);
@@ -963,6 +1028,7 @@ window.saveData = async function() {
     hotelPhotos: hotelPhotos.slice(),
     pastTripPhotos: pastTripPhotos.slice(),
     youtubeVideos: youtubeVideos.slice(),
+    policies: policies.slice(),
     shops: {
       new: [{name:'Lidl',url:'https://www.lidl.ie',icon:'🛒'},{name:'Aldi',url:'https://www.aldi.ie',icon:'🛒'},{name:'Decathlon',url:'https://www.decathlon.ie',icon:'🏔️'},{name:'Sports Direct',url:'https://ie.sportsdirect.com',icon:'⚽'}],
       secondhand: [{name:'Vinted',url:'https://www.vinted.ie',icon:'👗'},{name:'Adverts.ie',url:'https://www.adverts.ie',icon:'📋'},{name:'Depop',url:'https://www.depop.com',icon:'🛍️'}]
@@ -1038,6 +1104,7 @@ function loadForm(d) {
     pastTripPhotos = d.pastTripPhotos.slice();
     pastTripPhotos.forEach(function(url){ addThumb('past-thumbs', url, pastTripPhotos, false); });
   }
+  if (d.policies && d.policies.length) { policies = d.policies.slice(); renderPolicies(); }
   if (d.youtubeVideos && d.youtubeVideos.length) {
     youtubeVideos = d.youtubeVideos.slice();
     renderYouTube();

@@ -211,6 +211,13 @@
       description: cash.note || 'Cash will be collected and must be handed in to the school.',
       status: 'upcoming'
     }] : []);
+    const policyCards = (c.policies || []).map(p => `
+      <div class="info-card">
+        <h3>📄 ${p.title}</h3>
+        ${p.description ? `<p style="margin-bottom:10px;">${p.description}</p>` : ''}
+        <a class="hotel-link" href="${p.url}" target="_blank" rel="noopener">View policy →</a>
+      </div>`).join('');
+
     const deadlines = allDeadlines.map(d => `
       <div class="tl-item ${d.status === 'done' ? 'done' : ''}">
         <div class="tl-card">
@@ -284,6 +291,7 @@
           ${pastPhotos ? '<button class="nav-btn" onclick="navTo(\'pastphotos\')">Past Trips</button>' : ''}
           ${ytVideos ? '<button class="nav-btn" onclick="navTo(\'videos\')">Videos</button>' : ''}
           <button class="nav-btn" onclick="navTo('contact')">Contact</button>
+          ${policyCards ? '<button class="nav-btn" onclick="navTo(\'policies\')">Policies</button>' : ''}
         </div>
       </nav>
 
@@ -377,6 +385,8 @@
             ${c.claimsPhone || c.claimsEmail ? `<div class="contact-card"><h3>Insurance Claims</h3><div class="cname">Accident & General</div><div class="cdetail">${c.claimsPhone ? `<a href="tel:${c.claimsPhone}">${c.claimsPhone}</a><br>` : ''}${c.claimsEmail ? `<a href="mailto:${c.claimsEmail}">${c.claimsEmail}</a>` : ''}</div></div>` : ''}
           </div>
         </section>
+
+        ${policyCards ? `<section id="policies"><hr class="divider"><div class="section-title">📄 Policies</div><p class="section-sub">Please read these school policies before the trip.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;">${policyCards}</div></section>` : ''}
       </div>
 
       <footer>
