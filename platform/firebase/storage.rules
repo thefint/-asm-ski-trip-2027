@@ -1,0 +1,20 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Anyone can view school photos and policy files
+    match /schools/{schoolId}/{file=**} {
+      allow read: if true;
+    }
+    // Uploads go into the uploader's own folder: schools/{schoolId}/{their uid}/...
+    // Only verified, signed-in users can upload, only into their own folder,
+    // only images, PDFs or Word documents, and only up to 20 MB.
+    match /schools/{schoolId}/{uid}/{file=**} {
+      allow create, update: if request.auth != null
+        && request.auth.uid == uid
+        && request.auth.token.email_verified == true
+        && request.resource.size < 20 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*|application/pdf|application/msword|application/vnd[.]openxmlformats-officedocument[.]wordprocessingml[.]document');
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
