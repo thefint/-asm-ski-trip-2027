@@ -65,7 +65,17 @@
     <div class="card">
       <h2>🏫 All School Sites <span id="school-count" style="font-size:0.8rem;color:#888;font-weight:400;"></span></h2>
       <p class="note">Edit any site, send its owner a password reset email, or remove a site. Teachers can't see this page.</p>
-      <input type="text" class="search" id="search" placeholder="Search by school ID, name or owner email..." oninput="renderSchools()">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+        <input type="text" class="search" id="search" placeholder="Search by school ID, name or owner email..." oninput="renderSchools()" style="flex:1;min-width:220px;margin:0;">
+        <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;color:#555;">Sort by
+          <select id="sort" onchange="renderSchools()" style="padding:9px 10px;border:2px solid #e0e8f0;border-radius:10px;font-size:0.9rem;font-family:inherit;">
+            <option value="name">School name (A–Z)</option>
+            <option value="name-desc">School name (Z–A)</option>
+            <option value="updated">Last modified (newest first)</option>
+            <option value="updated-asc">Last modified (oldest first)</option>
+          </select>
+        </label>
+      </div>
       <div id="schools"><div class="empty">Loading...</div></div>
     </div>
 
@@ -104,7 +114,7 @@ let requests = [];  // [{id, data}]
 
 function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 function toast(t) { var el = document.getElementById('toast'); el.textContent = t; el.style.display = 'block'; clearTimeout(toast._t); toast._t = setTimeout(function(){ el.style.display = 'none'; }, 3500); }
-function fmtDate(iso) { if (!iso) return '—'; var d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleDateString('en-IE', { day: 'numeric', month: 'short', year: 'numeric' }); }
+function fmtDate(iso) { if (!iso) return '—'; var d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleDateString('en-IE', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + d.toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' }); }
 function gate(title, text, showLink) {
   document.getElementById('gate-title').textContent = title;
   document.getElementById('gate-text').textContent = text;
@@ -168,12 +178,21 @@ window.renderSchools = function() {
     var o = owners[s.id];
     return [s.id, s.data.schoolName, s.data.tripName, o && o.email].some(function(v){ return (v || '').toLowerCase().includes(q); });
   });
+  var sortBy = document.getElementById('sort').value;
+  var nameOf = function(s){ return (s.data.schoolName || s.id).toLowerCase(); };
+  var dateOf = function(s){ return s.data.updatedAt || ''; };
+  list.sort(function(a, b) {
+    if (sortBy === 'name') return nameOf(a).localeCompare(nameOf(b));
+    if (sortBy === 'name-desc') return nameOf(b).localeCompare(nameOf(a));
+    if (sortBy === 'updated') return dateOf(b).localeCompare(dateOf(a));
+    return dateOf(a).localeCompare(dateOf(b));
+  });
   document.getElementById('school-count').textContent = '(' + schools.length + ')';
   document.getElementById('schools').innerHTML = list.length ? list.map(function(s) {
     var o = owners[s.id], d = s.data, id = encodeURIComponent(s.id);
     return '<div class="row"><div class="main">'
-      + '<div class="title">' + esc(d.schoolName || s.id) + '</div>'
-      + '<div class="sub">ID: ' + esc(s.id) + (d.tripName ? ' · ' + esc(d.tripName) : '') + ' · updated ' + fmtDate(d.updatedAt) + '</div>'
+      + '<div class="title">' + (d.schoolName ? esc(d.schoolName) : esc(s.id) + ' <span style="font-weight:400;color:#b7770d;font-size:0.8rem;">(no school name yet)</span>') + '</div>'
+      + '<div class="sub">ID: ' + esc(s.id) + (d.tripName ? ' · ' + esc(d.tripName) : '') + ' · last modified ' + fmtDate(d.updatedAt) + '</div>'
       + '<div class="sub">Owner: ' + (o ? esc(o.email) : '<em>none yet</em>') + '</div>'
       + (d.adminPassword !== undefined || d.setupCode !== undefined ? '<div class="warn">⚠️ Still has an old password stored. Use "Remove old passwords" below.</div>' : '')
       + '</div><div class="actions">'
