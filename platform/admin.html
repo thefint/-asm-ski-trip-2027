@@ -467,6 +467,20 @@
       <button class="add-btn" style="margin-top:10px;" onclick="addYouTube()">+ Add Video</button>
     </div>
 
+    <!-- FORMS -->
+    <div class="card">
+      <h2>📝 Forms for Parents &amp; Students (optional)</h2>
+      <p class="section-note">Link a Google Form (or any online form) for parents or students to fill in, e.g. a <strong>rooming list</strong>, medical form or consent form. Each one appears on your site with an "Open form" button. Leave this empty if you don't use forms.</p>
+      <div id="forms-list"></div>
+      <div class="row2" style="margin-top:8px;">
+        <div class="field" style="margin:0;"><label>Form Title</label><input type="text" id="form-title" placeholder="e.g. Rooming List"></div>
+        <div class="field" style="margin:0;"><label>Link to Form</label><input type="text" id="form-url" placeholder="https://forms.gle/..."></div>
+      </div>
+      <div class="field" style="margin-top:12px;"><label>Instructions (optional)</label><input type="text" id="form-desc" placeholder="e.g. List up to 5 friends you'd like to share with. Please complete by 1 December."></div>
+      <button class="add-btn" onclick="addForm()">+ Add Form</button>
+      <p class="section-note" style="margin:10px 0 0;">In Google Forms, press <strong>Send</strong> → the link icon 🔗 → <strong>Copy</strong>. If your form only accepts responses from your school's Google accounts, parents without one won't be able to open it. Check under <strong>Settings → Responses</strong>.</p>
+    </div>
+
     <!-- POLICIES -->
     <div class="card">
       <h2>📄 Policies</h2>
@@ -543,6 +557,7 @@ let hotelPhotos = [];
 let pastTripPhotos = [];
 let youtubeVideos = [];
 let policies = [];
+let forms = [];
 
 // ---- DEFAULTS ----
 const DEFAULT_DAY = [
@@ -773,7 +788,7 @@ window.requestAccess = async function() {
 
 function enterAdmin(schoolId, data) {
   currentSchoolId = schoolId;
-  crestUrl = null; skimapUrl = null; hotelPhotos = []; pastTripPhotos = []; youtubeVideos = []; policies = []; renderPolicies();
+  crestUrl = null; skimapUrl = null; hotelPhotos = []; pastTripPhotos = []; youtubeVideos = []; policies = []; renderPolicies(); forms = []; renderForms();
   showScreen('form-screen');
   document.getElementById('header-school').textContent = 'School ID: ' + schoolId + (isSuperAdmin ? ' · Super Admin' : '');
   updateUrlPreview();
@@ -1094,6 +1109,27 @@ function renderYouTube() {
   }).join('');
 }
 
+// ---- FORMS ----
+window.addForm = function() {
+  var title = document.getElementById('form-title').value.trim();
+  var url = document.getElementById('form-url').value.trim();
+  if (!title) { alert('Please enter a form title, e.g. Rooming List.'); return; }
+  if (!/^https?:\/\//i.test(url)) { alert('Please paste the form link, starting with https://'); return; }
+  forms.push({ title: title, description: document.getElementById('form-desc').value.trim(), url: url });
+  ['form-title','form-url','form-desc'].forEach(function(id){ document.getElementById(id).value = ''; });
+  renderForms();
+};
+function renderForms() {
+  document.getElementById('forms-list').innerHTML = forms.map(function(f, i) {
+    return '<div class="yt-item"><div class="yt-thumb-fallback">📝</div>'
+      + '<div class="yt-info"><div class="yt-title">' + f.title + '</div>'
+      + (f.description ? '<div class="yt-id">' + f.description + '</div>' : '')
+      + '<div class="yt-id"><a href="' + f.url + '" target="_blank" rel="noopener">Open to check</a></div></div>'
+      + '<button class="remove-btn" style="position:static;" onclick="removeForm(' + i + ')">×</button></div>';
+  }).join('');
+}
+window.removeForm = function(i) { forms.splice(i, 1); renderForms(); };
+
 // ---- POLICIES ----
 window.addPolicy = function(uploadedUrl) {
   var title = document.getElementById('policy-title').value.trim();
@@ -1237,6 +1273,7 @@ window.saveData = async function() {
     pastTripPhotos: pastTripPhotos.slice(),
     youtubeVideos: youtubeVideos.slice(),
     policies: policies.slice(),
+    forms: forms.slice(),
     shops: {
       new: [{name:'Lidl',url:'https://www.lidl.ie',icon:'🛒'},{name:'Aldi',url:'https://www.aldi.ie',icon:'🛒'},{name:'Decathlon',url:'https://www.decathlon.ie',icon:'🏔️'},{name:'Sports Direct',url:'https://ie.sportsdirect.com',icon:'⚽'}],
       secondhand: [{name:'Vinted',url:'https://www.vinted.ie',icon:'👗'},{name:'Adverts.ie',url:'https://www.adverts.ie',icon:'📋'},{name:'Depop',url:'https://www.depop.com',icon:'🛍️'}]
@@ -1316,6 +1353,7 @@ function loadForm(d) {
     pastTripPhotos.forEach(function(url){ addThumb('past-thumbs', url, pastTripPhotos, false); });
   }
   if (d.policies && d.policies.length) { policies = d.policies.slice(); renderPolicies(); }
+  if (d.forms && d.forms.length) { forms = d.forms.slice(); renderForms(); }
   if (d.youtubeVideos && d.youtubeVideos.length) {
     youtubeVideos = d.youtubeVideos.slice();
     renderYouTube();

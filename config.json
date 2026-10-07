@@ -162,6 +162,13 @@
     { "src": "Ehrwald 2022.mp4", "title": "Ehrwald 2022" },
     { "src": "Andolo 2023.mp4", "title": "Andolo 2023" }
   ],
+  "policies": [
+    {
+      "title": "Code of Behaviour",
+      "description": "Ardscoil Mhuire's Code of Behaviour. It applies on all school trips and tours, including the ski trip.",
+      "url": "Code_of_Behaviour.pdf"
+    }
+  ],
   "ehic": {
     "applyUrl": "https://www.ehic.ie"
   }

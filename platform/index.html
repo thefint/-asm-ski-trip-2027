@@ -94,6 +94,8 @@
     .shop-label { font-size: 0.73rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; margin-top: 20px; }
 
     .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .form-btn, .info-card a.form-btn { display: inline-block; background: var(--navy); color: var(--white); text-decoration: none; font-weight: 700; font-size: 0.9rem; padding: 10px 18px; border-radius: 10px; }
+    .form-btn:hover, .info-card a.form-btn:hover { background: var(--navy-mid); color: var(--white); text-decoration: none; }
     .hotel-link { color: var(--sky); font-weight: 600; text-decoration: none; }
     .hotel-link:hover { text-decoration: underline; }
     .info-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
@@ -211,6 +213,13 @@
       description: cash.note || 'Cash will be collected and must be handed in to the school.',
       status: 'upcoming'
     }] : []);
+    const formCards = (c.forms || []).map(f => `
+      <div class="info-card">
+        <h3>📝 ${f.title}</h3>
+        ${f.description ? `<p style="margin-bottom:12px;">${f.description}</p>` : ''}
+        <a class="form-btn" href="${f.url}" target="_blank" rel="noopener">Open form →</a>
+      </div>`).join('');
+
     const policyCards = (c.policies || []).map(p => `
       <div class="info-card">
         <h3>📄 ${p.title}</h3>
@@ -284,6 +293,7 @@
           ${hasHotel ? '<button class="nav-btn" onclick="navTo(\'hotel\')">Hotel</button>' : ''}
           ${skiMapHtml ? '<button class="nav-btn" onclick="navTo(\'maps\')">Ski Map</button>' : ''}
           ${deadlines ? '<button class="nav-btn" onclick="navTo(\'deadlines\')">Deadlines</button>' : ''}
+          ${formCards ? '<button class="nav-btn" onclick="navTo(\'forms\')">Forms</button>' : ''}
           <button class="nav-btn" onclick="navTo('packing')">What to Pack</button>
           <button class="nav-btn" onclick="navTo('health')">EHIC & Insurance</button>
           <button class="nav-btn" onclick="navTo('travel')">Travel Info</button>
@@ -325,6 +335,8 @@
         ${skiMapHtml ? `<section id="maps"><hr class="divider"><div class="section-title">🗺️ Ski Map</div><p class="section-sub">Ski area at ${c.destination}.</p><div style="display:flex;flex-direction:column;gap:20px;">${skiMapHtml}</div></section>` : ''}
 
         ${deadlines ? `<section id="deadlines"><hr class="divider"><div class="section-title">📅 Payment Deadlines</div><p class="section-sub">Key dates — mark these in your calendar.</p><div class="timeline">${deadlines}</div></section>` : ''}
+
+        ${formCards ? `<section id="forms"><hr class="divider"><div class="section-title">📝 Forms to Fill In</div><p class="section-sub">Please complete these forms for the trip.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;">${formCards}</div></section>` : ''}
 
         <section id="packing">
           <hr class="divider">
