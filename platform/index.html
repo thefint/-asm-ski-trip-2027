@@ -236,7 +236,22 @@
         </div>
       </div>`).join('');
 
-    const scheduleRows = (c.typicalDay || []).map(row => `
+    // Après ski activities ticked in the admin form, e.g. "movie night, bingo, swimming & sledging"
+    const apresList = (c.apresSki || []).map(a => String(a).trim()).filter(Boolean)
+      .map((a, i) => i === 0 || /[A-Z]/.test(a.slice(1)) ? a : a.charAt(0).toLowerCase() + a.slice(1));
+    const apresText = apresList.length > 1 ? apresList.slice(0, -1).join(', ') + ' & ' + apresList[apresList.length - 1] : (apresList[0] || '');
+    const isApresRow = row => /apr[eè]s/i.test(row.text || '') || /^evening$/i.test((row.time || '').trim());
+    const dayRows = (c.typicalDay || []).slice();
+    const apresIdx = apresText ? dayRows.findIndex(isApresRow) : -1;
+    if (apresText && apresIdx >= 0) {
+      dayRows[apresIdx] = Object.assign({}, dayRows[apresIdx], { text: (dayRows[apresIdx].text || 'Après ski activities') + ': ' + apresText });
+    } else if (apresText) {
+      // No evening line in their schedule: add one straight after dinner (or at the end)
+      const dinnerIdx = dayRows.findIndex(r => /dinner/i.test((r.time || '') + ' ' + (r.text || '')));
+      dayRows.splice(dinnerIdx >= 0 ? dinnerIdx + 1 : dayRows.length, 0, { time: 'Evening', icon: '🎉', text: 'Après ski activities: ' + apresText });
+    }
+
+    const scheduleRows = dayRows.map(row => `
       <div class="schedule-row">
         <div class="sched-time">${row.time}</div>
         <div class="sched-content">
