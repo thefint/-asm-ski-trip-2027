@@ -45,4 +45,6 @@ Get an email whenever a teacher presses **Request access**.
 2. Delete what's in the editor and paste in the contents of `notify-requests.gs`. Press **Save** (💾).
 3. In the function menu at the top choose **testEmail** → **Run** → **Review permissions** → choose your account → **Advanced** → **Go to project (unsafe)** → **Allow**. You should get a test email.
 4. **Deploy** → **New deployment** → gear icon ⚙ → **Web app**. Set **Execute as: Me** and **Who has access: Anyone** → **Deploy**.
-5. Copy the **Web app URL** (ends in `/exec`) and put it in `REQUEST_NOTIFY_URL` near the top of the script in `admin.html`.
+5. Copy the **Web app URL** (ends in `/exec`) and put it in `REQUEST_NOTIFY_URL` near the top of the script in `admin.html`. (Done: notifications are switched on.)
+
+If you change the script later, use **Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy** so the web address stays the same.
