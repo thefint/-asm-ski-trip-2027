@@ -36,3 +36,13 @@ They press **Forgot password?** on the sign-in screen, or you press **Send passw
 ## Adding another Super Admin
 
 Repeat step 2.3–2.4 with their User UID.
+
+## Access request emails (optional)
+
+Get an email whenever a teacher presses **Request access**.
+
+1. Go to https://script.google.com while signed in to the Google account that should receive the emails → **New project**.
+2. Delete what's in the editor and paste in the contents of `notify-requests.gs`. Press **Save** (💾).
+3. In the function menu at the top choose **testEmail** → **Run** → **Review permissions** → choose your account → **Advanced** → **Go to project (unsafe)** → **Allow**. You should get a test email.
+4. **Deploy** → **New deployment** → gear icon ⚙ → **Web app**. Set **Execute as: Me** and **Who has access: Anyone** → **Deploy**.
+5. Copy the **Web app URL** (ends in `/exec`) and put it in `REQUEST_NOTIFY_URL` near the top of the script in `admin.html`.

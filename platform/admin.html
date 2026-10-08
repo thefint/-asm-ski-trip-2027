@@ -565,6 +565,10 @@ const firebaseConfig = {
   appId: "1:1083239970180:web:d8cdeac69c05efce9819d1"
 };
 
+// Web address of the Google Apps Script that emails the site administrator when a
+// teacher requests access (see platform/firebase/notify-requests.gs). Empty = off.
+const REQUEST_NOTIFY_URL = '';
+
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
 const auth = getAuth(fbApp);
@@ -802,9 +806,15 @@ window.requestAccess = async function() {
   msg('request-err'); msg('request-ok');
   if (!id) { msg('request-err', 'Please enter your school ID.'); return; }
   try {
-    if (!(await getDoc(doc(db, 'schools', id))).exists()) { msg('request-err', 'No site found with the ID "' + id + '". Check the spelling. It\'s the part after ?school= in your site\'s link.'); return; }
+    var schoolSnap = await getDoc(doc(db, 'schools', id));
+    if (!schoolSnap.exists()) { msg('request-err', 'No site found with the ID "' + id + '". Check the spelling. It\'s the part after ?school= in your site\'s link.'); return; }
     var u = auth.currentUser;
     await setDoc(doc(db, 'accessRequests', u.uid + '_' + id), { uid: u.uid, email: u.email, schoolId: id, requestedAt: new Date().toISOString() });
+    if (REQUEST_NOTIFY_URL) {
+      // Fire-and-forget email to the administrator; the request is already saved either way
+      fetch(REQUEST_NOTIFY_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ email: u.email, schoolId: id, schoolName: schoolSnap.data().schoolName || '' }) }).catch(function(){});
+    }
     document.getElementById('request-school-id').value = '';
     msg('request-ok', 'Request sent for "' + id + '". You\'ll be able to edit it here once it\'s approved.');
     showPicker();
