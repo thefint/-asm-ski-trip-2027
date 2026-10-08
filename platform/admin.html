@@ -22,6 +22,8 @@
     .google-btn:hover { border-color: #5BA4CF; }
     .or-line { display: flex; align-items: center; gap: 10px; color: #999; font-size: 0.8rem; margin: 16px 0; }
     .or-line::before, .or-line::after { content: ''; flex: 1; height: 1px; background: #e0e8f0; }
+    .first-time { background: #eef6fc; border: 1.5px solid #cfe3f3; border-radius: 10px; padding: 10px 14px; font-size: 0.83rem; color: #334; line-height: 1.5; margin-bottom: 16px; text-align: left; }
+    .first-time a { color: #2d7fb8; }
     .link-btn { background: none; border: none; color: #2d7fb8; font-size: 0.88rem; cursor: pointer; font-family: inherit; padding: 6px; text-decoration: underline; }
     .pick-box { max-width: 560px; text-align: left; }
     .pick-box h3 { font-size: 0.95rem; color: #0D2B55; margin: 22px 0 10px; }
@@ -118,11 +120,30 @@
 </head>
 <body>
 
+<!-- LOADING (shown until the sign-in system has loaded) -->
+<div id="loading-screen" class="auth-box">
+  <div style="font-size:2.5rem;margin-bottom:12px;">&#9975;</div>
+  <h2>Ski Trip Admin</h2>
+  <p id="loading-text">Loading...</p>
+</div>
+<script>
+  // If the sign-in system hasn't loaded after 12 seconds, explain what to try instead of showing a blank page
+  setTimeout(function() {
+    if (window.__authReady) return;
+    document.getElementById('loading-text').innerHTML = '<strong>This is taking longer than usual.</strong><br><br>'
+      + '1. Refresh the page (Cmd+Shift+R on a Mac, Ctrl+Shift+R on Windows).<br>'
+      + '2. Try a different browser, e.g. Google Chrome.<br>'
+      + '3. If you use an ad blocker or content blocker, turn it off for this page.<br>'
+      + '4. School or work Wi-Fi sometimes blocks sign-in. Try mobile data or home Wi-Fi.';
+  }, 12000);
+</script>
+
 <!-- SIGN IN -->
 <div id="auth-screen" class="auth-box hidden">
   <div style="font-size:2.5rem;margin-bottom:12px;">&#9975;</div>
   <h2 id="auth-title">Ski Trip Admin</h2>
-  <p id="auth-sub">Sign in with your email and password.</p>
+  <p id="auth-sub">Sign in with Google, or with your email and password.</p>
+  <div class="first-time" id="first-time-note"><strong>First time using the new sign-in?</strong> Old school IDs and passwords no longer work. Press <strong>Sign in with Google</strong>, or <a href="#" onclick="toggleAuthMode();return false;">create an account</a> with your email.</div>
   <div class="auth-err" id="auth-err"></div>
   <div class="auth-ok" id="auth-ok"></div>
   <button class="google-btn" id="google-btn" onclick="googleSignIn()">
@@ -144,7 +165,8 @@
 <div id="verify-screen" class="auth-box hidden">
   <div style="font-size:2.5rem;margin-bottom:12px;">&#9993;&#65039;</div>
   <h2>Check your email</h2>
-  <p>We've sent a verification link to <strong id="verify-email"></strong>. Click the link in that email, then press Continue. (Check your spam folder if it's not there.)</p>
+  <p>We've sent a verification link to <strong id="verify-email"></strong>. Click the link in that email, then press Continue.</p>
+  <p style="font-size:0.82rem;">Not arrived after 5 minutes? Check your spam or junk folder. Some school email systems block these emails. If so, sign out and use <strong>Sign in with Google</strong> instead, or create an account with a personal email address.</p>
   <div class="auth-err" id="verify-err"></div>
   <div class="auth-ok" id="verify-ok"></div>
   <button class="btn-primary" style="width:100%;" onclick="checkVerified()">Continue</button>
@@ -608,12 +630,12 @@ function initDayDefaults(rows) {
 
 // ---- SIGN IN ----
 var authMode = 'signin';
-var SCREENS = ['auth-screen','verify-screen','pick-screen','form-screen'];
+var SCREENS = ['loading-screen','auth-screen','verify-screen','pick-screen','form-screen'];
 function showScreen(id) { SCREENS.forEach(function(s){ document.getElementById(s).classList.toggle('hidden', s !== id); }); window.scrollTo(0, 0); }
 function msg(id, text) { var el = document.getElementById(id); el.textContent = text || ''; el.style.display = text ? 'block' : 'none'; }
 function friendlyAuthError(e) {
   var c = (e && e.code) || '';
-  if (c.includes('invalid-credential') || c.includes('wrong-password') || c.includes('user-not-found')) return 'Email or password is incorrect.';
+  if (c.includes('invalid-credential') || c.includes('wrong-password') || c.includes('user-not-found')) return 'Email or password is incorrect. If this is your first time using the new sign-in, you need to create an account first. Your old school password won\'t work here.';
   if (c.includes('email-already-in-use')) return 'There is already an account with that email. Sign in instead, or use "Forgot password?".';
   if (c.includes('weak-password')) return 'Password must be at least 6 characters.';
   if (c.includes('invalid-email')) return 'Please enter a valid email address.';
@@ -630,6 +652,7 @@ window.toggleAuthMode = function() {
   document.getElementById('auth-title').textContent = up ? 'Create an account' : 'Ski Trip Admin';
   document.getElementById('auth-sub').textContent = up ? 'Use your school email address. You\'ll be asked to verify it.' : 'Sign in with your email and password.';
   document.getElementById('auth-pw2').classList.toggle('hidden', !up);
+  document.getElementById('first-time-note').classList.toggle('hidden', up);
   document.getElementById('auth-forgot').classList.toggle('hidden', up);
   document.getElementById('auth-submit').textContent = up ? 'Create Account' : 'Sign In';
   document.getElementById('auth-toggle').textContent = up ? 'Already have an account? Sign in' : 'New here? Create an account';
@@ -642,6 +665,7 @@ window.authSubmit = async function() {
   var pw = document.getElementById('auth-pw').value;
   msg('auth-err'); msg('auth-ok');
   if (!email || !pw) { msg('auth-err', 'Please enter your email and password.'); return; }
+  if (email.indexOf('@') === -1) { msg('auth-err', 'Please enter your email address here, not your school ID. You\'ll get access to your school\'s site after signing in.'); return; }
   try {
     if (authMode === 'signup') {
       if (pw !== document.getElementById('auth-pw2').value) { msg('auth-err', 'Passwords do not match.'); return; }
@@ -672,9 +696,10 @@ window.forgotPassword = async function() {
   var email = document.getElementById('auth-email').value.trim();
   msg('auth-err'); msg('auth-ok');
   if (!email) { msg('auth-err', 'Type your email address above first, then press "Forgot password?" again.'); return; }
+  if (email.indexOf('@') === -1) { msg('auth-err', 'Please type your email address (not your school ID), then press "Forgot password?" again.'); return; }
   try {
     await sendPasswordResetEmail(auth, email);
-    msg('auth-ok', 'If there\'s an account for ' + email + ', a password reset link is on its way. Check your spam folder too.');
+    msg('auth-ok', 'If there\'s an account for ' + email + ', a password reset link is on its way. Check your spam or junk folder too. No email after 10 minutes? You may not have an account yet. Press "New here? Create an account" instead.');
   } catch (e) { msg('auth-err', friendlyAuthError(e)); }
 };
 
@@ -699,6 +724,7 @@ window.switchSchool = function() {
 
 onAuthStateChanged(auth, handleUser);
 async function handleUser(user) {
+  window.__authReady = true;
   if (!user) {
     isSuperAdmin = false;
     document.getElementById('auth-pw').value = ''; document.getElementById('auth-pw2').value = '';
