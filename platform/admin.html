@@ -151,7 +151,7 @@
     Sign in with Google
   </button>
   <div class="or-line"><span>or use email</span></div>
-  <input type="email" id="auth-email" placeholder="Email address" autocomplete="email">
+  <input type="text" inputmode="email" id="auth-email" placeholder="Email address" autocomplete="email">
   <input type="password" id="auth-pw" placeholder="Password" autocomplete="current-password">
   <input type="password" id="auth-pw2" class="hidden" placeholder="Confirm password" autocomplete="new-password">
   <button class="btn-primary" id="auth-submit" style="width:100%;" onclick="authSubmit()">Sign In</button>
@@ -565,8 +565,9 @@ const firebaseConfig = {
   appId: "1:1083239970180:web:d8cdeac69c05efce9819d1"
 };
 
-// Web address of the Google Apps Script that emails the site administrator when a
-// teacher requests access (see platform/firebase/notify-requests.gs). Empty = off.
+// Web address of the Google Apps Script (platform/firebase/notify-requests.gs) that
+// emails the site administrator about access requests and sends password resets
+// for teachers who type their school ID on "Forgot password?". Empty = off.
 const REQUEST_NOTIFY_URL = 'https://script.google.com/macros/s/AKfycbzI1CZbK_9eXoEh44G0XuwnlxCyRT8UHUBc_pNRpsEf91Yrt3s1BOGUK7mAeO4RqFg2RQ/exec';
 
 const fbApp = initializeApp(firebaseConfig);
@@ -669,7 +670,7 @@ window.authSubmit = async function() {
   var pw = document.getElementById('auth-pw').value;
   msg('auth-err'); msg('auth-ok');
   if (!email || !pw) { msg('auth-err', 'Please enter your email and password.'); return; }
-  if (email.indexOf('@') === -1) { msg('auth-err', 'Please enter your email address here, not your school ID. You\'ll get access to your school\'s site after signing in.'); return; }
+  if (email.indexOf('@') === -1) { msg('auth-err', 'Please sign in with your email address, not your school ID. Forgotten which email or your password? Press "Forgot password?" below. It works with your school ID too.'); return; }
   try {
     if (authMode === 'signup') {
       if (pw !== document.getElementById('auth-pw2').value) { msg('auth-err', 'Passwords do not match.'); return; }
@@ -699,8 +700,16 @@ window.googleSignIn = async function() {
 window.forgotPassword = async function() {
   var email = document.getElementById('auth-email').value.trim();
   msg('auth-err'); msg('auth-ok');
-  if (!email) { msg('auth-err', 'Type your email address above first, then press "Forgot password?" again.'); return; }
-  if (email.indexOf('@') === -1) { msg('auth-err', 'Please type your email address (not your school ID), then press "Forgot password?" again.'); return; }
+  if (!email) { msg('auth-err', 'Type your email address or your school ID in the box above, then press "Forgot password?" again.'); return; }
+  if (email.indexOf('@') === -1) {
+    // School ID: the helper script looks up the linked email and sends the reset there, without revealing it
+    var schoolId = cleanId(email);
+    if (!REQUEST_NOTIFY_URL) { msg('auth-err', 'Please type your email address (not your school ID), then press "Forgot password?" again.'); return; }
+    fetch(REQUEST_NOTIFY_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'reset', schoolId: schoolId }) }).catch(function(){});
+    msg('auth-ok', 'If a teacher account is linked to "' + schoolId + '", we\'ve sent a password reset link to its email address. Check your inbox and spam folder in the next few minutes. If you normally use "Sign in with Google", just press that button instead.');
+    return;
+  }
   try {
     await sendPasswordResetEmail(auth, email);
     msg('auth-ok', 'If there\'s an account for ' + email + ', a password reset link is on its way. Check your spam or junk folder too. No email after 10 minutes? You may not have an account yet. Press "New here? Create an account" instead.');
