@@ -48,3 +48,15 @@ Get an email whenever a teacher presses **Request access**.
 5. Copy the **Web app URL** (ends in `/exec`) and put it in `REQUEST_NOTIFY_URL` near the top of the script in `admin.html`. (Done: notifications are switched on.)
 
 If you change the script later, use **Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy** so the web address stays the same.
+
+## School ID password reset
+
+Lets a teacher type their **school ID** (not just their email) on **Forgot password?**. The script looks up the email linked to that school and sends it a reset link, without ever showing the email. Uses the same Apps Script project as the access request emails.
+
+1. Open the Apps Script project → replace the code with the latest `notify-requests.gs` → **Save**.
+2. **Project Settings** (⚙ on the left) → tick **Show "appsscript.json" manifest file in editor**.
+3. Back in the editor, open `appsscript.json` → replace its contents with `appsscript.json` from this folder → **Save**.
+4. Choose **testLookup** → **Run** → allow the new permissions. The log should say the school exists and a linked teacher email was found.
+5. **Deploy** → **Manage deployments** → ✏️ **Edit** → Version: **New version** → **Deploy**. The web address stays the same.
+
+The Google account running the script must be an owner or editor of the Firebase project.
