@@ -228,7 +228,7 @@
         <a class="form-btn" href="${f.url}" target="_blank" rel="noopener">Open form →</a>
       </div>`).join('');
 
-    // Online meeting shown under the countdown (hidden 3 hours after it starts)
+    // Ski trip meeting (in person or online) shown under the countdown, hidden 3 hours after it starts
     const mtg = c.meeting || {};
     const mtgDate = mtg.enabled && mtg.dateTime ? new Date(mtg.dateTime) : null;
     const showMeeting = mtgDate && !isNaN(mtgDate) && Date.now() < mtgDate.getTime() + 3 * 3600 * 1000;
@@ -238,22 +238,24 @@
       const when = mtgDate.toLocaleDateString('en-IE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
         + ' at ' + mtgDate.toLocaleTimeString('en-IE', { hour: 'numeric', minute: '2-digit', hour12: true });
       const gcal = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-      const title = mtg.title || 'Online Meeting';
+      const title = mtg.title || 'Ski Trip Meeting';
+      const online = !!safeUrl(mtg.url);
       const calUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
         + '&text=' + encodeURIComponent(title)
         + '&dates=' + gcal(mtgDate) + '/' + gcal(new Date(mtgDate.getTime() + 3600 * 1000))
-        + '&details=' + encodeURIComponent([mtg.details, safeUrl(mtg.url) ? 'Join: ' + mtg.url : ''].filter(Boolean).join('\n'));
+        + '&details=' + encodeURIComponent([mtg.details, online ? 'Join: ' + mtg.url : ''].filter(Boolean).join('\n'))
+        + (mtg.location ? '&location=' + encodeURIComponent(mtg.location) : '');
       meetingHtml = `
           <div class="meeting-box">
-            <div class="meeting-icon">🎥</div>
+            <div class="meeting-icon">${online ? '🎥' : '📅'}</div>
             <div class="meeting-main">
-              <div class="meeting-label">Upcoming online meeting</div>
+              <div class="meeting-label">Upcoming meeting</div>
               <div class="meeting-title">${title}</div>
-              <div class="meeting-when">${when}</div>
+              <div class="meeting-when">${when}${mtg.location ? ' · 📍 ' + mtg.location : ''}</div>
               ${mtg.details ? `<div class="meeting-details">${mtg.details}</div>` : ''}
             </div>
             <div class="meeting-actions">
-              ${safeUrl(mtg.url) ? `<a class="form-btn" href="${mtg.url}" target="_blank" rel="noopener">Join meeting →</a>` : ''}
+              ${online ? `<a class="form-btn" href="${mtg.url}" target="_blank" rel="noopener">Join meeting →</a>` : ''}
               <a class="hotel-link" href="${calUrl}" target="_blank" rel="noopener">📅 Add to calendar</a>
             </div>
           </div>`;

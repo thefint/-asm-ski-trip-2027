@@ -258,14 +258,17 @@
       <div class="field"><label>Duration (auto-filled, editable)</label><input type="text" id="duration" placeholder="e.g. 7 days - 6 nights"></div>
 
       <div style="margin-top:20px;padding-top:16px;border-top:1px solid #e5e5e5;">
-        <label class="tag" style="display:inline-flex;"><input type="checkbox" id="meetingEnabled" onchange="toggleMeeting()"> Show an online meeting under the countdown (optional)</label>
+        <label class="tag" style="display:inline-flex;"><input type="checkbox" id="meetingEnabled" onchange="toggleMeeting()"> Show a ski trip meeting under the countdown (optional)</label>
         <div id="meeting-fields" class="hidden" style="margin-top:12px;">
           <div class="row2">
-            <div class="field"><label>Meeting Title</label><input type="text" id="meetingTitle" placeholder="e.g. Parents' Information Meeting"></div>
+            <div class="field"><label>Meeting Title</label><input type="text" id="meetingTitle" placeholder="e.g. Ski Trip Information Meeting"></div>
             <div class="field"><label>Date &amp; Time (pick from calendar)</label><input type="datetime-local" id="meetingDateTime"></div>
           </div>
-          <div class="field"><label>Meeting Link (optional)</label><input type="text" id="meetingUrl" placeholder="Teams, Zoom or Google Meet link"></div>
-          <div class="field"><label>Details (optional)</label><input type="text" id="meetingDetails" placeholder="e.g. All parents welcome. Slides will be shared afterwards."></div>
+          <div class="row2">
+            <div class="field"><label>Location (optional)</label><input type="text" id="meetingLocation" placeholder="e.g. School hall, or Online"></div>
+            <div class="field"><label>Online Meeting Link (optional)</label><input type="text" id="meetingUrl" placeholder="Teams, Zoom or Google Meet link"></div>
+          </div>
+          <div class="field"><label>Details (optional)</label><input type="text" id="meetingDetails" placeholder="e.g. Parents and students welcome. Slides will be shared afterwards."></div>
           <p class="section-note" style="margin:0;">It disappears from your site automatically a few hours after the meeting.</p>
         </div>
       </div>
@@ -1403,7 +1406,7 @@ window.saveData = async function() {
     policies: policies.slice(),
     forms: forms.slice(),
     documents: documents.slice(),
-    meeting: { enabled: document.getElementById('meetingEnabled').checked, title: val('meetingTitle'), dateTime: val('meetingDateTime'), url: val('meetingUrl'), details: val('meetingDetails') },
+    meeting: { enabled: document.getElementById('meetingEnabled').checked, title: val('meetingTitle'), dateTime: val('meetingDateTime'), location: val('meetingLocation'), url: val('meetingUrl'), details: val('meetingDetails') },
     shops: {
       new: [{name:'Lidl',url:'https://www.lidl.ie',icon:'🛒'},{name:'Aldi',url:'https://www.aldi.ie',icon:'🛒'},{name:'Decathlon',url:'https://www.decathlon.ie',icon:'🏔️'},{name:'Sports Direct',url:'https://ie.sportsdirect.com',icon:'⚽'}],
       secondhand: [{name:'Vinted',url:'https://www.vinted.ie',icon:'👗'},{name:'Adverts.ie',url:'https://www.adverts.ie',icon:'📋'},{name:'Depop',url:'https://www.depop.com',icon:'🛍️'}]
@@ -1487,7 +1490,7 @@ function loadForm(d) {
   if (d.documents && d.documents.length) { documents = d.documents.slice(); renderDocuments(); }
   if (d.meeting) {
     document.getElementById('meetingEnabled').checked = !!d.meeting.enabled;
-    set('meetingTitle', d.meeting.title); set('meetingDateTime', d.meeting.dateTime); set('meetingUrl', d.meeting.url); set('meetingDetails', d.meeting.details);
+    set('meetingTitle', d.meeting.title); set('meetingDateTime', d.meeting.dateTime); set('meetingLocation', d.meeting.location); set('meetingUrl', d.meeting.url); set('meetingDetails', d.meeting.details);
     window.toggleMeeting();
   }
   if (d.youtubeVideos && d.youtubeVideos.length) {
