@@ -256,6 +256,19 @@
         <div class="field"><label>Return Display Text (auto-filled, editable)</label><input type="text" id="returnDateDisplay" placeholder="e.g. Friday, 5 Feb 2027"></div>
       </div>
       <div class="field"><label>Duration (auto-filled, editable)</label><input type="text" id="duration" placeholder="e.g. 7 days - 6 nights"></div>
+
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid #e5e5e5;">
+        <label class="tag" style="display:inline-flex;"><input type="checkbox" id="meetingEnabled" onchange="toggleMeeting()"> Show an online meeting under the countdown (optional)</label>
+        <div id="meeting-fields" class="hidden" style="margin-top:12px;">
+          <div class="row2">
+            <div class="field"><label>Meeting Title</label><input type="text" id="meetingTitle" placeholder="e.g. Parents' Information Meeting"></div>
+            <div class="field"><label>Date &amp; Time (pick from calendar)</label><input type="datetime-local" id="meetingDateTime"></div>
+          </div>
+          <div class="field"><label>Meeting Link (optional)</label><input type="text" id="meetingUrl" placeholder="Teams, Zoom or Google Meet link"></div>
+          <div class="field"><label>Details (optional)</label><input type="text" id="meetingDetails" placeholder="e.g. All parents welcome. Slides will be shared afterwards."></div>
+          <p class="section-note" style="margin:0;">It disappears from your site automatically a few hours after the meeting.</p>
+        </div>
+      </div>
     </div>
 
     <!-- HOTEL -->
@@ -503,6 +516,26 @@
       <p class="section-note" style="margin:10px 0 0;">In Google Forms, press <strong>Send</strong> → the link icon 🔗 → <strong>Copy</strong>. If your form only accepts responses from your school's Google accounts, parents without one won't be able to open it. Check under <strong>Settings → Responses</strong>.</p>
     </div>
 
+    <!-- DOCUMENTS -->
+    <div class="card">
+      <h2>📚 Information &amp; Documents (optional)</h2>
+      <p class="section-note">Share slides, information letters or other documents with parents, e.g. the slides from your information meeting. Paste a link (Google Slides, Google Drive, OneDrive) or upload a PDF. These appear in an Information &amp; Documents section near the end of your site.</p>
+      <div id="docs-list"></div>
+      <div class="row2" style="margin-top:8px;">
+        <div class="field" style="margin:0;"><label>Document Title</label><input type="text" id="doc-title" placeholder="e.g. Information Meeting Slides"></div>
+        <div class="field" style="margin:0;"><label>Link to Document</label><input type="text" id="doc-url" placeholder="https://..."></div>
+      </div>
+      <div class="field" style="margin-top:12px;"><label>Short Description (optional)</label><input type="text" id="doc-desc" placeholder="e.g. Slides from the parents' meeting on 10 November"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <button class="add-btn" onclick="addDocument()">+ Add Document (with link)</button>
+        <span style="font-size:0.83rem;color:#888;">or</span>
+        <button class="add-btn" onclick="startDocUpload()">📎 Upload PDF instead</button>
+      </div>
+      <input type="file" id="doc-file" accept=".pdf,.doc,.docx,application/pdf" style="display:none">
+      <div class="upload-prog" id="doc-prog"><div class="upload-prog-bar" id="doc-bar"></div></div>
+      <p class="section-note" style="margin:10px 0 0;"><strong>PowerPoint slides?</strong> Save them as a PDF first (File → Save As → PDF) and upload that, or paste a Google Slides / OneDrive link. Links must be shared as <strong>Anyone with the link</strong> so parents can open them.</p>
+    </div>
+
     <!-- POLICIES -->
     <div class="card">
       <h2>📄 Policies</h2>
@@ -585,6 +618,7 @@ let pastTripPhotos = [];
 let youtubeVideos = [];
 let policies = [];
 let forms = [];
+let documents = [];
 
 // ---- DEFAULTS ----
 const DEFAULT_DAY = [
@@ -833,7 +867,7 @@ window.requestAccess = async function() {
 
 function enterAdmin(schoolId, data) {
   currentSchoolId = schoolId;
-  crestUrl = null; skimapUrl = null; hotelPhotos = []; pastTripPhotos = []; youtubeVideos = []; policies = []; renderPolicies(); forms = []; renderForms();
+  crestUrl = null; skimapUrl = null; hotelPhotos = []; pastTripPhotos = []; youtubeVideos = []; policies = []; renderPolicies(); forms = []; renderForms(); documents = []; renderDocuments();
   showScreen('form-screen');
   document.getElementById('header-school').textContent = 'School ID: ' + schoolId + (isSuperAdmin ? ' · Super Admin' : '');
   updateUrlPreview();
@@ -1154,6 +1188,55 @@ function renderYouTube() {
   }).join('');
 }
 
+// ---- MEETING ----
+window.toggleMeeting = function() {
+  document.getElementById('meeting-fields').classList.toggle('hidden', !document.getElementById('meetingEnabled').checked);
+};
+
+// ---- DOCUMENTS ----
+window.addDocument = function(uploadedUrl) {
+  var title = document.getElementById('doc-title').value.trim();
+  var url = uploadedUrl || document.getElementById('doc-url').value.trim();
+  if (!title) { alert('Please enter a document title first.'); return; }
+  if (!/^https?:\/\//i.test(url)) { alert('Please paste a link starting with https://, or use Upload PDF instead.'); return; }
+  documents.push({ title: title, description: document.getElementById('doc-desc').value.trim(), url: url });
+  ['doc-title','doc-url','doc-desc'].forEach(function(id){ document.getElementById(id).value = ''; });
+  renderDocuments();
+};
+window.startDocUpload = function() {
+  if (!document.getElementById('doc-title').value.trim()) { alert('Please enter a document title first, then upload the file.'); return; }
+  document.getElementById('doc-file').click();
+};
+document.getElementById('doc-file').addEventListener('change', function(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) { alert('That file is over 10 MB. Please upload a smaller PDF or paste a link instead.'); e.target.value = ''; return; }
+  var path = 'schools/' + currentSchoolId + '/' + auth.currentUser.uid + '/doc_' + Date.now() + '.' + file.name.split('.').pop();
+  var prog = document.getElementById('doc-prog'), bar = document.getElementById('doc-bar');
+  prog.style.display = 'block'; bar.style.width = '0';
+  var task = uploadBytesResumable(sref(storage, path), file);
+  task.on('state_changed',
+    function(s){ bar.style.width = (s.bytesTransferred/s.totalBytes*100)+'%'; },
+    function(err){ alert('Upload failed: '+err.message); prog.style.display='none'; },
+    async function(){
+      var url = await getDownloadURL(task.snapshot.ref);
+      prog.style.display = 'none';
+      e.target.value = '';
+      window.addDocument(url);
+    }
+  );
+});
+function renderDocuments() {
+  document.getElementById('docs-list').innerHTML = documents.map(function(d, i) {
+    return '<div class="yt-item"><div class="yt-thumb-fallback">📚</div>'
+      + '<div class="yt-info"><div class="yt-title">' + d.title + '</div>'
+      + (d.description ? '<div class="yt-id">' + d.description + '</div>' : '')
+      + '<div class="yt-id"><a href="' + d.url + '" target="_blank" rel="noopener">Open to check</a></div></div>'
+      + '<button class="remove-btn" style="position:static;" onclick="removeDocument(' + i + ')">×</button></div>';
+  }).join('');
+}
+window.removeDocument = function(i) { documents.splice(i, 1); renderDocuments(); };
+
 // ---- FORMS ----
 window.addForm = function() {
   var title = document.getElementById('form-title').value.trim();
@@ -1319,6 +1402,8 @@ window.saveData = async function() {
     youtubeVideos: youtubeVideos.slice(),
     policies: policies.slice(),
     forms: forms.slice(),
+    documents: documents.slice(),
+    meeting: { enabled: document.getElementById('meetingEnabled').checked, title: val('meetingTitle'), dateTime: val('meetingDateTime'), url: val('meetingUrl'), details: val('meetingDetails') },
     shops: {
       new: [{name:'Lidl',url:'https://www.lidl.ie',icon:'🛒'},{name:'Aldi',url:'https://www.aldi.ie',icon:'🛒'},{name:'Decathlon',url:'https://www.decathlon.ie',icon:'🏔️'},{name:'Sports Direct',url:'https://ie.sportsdirect.com',icon:'⚽'}],
       secondhand: [{name:'Vinted',url:'https://www.vinted.ie',icon:'👗'},{name:'Adverts.ie',url:'https://www.adverts.ie',icon:'📋'},{name:'Depop',url:'https://www.depop.com',icon:'🛍️'}]
@@ -1399,6 +1484,12 @@ function loadForm(d) {
   }
   if (d.policies && d.policies.length) { policies = d.policies.slice(); renderPolicies(); }
   if (d.forms && d.forms.length) { forms = d.forms.slice(); renderForms(); }
+  if (d.documents && d.documents.length) { documents = d.documents.slice(); renderDocuments(); }
+  if (d.meeting) {
+    document.getElementById('meetingEnabled').checked = !!d.meeting.enabled;
+    set('meetingTitle', d.meeting.title); set('meetingDateTime', d.meeting.dateTime); set('meetingUrl', d.meeting.url); set('meetingDetails', d.meeting.details);
+    window.toggleMeeting();
+  }
   if (d.youtubeVideos && d.youtubeVideos.length) {
     youtubeVideos = d.youtubeVideos.slice();
     renderYouTube();
