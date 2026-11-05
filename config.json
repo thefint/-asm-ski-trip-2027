@@ -36,6 +36,8 @@
     "mapsLink": "https://maps.google.com/?q=Alpina+Regina+Fernpassstrasse+54+6633+Biberwier+Austria",
     "roomOccupancy": "Rooms vary from 2 up to 6 students per room.",
     "roomNote": "Room allocations will be confirmed much closer to the time, and room lists can change at the last minute. You will be roomed with at least one friend.",
+    "roomingListUrl": "https://forms.gle/qP5Esq2Vm66sv3sRA",
+    "roomingListNote": "Tell us who you'd like to share a room with by filling in the rooming list form.",
     "photos": [
       { "src": "biberwier-hotel-alpina-regina-picture-26.jpg", "alt": "Hotel exterior" },
       { "src": "biberwier-hotel-alpina-regina-picture-17.jpg", "alt": "Winter view" },
@@ -165,7 +167,6 @@
     { "src": "Ehrwald 2022.mp4", "title": "Ehrwald 2022" },
     { "src": "Andolo 2023.mp4", "title": "Andolo 2023" }
   ],
-  "forms": [],
   "policies": [
     {
       "title": "Code of Behaviour",

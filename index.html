@@ -203,7 +203,6 @@ function buildPage(c) {
         <button class="nav-btn" onclick="navTo('hotel')">Hotel</button>
         <button class="nav-btn" onclick="navTo('maps')">Ski Maps</button>
         <button class="nav-btn" onclick="navTo('deadlines')">Deadlines</button>
-        ${(c.forms || []).length ? `<button class="nav-btn" onclick="navTo('forms')">Forms</button>` : ''}
         <button class="nav-btn" onclick="navTo('packing')">What to Pack</button>
         <button class="nav-btn" onclick="navTo('health')">EHIC & Insurance</button>
         <button class="nav-btn" onclick="navTo('travel')">Travel Info</button>
@@ -290,11 +289,16 @@ function buildPage(c) {
         <hr class="divider">
         <div class="section-title">🏨 ${c.hotel.name}</div>
         <p class="section-sub">${c.hotel.address} &nbsp;·&nbsp; <a class="hotel-link" href="${c.hotel.website}" target="_blank" rel="noopener">🔗 Hotel Website</a> &nbsp;·&nbsp; <a class="hotel-link" href="${c.hotel.mapsLink}" target="_blank" rel="noopener">📍 Google Maps</a></p>
-        ${c.hotel.roomOccupancy || c.hotel.roomNote ? `
+        ${c.hotel.roomOccupancy || c.hotel.roomNote || c.hotel.roomingListUrl ? `
         <div class="info-card" style="margin-bottom:20px;">
           <h3>🛏️ Rooms</h3>
           ${c.hotel.roomOccupancy ? `<p><strong>${c.hotel.roomOccupancy}</strong></p>` : ''}
           ${c.hotel.roomNote ? `<p style="margin-top:6px;">${c.hotel.roomNote}</p>` : ''}
+          ${c.hotel.roomingListUrl ? `
+          <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+            <p style="margin-bottom:10px;">📝 ${c.hotel.roomingListNote || 'Please fill in the rooming list form.'}</p>
+            <a class="form-btn" href="${c.hotel.roomingListUrl}" target="_blank" rel="noopener">Fill in the rooming list →</a>
+          </div>` : ''}
         </div>` : ''}
         <div class="photo-grid">
           ${c.hotel.photos.map(p => `<img src="${p.src}" alt="${p.alt}">`).join('')}
@@ -331,22 +335,6 @@ function buildPage(c) {
             </div>`).join('')}
         </div>
       </section>
-
-      ${(c.forms || []).length ? `
-      <!-- FORMS -->
-      <section id="forms">
-        <hr class="divider">
-        <div class="section-title">📝 Forms to Fill In</div>
-        <p class="section-sub">Please complete these forms for the trip.</p>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;">
-          ${c.forms.map(f => `
-            <div class="info-card">
-              <h3>📝 ${f.title}</h3>
-              ${f.description ? `<p style="margin-bottom:12px;">${f.description}</p>` : ''}
-              <a class="form-btn" href="${f.url}" target="_blank" rel="noopener">Open form →</a>
-            </div>`).join('')}
-        </div>
-      </section>` : ''}
 
       <!-- PACKING -->
       <section id="packing">
@@ -558,7 +546,7 @@ function buildPage(c) {
   setInterval(updateCountdown, 1000);
 
   // Active nav
-  const sectionIds = ['trip','hotel','maps','deadlines','forms','packing','health','travel','day','videos','contact','policies'];
+  const sectionIds = ['trip','hotel','maps','deadlines','packing','health','travel','day','videos','contact','policies'];
   const navBtns = document.querySelectorAll('.nav-btn');
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => {
