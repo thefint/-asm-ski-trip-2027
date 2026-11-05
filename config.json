@@ -15,13 +15,16 @@
   "trip": {
     "destination": "Biberwier, Austria",
     "destinationSub": "Zugspitz Arena ski region",
-    "departureDate": "2027-01-30T12:00:00",
+    "departureDate": "2027-01-30T06:25:00",
     "departureDateDisplay": "Saturday, 30 Jan 2027",
     "returnDateDisplay": "Friday, 5 Feb 2027",
     "duration": "7 days · 6 nights",
-    "outboundFlight": "Cork → Munich",
-    "returnFlight": "Munich → Dublin",
-    "flightTimes": "Times TBC",
+    "outboundFlight": "Cork (ORK) → Munich (MUC)",
+    "outboundFlightNumber": "EI836",
+    "outboundFlightTimes": "Departs 06:25 · Arrives 09:55",
+    "returnFlight": "Munich (MUC) → Dublin (DUB)",
+    "returnFlightNumber": "EI357",
+    "returnFlightTimes": "Departs 20:15 · Arrives 21:55",
     "outboundBusNote": "🚌 Bus from Limerick to Cork Airport, hired by the school. Paid in cash closer to the time.",
     "returnBusNote": "🚌 Bus from Dublin Airport back to Limerick, hired by the school. Paid in cash closer to the time."
   },
@@ -162,6 +165,7 @@
     { "src": "Ehrwald 2022.mp4", "title": "Ehrwald 2022" },
     { "src": "Andolo 2023.mp4", "title": "Andolo 2023" }
   ],
+  "forms": [],
   "policies": [
     {
       "title": "Code of Behaviour",

@@ -274,6 +274,39 @@
       </div>
     </div>
 
+    <!-- FLIGHTS -->
+    <div class="card">
+      <h2>✈️ Flights (optional)</h2>
+      <p class="section-note">Shown on your site under Trip Details. Fill in what you know and add the rest later. Leave it blank if flights aren't confirmed yet.</p>
+      <h3 style="font-size:0.95rem;color:#0D2B55;margin:4px 0 10px;">🛫 Outbound flight</h3>
+      <div class="row2">
+        <div class="field"><label>From</label><input type="text" id="outFrom" placeholder="e.g. Dublin (DUB)"></div>
+        <div class="field"><label>To</label><input type="text" id="outTo" placeholder="e.g. Innsbruck (INN)"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Date (pick from calendar)</label><input type="date" id="outDate"></div>
+        <div class="field"><label>Flight Number (optional)</label><input type="text" id="outNumber" placeholder="e.g. EI123"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Departs (local time)</label><input type="time" id="outDep"></div>
+        <div class="field"><label>Arrives (local time)</label><input type="time" id="outArr"></div>
+      </div>
+      <h3 style="font-size:0.95rem;color:#0D2B55;margin:18px 0 10px;">🛬 Return flight</h3>
+      <div class="row2">
+        <div class="field"><label>From</label><input type="text" id="retFrom" placeholder="e.g. Innsbruck (INN)"></div>
+        <div class="field"><label>To</label><input type="text" id="retTo" placeholder="e.g. Dublin (DUB)"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Date (pick from calendar)</label><input type="date" id="retDate"></div>
+        <div class="field"><label>Flight Number (optional)</label><input type="text" id="retNumber" placeholder="e.g. EI124"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Departs (local time)</label><input type="time" id="retDep"></div>
+        <div class="field"><label>Arrives (local time)</label><input type="time" id="retArr"></div>
+      </div>
+      <div class="field" style="margin-top:8px;"><label>Travel Notes (optional)</label><textarea id="flightNotes" placeholder="e.g. Bus from the school to Cork Airport at 3:30 am. Please arrive 15 minutes early."></textarea></div>
+    </div>
+
     <!-- HOTEL -->
     <div class="card">
       <h2>Hotel</h2>
@@ -1404,6 +1437,11 @@ window.saveData = async function() {
     pastTripPhotos: pastTripPhotos.slice(),
     youtubeVideos: youtubeVideos.slice(),
     policies: policies.slice(),
+    flights: {
+      outbound: { from: val('outFrom'), to: val('outTo'), date: val('outDate'), number: val('outNumber'), dep: val('outDep'), arr: val('outArr') },
+      return: { from: val('retFrom'), to: val('retTo'), date: val('retDate'), number: val('retNumber'), dep: val('retDep'), arr: val('retArr') },
+      notes: val('flightNotes')
+    },
     forms: forms.slice(),
     documents: documents.slice(),
     meeting: { enabled: document.getElementById('meetingEnabled').checked, title: val('meetingTitle'), dateTime: val('meetingDateTime'), location: val('meetingLocation'), url: val('meetingUrl'), details: val('meetingDetails') },
@@ -1486,6 +1524,11 @@ function loadForm(d) {
     pastTripPhotos.forEach(function(url){ addThumb('past-thumbs', url, pastTripPhotos, false); });
   }
   if (d.policies && d.policies.length) { policies = d.policies.slice(); renderPolicies(); }
+  if (d.flights) {
+    if (d.flights.outbound) { set('outFrom', d.flights.outbound.from); set('outTo', d.flights.outbound.to); set('outDate', d.flights.outbound.date); set('outNumber', d.flights.outbound.number); set('outDep', d.flights.outbound.dep); set('outArr', d.flights.outbound.arr); }
+    if (d.flights.return) { set('retFrom', d.flights.return.from); set('retTo', d.flights.return.to); set('retDate', d.flights.return.date); set('retNumber', d.flights.return.number); set('retDep', d.flights.return.dep); set('retArr', d.flights.return.arr); }
+    set('flightNotes', d.flights.notes);
+  }
   if (d.forms && d.forms.length) { forms = d.forms.slice(); renderForms(); }
   if (d.documents && d.documents.length) { documents = d.documents.slice(); renderDocuments(); }
   if (d.meeting) {

@@ -261,6 +261,19 @@
           </div>`;
     }
 
+    // Flights entered in the admin form (each card only shows if that leg has some details)
+    const fl = c.flights || {};
+    const flightDate = v => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString('en-IE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : ''; };
+    const flightCard = (leg, icon, label) => {
+      if (!leg || !(leg.from || leg.to || leg.date || leg.number || leg.dep)) return '';
+      const route = [leg.from, leg.to].filter(Boolean).join(' → ');
+      const times = [leg.dep ? 'Departs ' + leg.dep : '', leg.arr ? 'Arrives ' + leg.arr : ''].filter(Boolean).join(' · ');
+      return `<div class="detail-card"><div class="icon">${icon}</div><div class="label">${label}</div><div class="value">${route || 'TBC'}</div>`
+        + `<div class="value-sub">${[flightDate(leg.date), leg.number].filter(Boolean).join(' · ')}</div>`
+        + (times ? `<div class="value-sub"><strong>${times}</strong></div>` : '') + `</div>`;
+    };
+    const flightCards = flightCard(fl.outbound, '🛫', 'Outbound Flight') + flightCard(fl['return'], '🛬', 'Return Flight');
+
     const docCards = (c.documents || []).map(d => {
       const icon = /docs\.google\.com\/presentation|\.pptx?(\?|$)/i.test(d.url) ? '📊' : '📄';
       return `
@@ -391,6 +404,7 @@
           <div class="detail-grid">
             <div class="detail-card"><div class="icon">📅</div><div class="label">Departure</div><div class="value">${c.departureDateDisplay || 'TBC'}</div></div>
             <div class="detail-card"><div class="icon">🏁</div><div class="label">Return</div><div class="value">${c.returnDateDisplay || 'TBC'}</div><div class="value-sub">${c.duration || ''}</div></div>
+            ${flightCards}
             <div class="detail-card"><div class="icon">🏔️</div><div class="label">Resort</div><div class="value">${c.destination || ''}</div><div class="value-sub">${c.destinationSub || ''}</div></div>
             <div class="detail-card"><div class="icon">🏨</div><div class="label">Hotel</div><div class="value">${c.hotelName || ''}</div><div class="value-sub">${c.hotelAddress || ''}</div>${c.hotelWebsite ? `<a href="${c.hotelWebsite}" target="_blank" rel="noopener">🔗 Hotel Website</a>` : ''}</div>
             ${c.portalUrl ? `<div class="detail-card"><div class="icon">🎿</div><div class="label">Organiser</div><div class="value">${c.organiserName || ''}</div><a href="${c.portalUrl}" target="_blank" rel="noopener">🔗 Parent Portal</a></div>` : ''}
@@ -441,6 +455,7 @@
           <div class="section-title">✈️ Travel Information</div>
           <p class="section-sub">Important reminders for the journey.</p>
           <div class="info-grid">
+            ${fl.notes ? `<div class="info-card"><h3>✈️ Flights &amp; Transfers</h3><p style="white-space:pre-line;">${fl.notes}</p></div>` : ''}
             <div class="info-card"><h3>🛂 Passports</h3><ul><li>Must be valid for at least 3 months from travel date</li><li>Passports collected by teachers on the day</li><li>Non-EU holders may need a visa — check in advance</li></ul></div>
             <div class="info-card"><h3>🧳 Luggage</h3><ul><li>One 20kg suitcase per student</li><li>One small backpack under-seat only</li></ul></div>
             <div class="info-card"><h3>📱 Phones</h3><ul><li>Phones collected at 11:00 pm nightly</li><li>Bluetooth speakers not permitted</li></ul></div>
