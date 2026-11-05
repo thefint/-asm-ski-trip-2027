@@ -105,6 +105,8 @@
     /* INFO CARDS */
     .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
     .hotel-link { color: var(--sky); font-weight: 600; text-decoration: none; }
+    .form-btn, .info-card a.form-btn { display: inline-block; background: var(--navy); color: var(--white); text-decoration: none; font-weight: 700; font-size: 0.9rem; padding: 10px 18px; border-radius: 10px; }
+    .form-btn:hover, .info-card a.form-btn:hover { background: var(--navy-mid); color: var(--white); text-decoration: none; }
     .hotel-link:hover { text-decoration: underline; }
     .info-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
     .info-card h3 { font-size: 1rem; font-weight: 800; color: var(--navy); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
@@ -245,14 +247,16 @@ function buildPage(c) {
             <div class="icon">🛫</div>
             <div class="label">Outbound Flight</div>
             <div class="value">${c.trip.outboundFlight}</div>
-            <div class="value-sub">${c.trip.departureDateDisplay} · ${c.trip.flightTimes}</div>
+            <div class="value-sub">${c.trip.departureDateDisplay} · ${c.trip.outboundFlightNumber}</div>
+            <div class="value-sub"><strong>${c.trip.outboundFlightTimes}</strong></div>
             <div class="value-sub">${c.trip.outboundBusNote}</div>
           </div>
           <div class="detail-card">
             <div class="icon">🛬</div>
             <div class="label">Return Flight</div>
             <div class="value">${c.trip.returnFlight}</div>
-            <div class="value-sub">${c.trip.returnDateDisplay} · ${c.trip.flightTimes}</div>
+            <div class="value-sub">${c.trip.returnDateDisplay} · ${c.trip.returnFlightNumber}</div>
+            <div class="value-sub"><strong>${c.trip.returnFlightTimes}</strong></div>
             <div class="value-sub">${c.trip.returnBusNote}</div>
           </div>
           <div class="detail-card">
@@ -285,11 +289,16 @@ function buildPage(c) {
         <hr class="divider">
         <div class="section-title">🏨 ${c.hotel.name}</div>
         <p class="section-sub">${c.hotel.address} &nbsp;·&nbsp; <a class="hotel-link" href="${c.hotel.website}" target="_blank" rel="noopener">🔗 Hotel Website</a> &nbsp;·&nbsp; <a class="hotel-link" href="${c.hotel.mapsLink}" target="_blank" rel="noopener">📍 Google Maps</a></p>
-        ${c.hotel.roomOccupancy || c.hotel.roomNote ? `
+        ${c.hotel.roomOccupancy || c.hotel.roomNote || c.hotel.roomingListUrl ? `
         <div class="info-card" style="margin-bottom:20px;">
           <h3>🛏️ Rooms</h3>
           ${c.hotel.roomOccupancy ? `<p><strong>${c.hotel.roomOccupancy}</strong></p>` : ''}
           ${c.hotel.roomNote ? `<p style="margin-top:6px;">${c.hotel.roomNote}</p>` : ''}
+          ${c.hotel.roomingListUrl ? `
+          <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+            <p style="margin-bottom:10px;">📝 ${c.hotel.roomingListNote || 'Please fill in the rooming list form.'}</p>
+            <a class="form-btn" href="${c.hotel.roomingListUrl}" target="_blank" rel="noopener">Fill in the rooming list →</a>
+          </div>` : ''}
         </div>` : ''}
         <div class="photo-grid">
           ${c.hotel.photos.map(p => `<img src="${p.src}" alt="${p.alt}">`).join('')}
