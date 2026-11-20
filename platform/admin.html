@@ -26,6 +26,8 @@
     .first-time a { color: #2d7fb8; }
     .link-btn { background: none; border: none; color: #2d7fb8; font-size: 0.88rem; cursor: pointer; font-family: inherit; padding: 6px; text-decoration: underline; }
     .pick-box { max-width: 560px; text-align: left; }
+    .pick-label { display: block; font-size: 0.8rem; font-weight: 700; color: #0D2B55; margin: 0 0 5px; }
+    .pick-label span { font-weight: 400; color: #888; }
     .pick-box h3 { font-size: 0.95rem; color: #0D2B55; margin: 22px 0 10px; }
     .school-btn { display: flex; justify-content: space-between; align-items: center; width: 100%; background: #f7fafd; border: 1.5px solid #d0e4f4; border-radius: 10px; padding: 12px 16px; margin-bottom: 8px; font-size: 0.95rem; font-weight: 700; color: #0D2B55; cursor: pointer; font-family: inherit; text-align: left; }
     .school-btn:hover { border-color: #5BA4CF; }
@@ -189,18 +191,21 @@
 
   <h3>Create a new school site</h3>
   <div class="auth-err" id="create-err"></div>
-  <input type="text" id="new-school-name" placeholder="School name, e.g. St Clare's CBS" autocomplete="off" style="margin-bottom:8px !important;">
+  <label class="pick-label" for="new-school-name">School name <span>(as it should appear on your site)</span></label>
+  <input type="text" id="new-school-name" placeholder="e.g. Coláiste Chiaráin" autocomplete="off" oninput="suggestSchoolId()" style="margin-bottom:12px !important;">
+  <label class="pick-label" for="new-school-id">School ID <span>(short, for your site's link)</span></label>
   <div class="inline-row">
-    <input type="text" id="new-school-id" placeholder="Choose a school ID, e.g. stclares" autocomplete="off">
+    <input type="text" id="new-school-id" placeholder="e.g. colaistechiarain" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="window.schoolIdEdited = true">
     <button class="btn-primary" onclick="createSchool()">Create</button>
   </div>
-  <p style="font-size:0.78rem;margin:6px 0 0;">Lowercase letters, numbers and dashes only. This becomes part of your site's link.</p>
+  <p style="font-size:0.78rem;margin:6px 0 0;">Lowercase letters, numbers and dashes only, with no spaces. It's filled in for you from the school name, and you can change it. Your site's link will end in <strong>?school=</strong><strong id="id-preview">yourschoolid</strong></p>
 
   <h3>Already have a site from before?</h3>
   <div class="auth-err" id="request-err"></div>
   <div class="auth-ok" id="request-ok"></div>
+  <label class="pick-label" for="request-school-id">Your existing School ID <span>(the part after ?school= in your site's link)</span></label>
   <div class="inline-row">
-    <input type="text" id="request-school-id" placeholder="Your existing school ID" autocomplete="off">
+    <input type="text" id="request-school-id" placeholder="e.g. colaistechiarain" autocomplete="off" autocapitalize="off" spellcheck="false">
     <button class="btn-primary" onclick="requestAccess()">Request access</button>
   </div>
   <p style="font-size:0.78rem;margin:6px 0 0;">The site administrator will approve your request, usually within a day. Your site stays online in the meantime.</p>
@@ -864,12 +869,34 @@ window.openSchool = async function(schoolId) {
   enterAdmin(schoolId, snap.exists() ? snap.data() : {});
 };
 
+// Suggest a school ID from the school name, e.g. "Coláiste Chiaráin" -> "colaistechiarain"
+window.schoolIdEdited = false;
+function idFromName(name) {
+  return name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    .replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '').slice(0, 40);
+}
+window.suggestSchoolId = function() {
+  var idEl = document.getElementById('new-school-id');
+  if (!window.schoolIdEdited || !idEl.value.trim()) { idEl.value = idFromName(document.getElementById('new-school-name').value); window.schoolIdEdited = false; }
+  updateIdPreview();
+};
+function updateIdPreview() {
+  msg('create-err');
+  document.getElementById('id-preview').textContent = cleanId(document.getElementById('new-school-id').value) || 'yourschoolid';
+}
+document.getElementById('new-school-id').addEventListener('input', updateIdPreview);
+
 window.createSchool = async function() {
   var id = cleanId(document.getElementById('new-school-id').value);
   var name = document.getElementById('new-school-name').value.trim();
   msg('create-err');
   if (!name) { msg('create-err', 'Please enter your school name.'); return; }
-  if (!/^[a-z0-9][a-z0-9-]{1,39}$/.test(id)) { msg('create-err', 'Use 2–40 lowercase letters, numbers or dashes (no spaces or @).'); return; }
+  if (!/^[a-z0-9][a-z0-9-]{1,39}$/.test(id)) {
+    var suggestion = idFromName(name);
+    msg('create-err', 'The School ID can only use lowercase letters, numbers and dashes, with no spaces, capitals or full stops'
+      + (suggestion.length >= 2 ? ', e.g. ' + suggestion : '') + '. Your school\'s full name goes in the School name box.');
+    return;
+  }
   try {
     if ((await getDoc(doc(db, 'schools', id))).exists()) { msg('create-err', 'That school ID is already taken. If it\'s your site from before, request access below.'); return; }
     await setDoc(doc(db, 'schoolOwners', id), { uid: auth.currentUser.uid, email: auth.currentUser.email, createdAt: new Date().toISOString() });
