@@ -612,6 +612,7 @@
         <div id="save-status">Saved!</div>
         <div id="save-err">Save failed. Try again.</div>
         <button class="add-btn" id="copy-btn" onclick="copyLink()" style="font-size:0.9rem;padding:10px 18px;">📋 Copy Link</button>
+        <button class="add-btn" id="preview-btn" onclick="previewSite()" style="font-size:0.9rem;padding:10px 18px;">👁 Preview</button>
         <button class="btn-primary" id="save-btn" onclick="saveData()">Save &amp; Publish</button>
       </div>
     </div>
@@ -1346,20 +1347,19 @@ window.driveThumbFailed = function(img) {
 window.removeYT = function(i){ youtubeVideos.splice(i,1); renderYouTube(); };
 
 // ---- SAVE ----
-window.saveData = async function() {
-  var btn = document.getElementById('save-btn');
-  var errEl = document.getElementById('save-err');
-  document.getElementById('save-status').style.display = 'none';
-  errEl.style.display = 'none';
-  if (!val('schoolName')) {
-    errEl.textContent = 'Please enter your School Name (at the top of the form) before saving.';
-    errEl.style.display = 'block';
-    var nameEl = document.getElementById('schoolName');
-    nameEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); nameEl.focus();
+// Opens the school site in a new tab using the unsaved form contents (nothing is published)
+window.previewSite = function() {
+  try {
+    localStorage.setItem('skiTripPreview:' + currentSchoolId, JSON.stringify({ at: Date.now(), data: buildFormData() }));
+  } catch (e) {
+    alert('Sorry, the preview could not be opened in this browser. Try Save and Publish instead, or a different browser.');
     return;
   }
-  btn.disabled = true; btn.textContent = 'Saving...';
+  window.open(location.pathname.replace('admin.html', 'index.html') + '?school=' + encodeURIComponent(currentSchoolId) + '&preview=1', '_blank');
+};
 
+// Collects everything in the form into the object saved for (or previewed as) the school site
+function buildFormData() {
   var navy = val('txt-navy') || '#0D2B55';
   var sky  = val('txt-sky')  || '#5BA4CF';
   var extras = getPackingExtras();
@@ -1451,6 +1451,24 @@ window.saveData = async function() {
     },
     updatedAt: new Date().toISOString()
   };
+  return data;
+}
+
+window.saveData = async function() {
+  var btn = document.getElementById('save-btn');
+  var errEl = document.getElementById('save-err');
+  document.getElementById('save-status').style.display = 'none';
+  errEl.style.display = 'none';
+  if (!val('schoolName')) {
+    errEl.textContent = 'Please enter your School Name (at the top of the form) before saving.';
+    errEl.style.display = 'block';
+    var nameEl = document.getElementById('schoolName');
+    nameEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); nameEl.focus();
+    return;
+  }
+  btn.disabled = true; btn.textContent = 'Saving...';
+
+  var data = buildFormData();
 
   try {
     data.adminPassword = deleteField(); // old shared-password system, no longer used

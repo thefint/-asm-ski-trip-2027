@@ -94,6 +94,7 @@
     .shop-label { font-size: 0.73rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; margin-top: 20px; }
 
     .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .preview-bar { position: sticky; top: 0; z-index: 200; background: #f39c12; color: #1f1300; text-align: center; font-size: 0.9rem; padding: 10px 16px; line-height: 1.4; }
     .meeting-box { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; background: var(--white); border: 2px solid var(--sky); border-radius: 14px; padding: 18px 22px; margin: -8px 0 24px; }
     .meeting-icon { font-size: 1.8rem; }
     .meeting-main { flex: 1; min-width: 200px; }
@@ -170,8 +171,20 @@
     document.getElementById('error').hidden = false;
     document.getElementById('error').innerHTML = '<h2>No school specified.</h2><p>URL must include <code>?school=yourschoolid</code></p>';
   } else {
-    const snap = await getDoc(doc(db, 'schools', schoolId));
-    if (!snap.exists()) {
+    // Preview from the admin form: use the unsaved form contents stored in this browser
+    let preview = null;
+    if (params.get('preview') === '1') {
+      try { preview = JSON.parse(localStorage.getItem('skiTripPreview:' + schoolId) || 'null'); } catch (e) {}
+    }
+    const snap = preview ? null : await getDoc(doc(db, 'schools', schoolId));
+    if (preview && preview.data) {
+      buildPage(preview.data);
+      const bar = document.createElement('div');
+      bar.className = 'preview-bar';
+      bar.innerHTML = '👁 <strong>Preview: not published yet.</strong> Parents can\'t see these changes. Close this tab and press <strong>Save and Publish</strong> in the form to make them live.';
+      document.body.insertBefore(bar, document.body.firstChild);
+      document.title = 'Preview: ' + document.title;
+    } else if (!snap.exists()) {
       document.getElementById('loading').hidden = true;
       document.getElementById('error').hidden = false;
       document.getElementById('error').innerHTML = `<h2>School not found.</h2><p>No data found for school ID: <strong>${schoolId}</strong></p>`;
@@ -307,7 +320,10 @@
     const dayRows = (c.typicalDay || []).slice();
     const apresIdx = apresText ? dayRows.findIndex(isApresRow) : -1;
     if (apresText && apresIdx >= 0) {
-      dayRows[apresIdx] = Object.assign({}, dayRows[apresIdx], { text: (dayRows[apresIdx].text || 'Après ski activities') + ': ' + apresText });
+      const row = dayRows[apresIdx];
+      // The admin form already writes "Apres ski: ..." into this row, so replace it rather than add the list twice
+      const text = /apr[eè]s/i.test(row.text || '') ? 'Après ski activities: ' + apresText : (row.text || 'Après ski activities') + ': ' + apresText;
+      dayRows[apresIdx] = Object.assign({}, row, { text: text });
     } else if (apresText) {
       // No evening line in their schedule: add one straight after dinner (or at the end)
       const dinnerIdx = dayRows.findIndex(r => /dinner/i.test((r.time || '') + ' ' + (r.text || '')));
